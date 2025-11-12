@@ -56,11 +56,12 @@
   <div class="app-container">
     <!-- Header -->
     <div class="header-banner">
-      <img id="companyLogo" src="" alt="Logo" height="50">
+      <div>
+        <img id="companyLogo" src="" alt="Logo" height="50">
+        <div><small class="text-white">Logo URL: <span id="logoDebug"></span></small></div>
+      </div>
       <div class="text-end">
         <div><strong>Department:</strong> <span id="departmentName"></span></div>
-        <div><strong>Queue:</strong> <span id="queueName"></span></div>
-        <div><strong>Call Time:</strong> 00:00:11</div>
       </div>
     </div>
 
@@ -152,25 +153,23 @@
       document.getElementById("callerAddress").value = getParam("ADDRESS");
       document.getElementById("serviceId").value = getParam("AccountPatientOrMemberID") || getParam("CCN");
       document.getElementById("callerNotes").textContent = getParam("Notes") || "Customer";
-
-      document.getElementById("companyLogo").src = getParam("EmbeddedLogo");
       document.getElementById("departmentName").textContent = getParam("DepartmentName");
-      document.getElementById("queueName").textContent = getParam("QueueName");
 
-      // Preferences
+      const logoUrl = getParam("EmbeddedLogo");
+      document.getElementById("companyLogo").src = logoUrl;
+      document.getElementById("logoDebug").textContent = logoUrl;
+
       document.getElementById("prefVoice").checked = getParam("Prefer_Voice") === "true";
       document.getElementById("prefSMS").checked = getParam("Pref_SMS") === "true";
       document.getElementById("prefEmail").checked = getParam("Pref_Email") === "true";
-      document.getElementById("smsOptIn").checked = getParam("SMS Opt-In") === "true";
+      document.getElementById("smsOptIn").checked = getParam("SMSOptIn") === "true";
 
-      // Button labels
       document.getElementById("actionBtn2").textContent = getParam("Button2TEXT") || "Notify Supervisor";
 
-      // Theme
       document.documentElement.style.setProperty('--accent-color', getParam("HeaderColor") || '#fd5f46');
       document.documentElement.style.setProperty('--primary-color', getParam("ButtonColor") || '#0d6efd');
       document.body.style.backgroundColor = getParam("PageBackgroundColor") || '#f2f4f8';
-    }
+    };
   </script>
 </body>
 </html>
