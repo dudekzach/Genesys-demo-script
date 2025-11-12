@@ -1,27 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Agent Script Demo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Bootstrap CDN -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agent Script – Genesys Demo</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .script-card {
+      max-width: 700px;
+      margin: 30px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      padding: 30px;
+    }
+    .script-section:not(:last-child) {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #0d6efd;
+    }
+    .btn-success {
+      background-color: #28a745;
+      border-color: #28a745;
+    }
+    .btn-success:hover {
+      background-color: #218838;
+      border-color: #1e7e34;
+    }
+  </style>
 </head>
-<body class="bg-light p-4">
-  <div class="container border rounded shadow p-4 bg-white">
-    <h1 class="text-primary mb-3">Welcome to My Genesys Cloud Demo</h1>
-    <p>This is an embedded script view for agent interactions.</p>
+<body>
 
-    <hr class="my-4">
+  <div class="script-card">
+    <h2 class="text-center text-primary mb-4">Agent Script: Inbound Call</h2>
 
-    <h2 class="text-primary">Welcome Script</h2>
-    <p class="mb-4">Follow this guide when speaking to the customer.</p>
-
-    <div class="mb-3">
-      <label for="custName" class="form-label">Customer Name</label>
-      <input type="text" class="form-control" id="custName" placeholder="Enter customer name">
+    <div class="script-section">
+      <div class="section-title mb-2">Step 1: Identify the Customer</div>
+      <div class="mb-3">
+        <label for="custName" class="form-label">Customer Name</label>
+        <input type="text" class="form-control" id="custName" placeholder="e.g., Jane Doe">
+      </div>
+      <div class="mb-3">
+        <label for="accountNumber" class="form-label">Account Number</label>
+        <input type="text" class="form-control" id="accountNumber" placeholder="e.g., 123456789">
+      </div>
     </div>
 
-    <div class="mb-3">
-      <label for="issueType" class="form-label">Issue Type</label>
-      <select class="form-select" id="issueType">
-        <option>
+    <div class="script-section">
+      <div class="section-title mb-2">Step 2: Determine Call Type</div>
+      <div class="mb-3">
+        <label for="issueType" class="form-label">Issue Type</label>
+        <select class="form-select" id="issueType">
+          <option>Billing</option>
+          <option>Technical Support</option>
+          <option>Account Inquiry</option>
+          <option>General Question</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="script-section">
+      <di
