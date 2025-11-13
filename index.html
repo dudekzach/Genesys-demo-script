@@ -37,7 +37,7 @@
       padding: 20px;
       color: white;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
     }
     .btn-rounded {
@@ -56,10 +56,6 @@
   <div class="app-container">
     <!-- Header -->
     <div class="header-banner">
-      <div>
-        <img id="companyLogo" src="" alt="Logo" height="50">
-        <div><small class="text-white">Logo URL: <span id="logoDebug"></span></small></div>
-      </div>
       <div class="text-end">
         <div><strong>Department:</strong> <span id="departmentName"></span></div>
       </div>
@@ -154,10 +150,6 @@
       document.getElementById("serviceId").value = getParam("AccountPatientOrMemberID") || getParam("CCN");
       document.getElementById("callerNotes").textContent = getParam("Notes") || "Customer";
       document.getElementById("departmentName").textContent = getParam("DepartmentName");
-
-      const logoUrl = getParam("EmbeddedLogo");
-      document.getElementById("companyLogo").src = logoUrl;
-      document.getElementById("logoDebug").textContent = logoUrl;
 
       document.getElementById("prefVoice").checked = getParam("Prefer_Voice") === "true";
       document.getElementById("prefSMS").checked = getParam("Pref_SMS") === "true";
