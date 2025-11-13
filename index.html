@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Genesys Agent Copilot Compact</title>
+  <title>Genesys Agent Copilot Compact Collapsible</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
     :root {
@@ -28,8 +28,39 @@
       background-color: var(--card-bg);
       border-radius: var(--border-radius);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      padding: 16px;
       margin-bottom: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .card-header {
+      background-color: var(--primary-color);
+      color: #fff;
+      font-weight: 600;
+      padding: 10px 14px;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .card-header span {
+      transition: transform 0.3s ease;
+    }
+    .card-header.collapsed span {
+      transform: rotate(-90deg);
+    }
+    .card-body {
+      padding: 16px;
+      background-color: var(--card-bg);
+      border-top: 1px solid #eee;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+    }
+    .card-body.open {
+      padding: 16px;
+      max-height: 1000px;
     }
     .header-banner {
       background-color: var(--primary-color);
@@ -56,15 +87,6 @@
     label {
       font-size: 0.8rem;
       color: #555;
-    }
-    h5 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    ul {
-      margin-bottom: 0;
-      padding-left: 1.2rem;
     }
     .toast {
       position: fixed;
@@ -94,98 +116,96 @@
     <!-- Header -->
     <div class="header-banner">
       <div><strong>Genesys Cloud CX</strong> | AI-Powered Experience Orchestration</div>
-      <div><strong>Dept:</strong> <span id="departmentName"></span> &nbsp;|&nbsp; <strong>Queue:</strong> <span id="queueName"></span></div>
+      <div><strong>Dept:</strong> <span id="departmentName"></span></div>
     </div>
 
-    <!-- Configuration -->
+    <!-- Configuration Panel -->
     <div class="card-soft">
-      <h5>Configuration Panel</h5>
-      <div class="form-check form-switch mb-1">
-        <input class="form-check-input" type="checkbox" id="toggleChecklist" checked />
-        <label class="form-check-label" for="toggleChecklist">Show Copilot Workflow</label>
-      </div>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="togglePreferences" checked />
-        <label class="form-check-label" for="togglePreferences">Show Customer Preferences</label>
+      <div class="card-header">Configuration Panel <span>▼</span></div>
+      <div class="card-body open">
+        <div class="form-check form-switch mb-1">
+          <input class="form-check-input" type="checkbox" id="toggleChecklist" checked />
+          <label class="form-check-label" for="toggleChecklist">Show Copilot Workflow</label>
+        </div>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="togglePreferences" checked />
+          <label class="form-check-label" for="togglePreferences">Show Customer Preferences</label>
+        </div>
       </div>
     </div>
 
     <!-- Customer Context -->
     <div class="card-soft">
-      <h5>Customer Context (from Genesys Data Actions)</h5>
-      <div class="row g-2">
-        <div class="col-6">
-          <label>Name</label>
-          <input id="callerName" class="form-control" readonly />
-        </div>
-        <div class="col-6">
-          <label>Phone</label>
-          <input id="callerPhone" class="form-control" readonly />
-        </div>
-        <div class="col-6">
-          <label>Email</label>
-          <input id="callerEmail" class="form-control" readonly />
-        </div>
-        <div class="col-6">
-          <label>Service ID</label>
-          <input id="serviceId" class="form-control" readonly />
-        </div>
-        <div class="col-12">
-          <label>Address</label>
-          <input id="callerAddress" class="form-control" readonly />
+      <div class="card-header">Customer Context (from Genesys Data Actions) <span>▼</span></div>
+      <div class="card-body open">
+        <div class="row g-2">
+          <div class="col-6">
+            <label>Name</label>
+            <input id="callerName" class="form-control" readonly />
+          </div>
+          <div class="col-6">
+            <label>Phone</label>
+            <input id="callerPhone" class="form-control" readonly />
+          </div>
+          <div class="col-6">
+            <label>Email</label>
+            <input id="callerEmail" class="form-control" readonly />
+          </div>
+          <div class="col-6">
+            <label>Service ID</label>
+            <input id="serviceId" class="form-control" readonly />
+          </div>
+          <div class="col-12">
+            <label>Address</label>
+            <input id="callerAddress" class="form-control" readonly />
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- AI Copilot -->
-    <div class="card-soft">
-      <h5>AI Copilot Recommendations</h5>
-      <ul id="aiRecommendations">
-        <li><strong>Next best action:</strong> Offer billing summary</li>
-        <li><strong>Knowledge surfaced:</strong> “Refund Policy Update (2025)”</li>
-        <li><strong>Sentiment detected:</strong> Neutral → Improving</li>
-      </ul>
     </div>
 
     <!-- Workflow -->
     <div id="checklistCard" class="card-soft">
-      <h5>Agent Copilot Workflow Steps</h5>
-      <div class="form-check mb-1">
-        <input class="form-check-input" type="checkbox" id="check1" />
-        <label class="form-check-label" for="check1">Verify customer identity</label>
-      </div>
-      <div class="form-check mb-1">
-        <input class="form-check-input" type="checkbox" id="check2" />
-        <label class="form-check-label" for="check2">Confirm purpose of interaction</label>
-      </div>
-      <div class="form-check mb-1">
-        <input class="form-check-input" type="checkbox" id="check3" />
-        <label class="form-check-label" for="check3">Share necessary disclosures</label>
-      </div>
-      <div class="form-check mb-1">
-        <input class="form-check-input" type="checkbox" id="check4" />
-        <label class="form-check-label" for="check4">Capture summary and update CRM</label>
+      <div class="card-header">Agent Copilot Workflow Steps <span>▼</span></div>
+      <div class="card-body open">
+        <div class="form-check mb-1">
+          <input class="form-check-input" type="checkbox" id="check1" />
+          <label class="form-check-label" for="check1">Verify customer identity</label>
+        </div>
+        <div class="form-check mb-1">
+          <input class="form-check-input" type="checkbox" id="check2" />
+          <label class="form-check-label" for="check2">Confirm purpose of interaction</label>
+        </div>
+        <div class="form-check mb-1">
+          <input class="form-check-input" type="checkbox" id="check3" />
+          <label class="form-check-label" for="check3">Share necessary disclosures</label>
+        </div>
+        <div class="form-check mb-1">
+          <input class="form-check-input" type="checkbox" id="check4" />
+          <label class="form-check-label" for="check4">Capture summary and update CRM</label>
+        </div>
       </div>
     </div>
 
     <!-- Preferences -->
     <div id="preferencesCard" class="card-soft">
-      <h5>Customer Preferences</h5>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="prefVoice" />
-        <label class="form-check-label" for="prefVoice">Voice</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="prefSMS" />
-        <label class="form-check-label" for="prefSMS">SMS</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="prefEmail" />
-        <label class="form-check-label" for="prefEmail">Email</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" id="smsOptIn" />
-        <label class="form-check-label" for="smsOptIn">SMS Opt-In</label>
+      <div class="card-header">Customer Preferences <span>▼</span></div>
+      <div class="card-body open">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="prefVoice" />
+          <label class="form-check-label" for="prefVoice">Voice</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="prefSMS" />
+          <label class="form-check-label" for="prefSMS">SMS</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="prefEmail" />
+          <label class="form-check-label" for="prefEmail">Email</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="smsOptIn" />
+          <label class="form-check-label" for="smsOptIn">SMS Opt-In</label>
+        </div>
       </div>
     </div>
 
@@ -224,14 +244,15 @@
     }
 
     window.onload = () => {
+      // Populate fields
       document.getElementById("callerName").value = `${getParam("FNAME")} ${getParam("LNAME")}`;
       document.getElementById("callerPhone").value = getParam("PHONE");
       document.getElementById("callerEmail").value = getParam("EMAIL");
       document.getElementById("callerAddress").value = getParam("ADDRESS");
       document.getElementById("serviceId").value = getParam("AccountPatientOrMemberID") || getParam("CCN");
       document.getElementById("departmentName").textContent = getParam("DepartmentName") || "Support";
-      document.getElementById("queueName").textContent = getParam("QueueName") || "General";
 
+      // Preferences
       document.getElementById("prefVoice").checked = getParam("Prefer_Voice") === "true";
       document.getElementById("prefSMS").checked = getParam("Pref_SMS") === "true";
       document.getElementById("prefEmail").checked = getParam("Pref_Email") === "true";
@@ -242,13 +263,25 @@
       document.documentElement.style.setProperty("--accent-color", getParam("ButtonColor") || "#ff764c");
       document.body.style.backgroundColor = getParam("PageBackgroundColor") || "#f5f6f8";
 
-      document.getElementById("toggleChecklist").addEventListener("change", e =>
+      // Checklist visibility toggles
+      document.getElementById("toggleChecklist").addEventListener("change", e => 
         (document.getElementById("checklistCard").style.display = e.target.checked ? "block" : "none")
       );
-      document.getElementById("togglePreferences").addEventListener("change", e =>
+      document.getElementById("togglePreferences").addEventListener("change", e => 
         (document.getElementById("preferencesCard").style.display = e.target.checked ? "block" : "none")
       );
 
+      // Collapsible functionality
+      document.querySelectorAll(".card-header").forEach(header => {
+        header.addEventListener("click", () => {
+          const body = header.nextElementSibling;
+          const icon = header.querySelector("span");
+          body.classList.toggle("open");
+          header.classList.toggle("collapsed");
+        });
+      });
+
+      // Checklist feedback
       document.querySelectorAll("#checklistCard input[type='checkbox']").forEach(box => {
         box.addEventListener("change", e => {
           if (e.target.checked) {
