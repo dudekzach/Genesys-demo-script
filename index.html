@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Genesys Demo Agent Script</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Genesys Agent Copilot Demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
     :root {
-      --primary-color: #0d6efd;
-      --accent-color: #fd5f46;
+      --primary-color: #ff4f1f;
+      --accent-color: #ff764c;
       --text-color: #212529;
-      --bg-color: #f2f4f8;
+      --bg-color: #f3f4f6;
       --card-bg: #ffffff;
       --border-radius: 16px;
     }
@@ -27,24 +27,33 @@
     .card-soft {
       background-color: var(--card-bg);
       border-radius: var(--border-radius);
-      box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
       padding: 30px;
       margin-bottom: 24px;
     }
     .header-banner {
-      background-color: var(--accent-color);
+      background-color: var(--primary-color);
       border-radius: var(--border-radius);
       padding: 20px;
       color: white;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-logo img {
+      height: 32px;
     }
     .btn-rounded {
       border-radius: var(--border-radius);
       padding: 10px 20px;
     }
-    .form-control, .form-select {
+    .form-control,
+    .form-select {
       border-radius: var(--border-radius);
     }
     .checklist-item {
@@ -53,86 +62,118 @@
     .toggle-switch {
       margin-right: 1rem;
     }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      background-color: var(--accent-color);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: none;
+    }
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
   </style>
 </head>
+
 <body>
   <div class="app-container">
     <!-- Header -->
     <div class="header-banner">
-      <div class="text-center">
-        <div><strong>Department:</strong> <span id="departmentName"></span></div>
+      <div class="header-logo">
+        <img src="https://www.genesys.com/favicon-32x32.png" alt="Genesys logo" />
+        <strong>Genesys Cloud CX | AI-Powered Experience Orchestration</strong>
       </div>
+      <div><strong>Department:</strong> <span id="departmentName"></span></div>
     </div>
 
     <!-- Configuration Panel -->
     <div class="card-soft">
       <h5>Configuration Panel</h5>
       <div class="form-check form-switch toggle-switch">
-        <input class="form-check-input" type="checkbox" id="toggleChecklist" checked>
-        <label class="form-check-label" for="toggleChecklist">Show Checklist</label>
+        <input class="form-check-input" type="checkbox" id="toggleChecklist" checked />
+        <label class="form-check-label" for="toggleChecklist">Show Copilot Workflow</label>
       </div>
       <div class="form-check form-switch toggle-switch">
-        <input class="form-check-input" type="checkbox" id="togglePreferences" checked>
-        <label class="form-check-label" for="togglePreferences">Show Preferences</label>
+        <input class="form-check-input" type="checkbox" id="togglePreferences" checked />
+        <label class="form-check-label" for="togglePreferences">Show Customer Preferences</label>
       </div>
     </div>
 
-    <!-- Caller Info -->
+    <!-- Customer Context -->
     <div class="card-soft">
-      <h5>Caller Info: <span id="callerNotes">Customer</span></h5>
+      <h5>Customer Context (from Genesys Data Actions)</h5>
       <div class="row g-3">
         <div class="col-md-6">
           <label>Name</label>
-          <input id="callerName" class="form-control" readonly>
+          <input id="callerName" class="form-control" readonly />
         </div>
         <div class="col-md-6">
           <label>Phone</label>
-          <input id="callerPhone" class="form-control" readonly>
+          <input id="callerPhone" class="form-control" readonly />
         </div>
         <div class="col-md-6">
           <label>Email</label>
-          <input id="callerEmail" class="form-control" readonly>
+          <input id="callerEmail" class="form-control" readonly />
         </div>
         <div class="col-md-6">
           <label>Service ID</label>
-          <input id="serviceId" class="form-control" readonly>
+          <input id="serviceId" class="form-control" readonly />
         </div>
         <div class="col-md-12">
           <label>Address</label>
-          <input id="callerAddress" class="form-control" readonly>
+          <input id="callerAddress" class="form-control" readonly />
         </div>
       </div>
     </div>
 
-    <!-- Checklist -->
+    <!-- AI Copilot Recommendations -->
+    <div class="card-soft">
+      <h5>AI Copilot Recommendations</h5>
+      <ul id="aiRecommendations">
+        <li><strong>Next best action:</strong> Offer billing summary</li>
+        <li><strong>Knowledge surfaced:</strong> “Refund Policy Update (2025)”</li>
+        <li><strong>Sentiment detected:</strong> Neutral → Improving</li>
+      </ul>
+    </div>
+
+    <!-- Workflow Checklist -->
     <div id="checklistCard" class="card-soft">
-      <h5>Call Checklist</h5>
+      <h5>Agent Copilot Workflow Steps</h5>
       <div class="form-check checklist-item">
-        <input class="form-check-input" type="checkbox" id="check1">
-        <label class="form-check-label" for="check1">Verify caller identity</label>
+        <input class="form-check-input" type="checkbox" id="check1" />
+        <label class="form-check-label" for="check1">Verify customer identity</label>
       </div>
       <div class="form-check checklist-item">
-        <input class="form-check-input" type="checkbox" id="check2">
-        <label class="form-check-label" for="check2">Confirm reason for call</label>
+        <input class="form-check-input" type="checkbox" id="check2" />
+        <label class="form-check-label" for="check2">Confirm purpose of interaction</label>
       </div>
       <div class="form-check checklist-item">
-        <input class="form-check-input" type="checkbox" id="check3">
-        <label class="form-check-label" for="check3">Provide disclaimer (if required)</label>
+        <input class="form-check-input" type="checkbox" id="check3" />
+        <label class="form-check-label" for="check3">Share necessary disclosures</label>
       </div>
       <div class="form-check checklist-item">
-        <input class="form-check-input" type="checkbox" id="check4">
-        <label class="form-check-label" for="check4">Capture notes in CRM</label>
+        <input class="form-check-input" type="checkbox" id="check4" />
+        <label class="form-check-label" for="check4">Capture summary and update CRM</label>
       </div>
     </div>
 
-    <!-- Preferences -->
+    <!-- Customer Preferences -->
     <div id="preferencesCard" class="card-soft">
-      <h5>Contact Preferences</h5>
+      <h5>Customer Preferences (from CRM Sync)</h5>
       <div>
-        <label><input type="checkbox" id="prefVoice"> Voice</label>
-        <label><input type="checkbox" id="prefSMS"> SMS</label>
-        <label><input type="checkbox" id="prefEmail"> Email</label>
-        <label class="ms-3"><input type="checkbox" id="smsOptIn"> SMS Opt-In</label>
+        <label><input type="checkbox" id="prefVoice" /> Voice</label>
+        <label><input type="checkbox" id="prefSMS" /> SMS</label>
+        <label><input type="checkbox" id="prefEmail" /> Email</label>
+        <label class="ms-3"><input type="checkbox" id="smsOptIn" /> SMS Opt-In</label>
       </div>
     </div>
 
@@ -152,21 +193,34 @@
     </div>
   </div>
 
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
   <script>
     function getParam(key) {
       const params = new URLSearchParams(window.location.search);
       return decodeURIComponent(params.get(key) || "");
     }
 
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.style.display = "block";
+      toast.classList.add("fade-in");
+      setTimeout(() => {
+        toast.style.display = "none";
+        toast.classList.remove("fade-in");
+      }, 3000);
+    }
+
     window.onload = () => {
       // Populate static fields
-      document.getElementById("callerName").value = getParam("FNAME") + " " + getParam("LNAME");
+      document.getElementById("callerName").value = `${getParam("FNAME")} ${getParam("LNAME")}`;
       document.getElementById("callerPhone").value = getParam("PHONE");
       document.getElementById("callerEmail").value = getParam("EMAIL");
       document.getElementById("callerAddress").value = getParam("ADDRESS");
       document.getElementById("serviceId").value = getParam("AccountPatientOrMemberID") || getParam("CCN");
-      document.getElementById("callerNotes").textContent = getParam("Notes") || "Customer";
-      document.getElementById("departmentName").textContent = getParam("DepartmentName");
+      document.getElementById("departmentName").textContent = getParam("DepartmentName") || "Customer Care";
 
       // Preferences
       document.getElementById("prefVoice").checked = getParam("Prefer_Voice") === "true";
@@ -176,16 +230,26 @@
 
       // Button text and theme
       document.getElementById("actionBtn2").textContent = getParam("Button2TEXT") || "Notify Supervisor";
-      document.documentElement.style.setProperty('--accent-color', getParam("HeaderColor") || '#fd5f46');
-      document.documentElement.style.setProperty('--primary-color', getParam("ButtonColor") || '#0d6efd');
-      document.body.style.backgroundColor = getParam("PageBackgroundColor") || '#f2f4f8';
+      document.documentElement.style.setProperty("--primary-color", getParam("HeaderColor") || "#ff4f1f");
+      document.documentElement.style.setProperty("--accent-color", getParam("ButtonColor") || "#ff764c");
+      document.body.style.backgroundColor = getParam("PageBackgroundColor") || "#f3f4f6";
 
-      // Toggle switches
-      document.getElementById("toggleChecklist").addEventListener('change', function() {
-        document.getElementById("checklistCard").style.display = this.checked ? 'block' : 'none';
+      // Checklist toggles
+      document.getElementById("toggleChecklist").addEventListener("change", function () {
+        document.getElementById("checklistCard").style.display = this.checked ? "block" : "none";
       });
-      document.getElementById("togglePreferences").addEventListener('change', function() {
-        document.getElementById("preferencesCard").style.display = this.checked ? 'block' : 'none';
+      document.getElementById("togglePreferences").addEventListener("change", function () {
+        document.getElementById("preferencesCard").style.display = this.checked ? "block" : "none";
+      });
+
+      // Smart feedback events
+      document.querySelectorAll("#checklistCard input[type='checkbox']").forEach((box) => {
+        box.addEventListener("change", (e) => {
+          if (e.target.checked) {
+            const msg = `✅ ${e.target.nextElementSibling.textContent} completed.`;
+            showToast(msg);
+          }
+        });
       });
     };
   </script>
