@@ -210,86 +210,83 @@
     </div>
 
     <!-- Actions -->
-    <div class="card-soft text-center">
-      <div class="row g-2">
-        <div class="col-4">
-          <button class="btn btn-primary btn-rounded w-100">New Case</button>
-        </div>
-        <div class="col-4">
-          <button class="btn btn-primary btn-rounded w-100">Update Info</button>
-        </div>
-        <div class="col-4">
-          <button id="actionBtn2" class="btn btn-danger btn-rounded w-100">Notify Supv.</button>
-        </div>
-      </div>
+<div class="card-soft text-center">
+  <div class="row g-2">
+    <div class="col-4">
+      <button id="actionBtn1" class="btn btn-primary btn-rounded w-100">New Case</button>
+    </div>
+    <div class="col-4">
+      <button id="actionBtn2" class="btn btn-primary btn-rounded w-100">Update Info</button>
+    </div>
+    <div class="col-4">
+      <button id="actionBtn3" class="btn btn-danger btn-rounded w-100">Notify Supv.</button>
     </div>
   </div>
+</div>
 
   <div id="toast" class="toast"></div>
 
-  <script>
-    function getParam(key) {
-      const params = new URLSearchParams(window.location.search);
-      return decodeURIComponent(params.get(key) || "");
-    }
-    function showToast(message) {
-      const toast = document.getElementById("toast");
-      toast.textContent = message;
-      toast.style.display = "block";
-      toast.classList.add("fade-in");
-      setTimeout(() => {
-        toast.style.display = "none";
-        toast.classList.remove("fade-in");
-      }, 2500);
-    }
+ <script>
+  function getParam(key) {
+    const params = new URLSearchParams(window.location.search);
+    return decodeURIComponent(params.get(key) || "");
+  }
 
-    window.onload = () => {
-      // Populate fields
-      document.getElementById("callerName").value = `${getParam("FNAME")} ${getParam("LNAME")}`;
-      document.getElementById("callerPhone").value = getParam("PHONE");
-      document.getElementById("callerEmail").value = getParam("EMAIL");
-      document.getElementById("callerAddress").value = getParam("ADDRESS");
-      document.getElementById("serviceId").value = getParam("AccountPatientOrMemberID") || getParam("CCN");
-      document.getElementById("departmentName").textContent = getParam("DepartmentName") || "Support";
+  function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.style.display = "block";
+    toast.classList.add("fade-in");
+    setTimeout(() => {
+      toast.style.display = "none";
+      toast.classList.remove("fade-in");
+    }, 2500);
+  }
 
-      // Preferences
-      document.getElementById("prefVoice").checked = getParam("Prefer_Voice") === "true";
-      document.getElementById("prefSMS").checked = getParam("Pref_SMS") === "true";
-      document.getElementById("prefEmail").checked = getParam("Pref_Email") === "true";
-      document.getElementById("smsOptIn").checked = getParam("SMSOptIn") === "true";
+  window.onload = () => {
+    // Populate static fields
+    document.getElementById("callerName").value = `${getParam("FNAME")} ${getParam("LNAME")}`;
+    document.getElementById("callerPhone").value = getParam("PHONE");
+    document.getElementById("callerEmail").value = getParam("EMAIL");
+    document.getElementById("callerAddress").value = getParam("ADDRESS");
+    document.getElementById("serviceId").value = getParam("AccountPatientOrMemberID") || getParam("CCN");
+    document.getElementById("departmentName").textContent = getParam("DepartmentName") || "Support";
 
-      document.getElementById("actionBtn2").textContent = getParam("Button2TEXT") || "Notify Supv.";
-      document.documentElement.style.setProperty("--primary-color", getParam("HeaderColor") || "#ff4f1f");
-      document.documentElement.style.setProperty("--accent-color", getParam("ButtonColor") || "#ff764c");
-      document.body.style.backgroundColor = getParam("PageBackgroundColor") || "#f5f6f8";
+    // Preferences
+    document.getElementById("prefVoice").checked = getParam("Prefer_Voice") === "true";
+    document.getElementById("prefSMS").checked = getParam("Pref_SMS") === "true";
+    document.getElementById("prefEmail").checked = getParam("Pref_Email") === "true";
+    document.getElementById("smsOptIn").checked = getParam("SMSOptIn") === "true";
 
-      // Checklist visibility toggles
-      document.getElementById("toggleChecklist").addEventListener("change", e => 
-        (document.getElementById("checklistCard").style.display = e.target.checked ? "block" : "none")
-      );
-      document.getElementById("togglePreferences").addEventListener("change", e => 
-        (document.getElementById("preferencesCard").style.display = e.target.checked ? "block" : "none")
-      );
+    // 🎯 NEW BUTTON TEXT SECTION — ADD THIS
+    document.getElementById("actionBtn1").textContent = getParam("Button1TEXT") || "New Case";
+    document.getElementById("actionBtn2").textContent = getParam("Button2TEXT") || "Update Info";
+    document.getElementById("actionBtn3").textContent = getParam("Button3TEXT") || "Notify Supv.";
 
-      // Collapsible functionality
-      document.querySelectorAll(".card-header").forEach(header => {
-        header.addEventListener("click", () => {
-          const body = header.nextElementSibling;
-          const icon = header.querySelector("span");
-          body.classList.toggle("open");
-          header.classList.toggle("collapsed");
-        });
+    // Colors / Theme
+    document.documentElement.style.setProperty("--primary-color", getParam("HeaderColor") || "#ff4f1f");
+    document.documentElement.style.setProperty("--accent-color", getParam("ButtonColor") || "#ff764c");
+    document.body.style.backgroundColor = getParam("PageBackgroundColor") || "#f5f6f8";
+
+    // Collapsible and checklist logic (already in your file)
+    document.querySelectorAll(".card-header").forEach(header => {
+      header.addEventListener("click", () => {
+        const body = header.nextElementSibling;
+        const icon = header.querySelector("span");
+        body.classList.toggle("open");
+        header.classList.toggle("collapsed");
       });
+    });
 
-      // Checklist feedback
-      document.querySelectorAll("#checklistCard input[type='checkbox']").forEach(box => {
-        box.addEventListener("change", e => {
-          if (e.target.checked) {
-            showToast(`✅ ${e.target.nextElementSibling.textContent} completed.`);
-          }
-        });
+    document.querySelectorAll("#checklistCard input[type='checkbox']").forEach(box => {
+      box.addEventListener("change", e => {
+        if (e.target.checked) {
+          showToast(`✅ ${e.target.nextElementSibling.textContent} completed.`);
+        }
       });
-    };
-  </script>
+    });
+  };
+</script>
+
 </body>
 </html>
