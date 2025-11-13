@@ -39,14 +39,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
     }
-    .header-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .header-logo img {
-      height: 32px;
+    .header-title {
+      font-weight: 600;
+      font-size: 1rem;
     }
     .btn-rounded {
       border-radius: var(--border-radius);
@@ -88,11 +85,13 @@
   <div class="app-container">
     <!-- Header -->
     <div class="header-banner">
-      <div class="header-logo">
-        <img src="https://www.genesys.com/favicon-32x32.png" alt="Genesys logo" />
-        <strong>Genesys Cloud CX | AI-Powered Experience Orchestration</strong>
+      <div class="header-title">
+        Genesys Cloud CX | AI-Powered Experience Orchestration
       </div>
-      <div><strong>Department:</strong> <span id="departmentName"></span></div>
+      <div>
+        <strong>Department:</strong> <span id="departmentName"></span>
+        <span class="ms-3"><strong>Queue:</strong> <span id="queueName"></span></span>
+      </div>
     </div>
 
     <!-- Configuration Panel -->
@@ -221,6 +220,7 @@
       document.getElementById("callerAddress").value = getParam("ADDRESS");
       document.getElementById("serviceId").value = getParam("AccountPatientOrMemberID") || getParam("CCN");
       document.getElementById("departmentName").textContent = getParam("DepartmentName") || "Customer Care";
+      document.getElementById("queueName").textContent = getParam("QueueName") || "General Support";
 
       // Preferences
       document.getElementById("prefVoice").checked = getParam("Prefer_Voice") === "true";
