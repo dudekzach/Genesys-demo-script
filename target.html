@@ -7,13 +7,12 @@
   <style>
     :root {
       --target-red: #cc0000;
-      --genesys-orange: #ff6a3d;
       --muted: #6c6f75;
       --bg: #fff;
       --card-bg: #fff;
       --line: #e6e8eb;
-      --shadow: 0 6px 20px rgba(0,0,0,0.08);
-      --radius: 16px;
+      --shadow: 0 4px 16px rgba(0,0,0,0.06);
+      --radius: 12px;
       --font: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     }
 
@@ -23,25 +22,24 @@
       background: var(--bg);
       color: #1a1a1a;
       line-height: 1.5;
+      transform: scale(0.9);
+      transform-origin: top center;
     }
 
     .page {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 24px 40px;
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 20px 30px;
     }
 
     header {
-      border-bottom: 5px solid var(--target-red);
-      padding-bottom: 12px;
+      border-bottom: 4px solid var(--target-red);
+      padding-bottom: 8px;
       margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
     header h1 {
-      font-size: 26px;
+      font-size: 22px;
       color: var(--target-red);
       font-weight: 800;
       margin: 0 0 4px;
@@ -50,10 +48,7 @@
     .subtitle {
       color: var(--muted);
       font-weight: 600;
-    }
-
-    .logo {
-      height: 50px;
+      font-size: 14px;
     }
 
     .banner {
@@ -61,48 +56,49 @@
       color: white;
       font-weight: 700;
       text-align: center;
-      padding: 12px 18px;
+      padding: 10px 14px;
       border-radius: var(--radius);
-      margin: 24px 0;
+      margin: 20px 0;
       box-shadow: var(--shadow);
+      font-size: 14px;
     }
 
     .scenario {
       background: var(--card-bg);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 20px 24px;
-      margin-bottom: 30px;
+      padding: 16px 18px;
+      margin-bottom: 24px;
+      font-size: 14px;
     }
 
     .scenario h3 {
       margin-top: 0;
       color: var(--target-red);
-      font-size: 20px;
-    }
-
-    .scenario p {
-      margin: 0;
+      font-size: 18px;
     }
 
     section.flow {
       background: var(--card-bg);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 22px 28px;
-      margin-bottom: 40px;
+      padding: 20px;
+      margin-bottom: 32px;
       position: relative;
+      font-size: 13px;
     }
 
     section.flow h2 {
       color: var(--target-red);
       margin-top: 0;
+      font-size: 18px;
     }
 
-    .step-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 30px;
+    .flow-steps {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px 30px;
       position: relative;
     }
 
@@ -110,70 +106,35 @@
       background: var(--card-bg);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: 16px 18px;
+      padding: 10px 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      flex: 0 1 180px;
+      text-align: center;
       position: relative;
-      z-index: 1;
     }
 
     .step strong {
       display: block;
       color: var(--target-red);
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
+      font-size: 13px;
     }
-
-    /* Snake connectors */
-    .snake-line {
-      position: absolute;
-      background: var(--target-red);
-      z-index: 0;
-    }
-
-    .snake-line.horizontal {
-      height: 6px;
-      border-radius: 3px;
-    }
-
-    .snake-line.vertical {
-      width: 6px;
-      border-radius: 3px;
-    }
-
-    .arrowhead {
-      width: 0;
-      height: 0;
-      border-top: 8px solid transparent;
-      border-bottom: 8px solid transparent;
-      border-left: 12px solid var(--target-red);
-      position: absolute;
-    }
-
-    /* Example snake connectors (simplified layout) */
-    .snake-line.flow1a { top: 120px; left: 180px; width: 260px; }
-    .snake-line.flow1b { top: 220px; left: 440px; height: 100px; }
-    .snake-line.flow1c { top: 320px; left: 200px; width: 240px; }
-
-    .arrowhead.end1 { top: 114px; left: 440px; }
-    .arrowhead.end2 { top: 310px; left: 440px; }
 
     footer {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 10px;
       color: var(--muted);
-      margin-top: 24px;
+      margin-top: 16px;
     }
   </style>
 </head>
 <body>
   <div class="page">
     <header>
-      <div>
-        <h1>Story Flow: Multi-Intent IVA Resolution Journey</h1>
-        <div class="subtitle">Target + Genesys Cloud Copilot Demo</div>
-      </div>
-      <img src="/mnt/data/2f31a58c-c4cc-457f-8df4-0c687c445e64.png" class="logo" alt="Target Logo" />
+      <h1>Story Flow: Multi-Intent IVA Resolution Journey</h1>
+      <div class="subtitle">Target + Genesys Cloud AI Demo</div>
     </header>
 
     <div class="banner">Multi-Intent Resolution Flow</div>
@@ -181,9 +142,9 @@
     <div class="scenario">
       <h3>Scenario</h3>
       <p>
-        A Target customer calls about their <strong>Target Circle Card</strong>. They first request a balance inquiry, then report a <strong>fraudulent charge</strong>.
+        A Target customer calls about their Target Circle Card. They first request a balance inquiry, then report a fraudulent charge.
         The Genesys Cloud <strong>Virtual Agent</strong> expresses empathy, walks through verification steps, and offers to cancel the card and send a replacement.
-        When the customer requests expedited shipping due to upcoming <strong>Black Friday</strong>, the Virtual Agent escalates to a live Target agent.
+        When the customer requests expedited shipping due to upcoming Black Friday, the <strong>Virtual Agent</strong> escalates to a live Target agent.
         Genesys <strong>Agent Copilot</strong> summarizes the interaction and assists the agent with <strong>Knowledge Articles</strong>, <strong>Next Best Action</strong> recommendations,
         and <strong>Disposition</strong> suggestions.
       </p>
@@ -191,26 +152,20 @@
 
     <section class="flow">
       <h2>Flow 1: Virtual Agent Interaction</h2>
-      <div class="step-grid">
+      <div class="flow-steps">
         <div class="step"><strong>Customer Call</strong><p>Customer calls Target support line via voice channel.</p></div>
         <div class="step"><strong>Virtual Agent Greeting</strong><p>Genesys Cloud Virtual Agent greets and identifies the customer.</p></div>
         <div class="step"><strong>Balance Request</strong><p>Customer asks for Target Circle Card balance; VA retrieves and reads back balance.</p></div>
         <div class="step"><strong>Fraud Concern</strong><p>Customer reports a fraudulent charge; VA expresses empathy and explains verification steps.</p></div>
-        <div class="step"><strong>Cancellation Offer</strong><p>VA offers to cancel card and send replacement; customer accepts.</p></div>
-        <div class="step"><strong>Expedite Request</strong><p>Customer requests expedited delivery before Black Friday.</p></div>
         <div class="step"><strong>Escalation Trigger</strong><p>VA escalates to live Target agent for further handling.</p></div>
+        <div class="step"><strong>Expedite Request</strong><p>Customer requests expedited delivery before Black Friday.</p></div>
+        <div class="step"><strong>Cancellation Offer</strong><p>VA offers to cancel card and send replacement; customer accepts.</p></div>
       </div>
-
-      <div class="snake-line horizontal flow1a"></div>
-      <div class="snake-line vertical flow1b"></div>
-      <div class="snake-line horizontal flow1c"></div>
-      <div class="arrowhead end1"></div>
-      <div class="arrowhead end2"></div>
     </section>
 
     <section class="flow">
       <h2>Flow 2: Live Agent & Copilot Experience</h2>
-      <div class="step-grid">
+      <div class="flow-steps">
         <div class="step"><strong>Agent Handoff</strong><p>Genesys Agent Copilot summarizes the conversation for the Target agent.</p></div>
         <div class="step"><strong>Contextual Guidance</strong><p>Copilot surfaces Knowledge Articles, Next Best Actions, and Agent Checklists in real time.</p></div>
         <div class="step"><strong>Disposition Suggestion</strong><p>Post-call, Copilot recommends the best Disposition to classify the interaction.</p></div>
