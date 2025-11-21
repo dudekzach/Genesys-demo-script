@@ -142,10 +142,10 @@
     <div class="scenario">
       <h3>Scenario</h3>
       <p>
-        A Target customer calls about their Target Circle Card. They first request a balance inquiry, then report a fraudulent charge.
-        The Genesys Cloud <strong>Virtual Agent</strong> expresses empathy, walks through verification steps, and offers to cancel the card and send a replacement.
-        When the customer requests expedited shipping due to upcoming Black Friday, the <strong>Virtual Agent</strong> escalates to a live Target agent.
-        Genesys <strong>Agent Copilot</strong> summarizes the interaction and assists the agent with <strong>Knowledge Articles</strong>, <strong>Next Best Action</strong> recommendations,
+        A Target customer, Paul, calls to report a lost Target Circle Card. He requests a balance inquiry and replacement card delivery.
+        The Genesys Cloud <strong>Virtual Agent</strong> expresses empathy and begins to processes both of Paul's intents.
+        When the customer requests expedited shipping due to upcoming Black Friday, the <strong>Virtual Agent</strong> provides a <strong>Knowledge</strong> response, then escalates to a live Target agent.
+        Genesys <strong>Agent Copilot</strong> summarizes the interaction and assists the agent with real-time <strong>Knowledge Articles</strong> recommendations,
         and <strong>Disposition</strong> suggestions.
       </p>
     </div>
@@ -155,11 +155,11 @@
       <div class="flow-steps">
         <div class="step"><strong>Customer Call</strong><p>Customer calls Target support line via voice channel.</p></div>
         <div class="step"><strong>Virtual Agent Greeting</strong><p>Genesys Cloud Virtual Agent greets and identifies the customer.</p></div>
-        <div class="step"><strong>Balance Request</strong><p>Customer asks for Target Circle Card balance; VA retrieves and reads back balance.</p></div>
-        <div class="step"><strong>Fraud Concern</strong><p>Customer reports a fraudulent charge; VA expresses empathy and explains verification steps.</p></div>
-        <div class="step"><strong>Escalation Trigger</strong><p>VA escalates to live Target agent for further handling.</p></div>
-        <div class="step"><strong>Expedite Request</strong><p>Customer requests expedited delivery before Black Friday.</p></div>
-        <div class="step"><strong>Cancellation Offer</strong><p>VA offers to cancel card and send replacement; customer accepts.</p></div>
+        <div class="step"><strong>Multi-Intent Request</strong><p>Paul asks for Circle Card balance and replacement card delivery</p></div>
+        <div class="step"><strong>Balance Inquiry Handling</strong><p>Virtual Agent provides the balance and confirms no fraudulent charges.</p></div>
+        <div class="step"><strong>Escalation Trigger</strong><p>Virtual Agent escalates to live Target agent for further handling.</p></div>
+        <div class="step"><strong>Expedite Request</strong><p>Paul requests expedited delivery before Black Friday.</p></div>
+        <div class="step"><strong>Replacement Card Delivery Handling</strong><p>Virtual Agent offers to cancel card and send replacement; Paul accepts.</p></div>
       </div>
     </section>
 
@@ -167,8 +167,8 @@
       <h2>Flow 2: Live Agent & Copilot Experience</h2>
       <div class="flow-steps">
         <div class="step"><strong>Agent Handoff</strong><p>Genesys Agent Copilot summarizes the conversation for the Target agent.</p></div>
-        <div class="step"><strong>Contextual Guidance</strong><p>Copilot surfaces Knowledge Articles, Next Best Actions, and Agent Checklists in real time.</p></div>
-        <div class="step"><strong>Disposition Suggestion</strong><p>Post-call, Copilot recommends the best Disposition to classify the interaction.</p></div>
+        <div class="step"><strong>Contextual Guidance</strong><p>Copilot surfaces Knowledge Articles in real time.</p></div>
+        <div class="step"><strong>Predictive Wrap-Up</strong><p>Post-call, Copilot recommends the best Disposition to classify the interaction.</p></div>
       </div>
     </section>
 
