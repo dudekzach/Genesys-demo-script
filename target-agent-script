@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Target Customer Experience Script</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --header-color: #cc0000;
+      --accent-color: #e50914;
+      --container-bg: #ffffff;
+      --bg-color: #f6f7f9;
+      --border-radius: 14px;
+      --text-color: #212121;
+    }
+    body {
+      background-color: var(--bg-color);
+      font-family: 'Segoe UI', sans-serif;
+      color: var(--text-color);
+      padding: 16px;
+    }
+    .outer-container {
+      background-color: var(--container-bg);
+      border-radius: var(--border-radius);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      padding: 20px;
+      max-width: 720px;
+      margin: auto;
+    }
+    .header-banner {
+      background-color: var(--header-color);
+      color: #fff;
+      font-weight: 600;
+      padding: 12px 16px;
+      border-radius: var(--border-radius);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+    .card-soft {
+      background-color: #fff;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .card-header {
+      background-color: var(--header-color);
+      color: #fff;
+      font-weight: 600;
+      padding: 10px 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .card-header span {
+      transition: transform 0.3s ease;
+    }
+    .card-header.collapsed span {
+      transform: rotate(-90deg);
+    }
+    .card-body {
+      padding: 16px;
+      background-color: #fff;
+      border-top: 1px solid #eee;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+    }
+    .card-body.open {
+      padding: 16px;
+      max-height: 1000px;
+    }
+    .btn-rounded {
+      border-radius: var(--border-radius);
+      padding: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    label {
+      font-size: 0.8rem;
+      color: #555;
+    }
+    .highlight {
+      background-color: #fef2f2;
+      border-left: 4px solid var(--header-color);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="outer-container">
+
+    <!-- Header -->
+    <div class="header-banner">
+      <div>Target Guest Experience Portal</div>
+      <div><strong>Dept:</strong> <span id="departmentName"></span></div>
+    </div>
+
+    <!-- Guest Info -->
+    <div class="card-soft">
+      <div class="card-header">Guest Profile <span>▼</span></div>
+      <div class="card-body open">
+        <div class="row g-2">
+          <div class="col-6">
+            <label>Guest Name</label>
+            <input id="callerName" class="form-control" readonly />
+          </div>
+          <div class="col-6">
+            <label>Phone</label>
+            <input id="callerPhone" class="form-control" readonly />
+          </div>
+          <div class="col-12">
+            <label>Email</label>
+            <input id="callerEmail" class="form-control" readonly />
+          </div>
+          <div class="col-12">
+            <label>Address</label>
+            <input id="callerAddress" class="form-control" readonly />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Context -->
+    <div class="card-soft">
+      <div class="card-header">Order Context <span>▼</span></div>
+      <div class="card-body open">
+        <div class="row g-2">
+          <div class="col-6">
+            <label>Order ID</label>
+            <input id="orderId" class="form-control" readonly />
+          </div>
+          <div class="col-6">
+            <label>Order Status</label>
+            <input id="orderStatus" class="form-control" readonly />
+          </div>
+          <div class="col-12">
+            <div class="highlight">
+              <strong>AI Insight:</strong> Customer recently initiated a return. Recommend checking if label was received and confirm refund timeline.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resolution Workflow -->
+    <div id="workflowCard" class="card-soft">
+      <div class="card-header">Resolution Steps <span>▼</span></div>
+      <div class="card-body open">
+        <div class="form-check mb-1">
+          <input class="form-check-input" type="checkbox" id="check1" />
+          <label class="form-check-label" for="check1">Verify order details in OMS</label>
+        </div>
+        <div class="form-check mb-1">
+          <input class="form-check-input" type="checkbox" id="check2" />
+          <label class="form-check-label" for="check2">Confirm guest identity via last 4 digits of card</label>
+        </div>
+        <div class="form-check mb-1">
+          <input class="form-check-input" type="checkbox" id="check3" />
+          <label class="form-check-label" for="check3">Provide status update or create return request</label>
+        </div>
+        <div class="form-check mb-1">
+          <input class="form-check-input" type="checkbox" id="check4" />
+          <label class="form-check-label" for="check4">Summarize resolution and confirm satisfaction</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Preferences -->
+    <div id="preferencesCard" class="card-soft">
+      <div class="card-header">Guest Communication Preferences <span>▼</span></div>
+      <div class="card-body open">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="prefVoice" />
+          <label class="form-check-label" for="prefVoice">Voice</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="prefSMS" />
+          <label class="form-check-label" for="prefSMS">SMS</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="prefEmail" />
+          <label class="form-check-label" for="prefEmail">Email</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="smsOptIn" />
+          <label class="form-check-label" for="smsOptIn">SMS Opt-In</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card-soft text-center">
+      <div class="row g-2">
+        <div class="col-4">
+          <button id="actionBtn1" class="btn btn-rounded w-100" style="background-color: var(--accent-color); color: white;">Issue Refund</button>
+        </div>
+        <div class="col-4">
+          <button id="actionBtn2" class="btn btn-rounded w-100" style="background-color: var(--accent-color); color: white;">Create Return</button>
+        </div>
+        <div class="col-4">
+          <button id="actionBtn3" class="btn btn-rounded w-100" style="background-color: var(--header-color); color: white;">Escalate</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function getParam(key) {
+      const params = new URLSearchParams(window.location.search);
+      return decodeURIComponent(params.get(key) || "");
+    }
+
+    window.onload = () => {
+      document.getElementById("callerName").value = `${getParam("FNAME")} ${getParam("LNAME")}`;
+      document.getElementById("callerPhone").value = getParam("PHONE");
+      document.getElementById("callerEmail").value = getParam("EMAIL");
+      document.getElementById("callerAddress").value = getParam("ADDRESS");
+      document.getElementById("orderId").value = getParam("OrderID") || "N/A";
+      document.getElementById("orderStatus").value = getParam("OrderStatus") || "Pending";
+
+      const headerColor = getParam("HeaderColor") || "#cc0000";
+      const buttonColor = getParam("ButtonColor") || "#e50914";
+      const containerColor = getParam("ContainerColor") || "#ffffff";
+
+      document.documentElement.style.setProperty("--header-color", headerColor);
+      document.documentElement.style.setProperty("--accent-color", buttonColor);
+      document.documentElement.style.setProperty("--container-bg", containerColor);
+
+      document.querySelectorAll(".card-header").forEach(header => {
+        header.style.backgroundColor = headerColor;
+        header.addEventListener("click", () => {
+          const body = header.nextElementSibling;
+          body.classList.toggle("open");
+          header.classList.toggle("collapsed");
+        });
+      });
+
+      document.querySelectorAll(".btn").forEach(btn => {
+        if (btn.id === "actionBtn3") {
+          btn.style.backgroundColor = headerColor;
+        } else {
+          btn.style.backgroundColor = buttonColor;
+        }
+      });
+    };
+  </script>
+</body>
+</html>
