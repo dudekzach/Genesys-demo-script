@@ -11,53 +11,53 @@
       --accent-color: #e50914;
       --container-bg: #ffffff;
       --bg-color: #f6f7f9;
-      --border-radius: 14px;
+      --border-radius: 12px;
       --text-color: #212121;
     }
     body {
       background-color: var(--bg-color);
       font-family: 'Segoe UI', sans-serif;
       color: var(--text-color);
-      padding: 16px;
+      padding: 6px;
+      margin: 0;
     }
     .outer-container {
       background-color: var(--container-bg);
       border-radius: var(--border-radius);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      padding: 20px;
-      max-width: 720px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      padding: 12px;
+      max-width: 560px;
       margin: auto;
     }
     .header-banner {
       background-color: var(--header-color);
       color: #fff;
       font-weight: 600;
-      padding: 12px 16px;
+      padding: 10px 12px;
       border-radius: var(--border-radius);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 1rem;
-      margin-bottom: 20px;
+      font-size: 0.9rem;
+      margin-bottom: 14px;
     }
     .card-soft {
       background-color: #fff;
       border-radius: var(--border-radius);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 12px;
       overflow: hidden;
-      transition: all 0.3s ease;
     }
     .card-header {
       background-color: var(--header-color);
       color: #fff;
       font-weight: 600;
-      padding: 10px 14px;
+      padding: 8px 12px;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     .card-header span {
       transition: transform 0.3s ease;
@@ -66,7 +66,7 @@
       transform: rotate(-90deg);
     }
     .card-body {
-      padding: 16px;
+      padding: 10px 12px;
       background-color: #fff;
       border-top: 1px solid #eee;
       max-height: 0;
@@ -74,42 +74,40 @@
       transition: max-height 0.4s ease, padding 0.3s ease;
     }
     .card-body.open {
-      padding: 16px;
+      padding: 10px 12px;
       max-height: 1000px;
     }
     .btn-rounded {
       border-radius: var(--border-radius);
-      padding: 10px;
-      font-size: 0.9rem;
+      padding: 6px;
+      font-size: 0.8rem;
       font-weight: 600;
     }
     label {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #555;
     }
     .highlight {
       background-color: #fef2f2;
-      border-left: 4px solid var(--header-color);
-      padding: 10px;
+      border-left: 3px solid var(--header-color);
+      padding: 8px;
       border-radius: 8px;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
     }
   </style>
 </head>
 <body>
   <div class="outer-container">
 
-    <!-- Header -->
     <div class="header-banner">
       <div>Target Guest Experience Portal</div>
       <div><strong>Dept:</strong> <span id="departmentName"></span></div>
     </div>
 
-    <!-- Guest Info -->
     <div class="card-soft">
       <div class="card-header">Guest Profile <span>▼</span></div>
       <div class="card-body open">
-        <div class="row g-2">
+        <div class="row g-1">
           <div class="col-6">
             <label>Guest Name</label>
             <input id="callerName" class="form-control" readonly />
@@ -130,11 +128,10 @@
       </div>
     </div>
 
-    <!-- Order Context -->
     <div class="card-soft">
       <div class="card-header">Order Context <span>▼</span></div>
       <div class="card-body open">
-        <div class="row g-2">
+        <div class="row g-1">
           <div class="col-6">
             <label>Order ID</label>
             <input id="orderId" class="form-control" readonly />
@@ -145,14 +142,13 @@
           </div>
           <div class="col-12">
             <div class="highlight">
-              <strong>AI Insight:</strong> Customer recently initiated a return. Recommend checking if label was received and confirm refund timeline.
+              <strong>AI Insight:</strong> Customer recently initiated a return. Recommend confirming refund status.
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Resolution Workflow -->
     <div id="workflowCard" class="card-soft">
       <div class="card-header">Resolution Steps <span>▼</span></div>
       <div class="card-body open">
@@ -175,11 +171,10 @@
       </div>
     </div>
 
-    <!-- Store Lookup -->
     <div class="card-soft">
       <div class="card-header">Store & Product Lookup <span>▼</span></div>
       <div class="card-body open">
-        <div class="row g-2">
+        <div class="row g-1">
           <div class="col-6">
             <label>Store ID</label>
             <input id="storeId" class="form-control" placeholder="Enter store ID" />
@@ -188,14 +183,13 @@
             <label>Product SKU</label>
             <input id="productSku" class="form-control" placeholder="Enter SKU" />
           </div>
-          <div class="col-12 text-end">
+          <div class="col-12 text-end mt-1">
             <button class="btn btn-rounded" style="background-color: var(--accent-color); color: white;">Check Availability</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Contact Preferences -->
     <div id="preferencesCard" class="card-soft">
       <div class="card-header">Guest Communication Preferences <span>▼</span></div>
       <div class="card-body open">
@@ -218,9 +212,8 @@
       </div>
     </div>
 
-    <!-- Actions -->
     <div class="card-soft text-center">
-      <div class="row g-2">
+      <div class="row g-1">
         <div class="col-4">
           <button id="actionBtn1" class="btn btn-rounded w-100" style="background-color: var(--accent-color); color: white;">Issue Refund</button>
         </div>
@@ -232,7 +225,6 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <script>
