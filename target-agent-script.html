@@ -96,7 +96,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="outer-container">
 
@@ -172,6 +171,26 @@
         <div class="form-check mb-1">
           <input class="form-check-input" type="checkbox" id="check4" />
           <label class="form-check-label" for="check4">Summarize resolution and confirm satisfaction</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Store Lookup -->
+    <div class="card-soft">
+      <div class="card-header">Store & Product Lookup <span>▼</span></div>
+      <div class="card-body open">
+        <div class="row g-2">
+          <div class="col-6">
+            <label>Store ID</label>
+            <input id="storeId" class="form-control" placeholder="Enter store ID" />
+          </div>
+          <div class="col-6">
+            <label>Product SKU</label>
+            <input id="productSku" class="form-control" placeholder="Enter SKU" />
+          </div>
+          <div class="col-12 text-end">
+            <button class="btn btn-rounded" style="background-color: var(--accent-color); color: white;">Check Availability</button>
+          </div>
         </div>
       </div>
     </div>
