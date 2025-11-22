@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Genesys Supervisor Experience View</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --header-color: #004aad;
+      --accent-color: #0077ff;
+      --container-bg: #ffffff;
+      --bg-color: #f4f6f8;
+      --border-radius: 14px;
+      --text-color: #212121;
+    }
+    body {
+      background-color: var(--bg-color);
+      font-family: 'Segoe UI', sans-serif;
+      color: var(--text-color);
+      padding: 12px;
+    }
+    .outer-container {
+      background-color: var(--container-bg);
+      border-radius: var(--border-radius);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      padding: 18px;
+      max-width: 700px;
+      margin: auto;
+    }
+    .header-banner {
+      background-color: var(--header-color);
+      color: #fff;
+      font-weight: 600;
+      padding: 12px 16px;
+      border-radius: var(--border-radius);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+    .card-soft {
+      background-color: #fff;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .card-header {
+      background-color: var(--header-color);
+      color: #fff;
+      font-weight: 600;
+      padding: 10px 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .card-header span {
+      transition: transform 0.3s ease;
+    }
+    .card-header.collapsed span {
+      transform: rotate(-90deg);
+    }
+    .card-body {
+      padding: 16px;
+      background-color: #fff;
+      border-top: 1px solid #eee;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+    }
+    .card-body.open {
+      padding: 16px;
+      max-height: 1000px;
+    }
+    .metric-box {
+      border: 1px solid #e3e6ea;
+      border-radius: var(--border-radius);
+      padding: 12px;
+      text-align: center;
+      background-color: #f9fafc;
+    }
+    .metric-label {
+      font-size: 0.8rem;
+      color: #555;
+    }
+    .metric-value {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--accent-color);
+    }
+    .sentiment-good { color: #00a676; font-weight: 600; }
+    .sentiment-neutral { color: #ffae42; font-weight: 600; }
+    .sentiment-bad { color: #d72638; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="outer-container">
+
+    <div class="header-banner">
+      <div>Genesys Supervisor Dashboard</div>
+      <div><strong>Region:</strong> <span id="regionName"></span></div>
+    </div>
+
+    <div class="card-soft">
+      <div class="card-header">Real-Time Queue Metrics <span>▼</span></div>
+      <div class="card-body open">
+        <div class="row g-2 text-center">
+          <div class="col-4 metric-box">
+            <div class="metric-label">Active Interactions</div>
+            <div class="metric-value" id="activeInteractions">18</div>
+          </div>
+          <div class="col-4 metric-box">
+            <div class="metric-label">Avg Handle Time</div>
+            <div class="metric-value" id="avgHandle">04:32</div>
+          </div>
+          <div class="col-4 metric-box">
+            <div class="metric-label">Service Level</div>
+            <div class="metric-value" id="serviceLevel">92%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-soft">
+      <div class="card-header">Team Sentiment Snapshot <span>▼</span></div>
+      <div class="card-body open">
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Team North <span class="sentiment-good">😊 Positive</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Team Central <span class="sentiment-neutral">😐 Neutral</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Team South <span class="sentiment-bad">😟 Negative</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card-soft">
+      <div class="card-header">Interaction Insights <span>▼</span></div>
+      <div class="card-body open">
+        <div class="highlight mb-2">
+          <strong>AI Summary:</strong> High call volume due to delivery delays. Recommend proactive outreach to pending orders.
+        </div>
+        <div class="highlight mb-2">
+          <strong>Top Topics:</strong> Refunds (34%), Order Tracking (28%), Promotions (16%)
+        </div>
+        <div class="highlight">
+          <strong>Supervisor Suggestion:</strong> Schedule targeted coaching for empathy scripting.
+        </div>
+      </div>
+    </div>
+
+    <div class="card-soft">
+      <div class="card-header">Agent Performance Overview <span>▼</span></div>
+      <div class="card-body open">
+        <table class="table table-sm table-striped">
+          <thead>
+            <tr><th>Agent</th><th>Interactions</th><th>CSAT</th><th>Avg Handle</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>J. Smith</td><td>22</td><td>96%</td><td>04:20</td></tr>
+            <tr><td>L. Nguyen</td><td>18</td><td>89%</td><td>05:10</td></tr>
+            <tr><td>C. Perez</td><td>25</td><td>94%</td><td>04:00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card-soft">
+      <div class="card-header">Coaching & Alerts <span>▼</span></div>
+      <div class="card-body open">
+        <ul class="list-group">
+          <li class="list-group-item">⚠️ Agent <strong>L. Nguyen</strong> flagged for elevated escalation rate.</li>
+          <li class="list-group-item">📅 Coaching session scheduled with <strong>C. Perez</strong> on Friday.</li>
+          <li class="list-group-item">✅ Great performance: <strong>J. Smith</strong> exceeded CSAT target this week.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getParam(key) {
+      const params = new URLSearchParams(window.location.search);
+      return decodeURIComponent(params.get(key) || "");
+    }
+
+    window.onload = () => {
+      document.getElementById("regionName").textContent = getParam("Region") || "Global";
+
+      const headerColor = getParam("HeaderColor") || "#004aad";
+      const accentColor = getParam("AccentColor") || "#0077ff";
+      const containerColor = getParam("ContainerColor") || "#ffffff";
+
+      document.documentElement.style.setProperty("--header-color", headerColor);
+      document.documentElement.style.setProperty("--accent-color", accentColor);
+      document.documentElement.style.setProperty("--container-bg", containerColor);
+
+      document.querySelectorAll(".card-header").forEach(header => {
+        header.style.backgroundColor = headerColor;
+        header.addEventListener("click", () => {
+          const body = header.nextElementSibling;
+          body.classList.toggle("open");
+          header.classList.toggle("collapsed");
+        });
+      });
+    };
+  </script>
+</body>
+</html>
