@@ -27,88 +27,93 @@
     }
 
     .page {
-      max-width: 1000px;
+      max-width: 1700px;
       margin: 20px auto;
-      padding: 0 20px 30px;
+      padding: 0 60px 50px;
     }
 
     header {
       border-bottom: 4px solid var(--target-red);
       padding-bottom: 8px;
       margin-bottom: 12px;
+      text-align: center; /* Center align header */
     }
 
     header h1 {
-      font-size: 22px;
+      font-size: 26px; /* Slightly larger title */
       color: var(--target-red);
       font-weight: 800;
-      margin: 0 0 4px;
+      margin: 0 0 8px;
     }
 
     .subtitle {
       color: var(--muted);
       font-weight: 600;
-      font-size: 14px;
-    }
-
-    .banner {
-      background: var(--target-red);
-      color: white;
-      font-weight: 700;
-      text-align: center;
-      padding: 10px 14px;
-      border-radius: var(--radius);
-      margin: 20px 0;
-      box-shadow: var(--shadow);
-      font-size: 14px;
+      font-size: 16px; /* Increased by 2 points */
+      max-width: 950px;
+      margin: 0 auto;
+      line-height: 1.6;
     }
 
     .scenario {
       background: var(--card-bg);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 16px 18px;
-      margin-bottom: 24px;
-      font-size: 14px;
+      padding: 22px 30px;
+      margin: 0 auto 30px auto;
+      font-size: 16px;
+      max-width: 96%;
     }
 
     .scenario h3 {
       margin-top: 0;
       color: var(--target-red);
-      font-size: 18px;
+      font-size: 20px;
     }
 
     section.flow {
       background: var(--card-bg);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 20px;
-      margin-bottom: 32px;
+      padding: 50px 80px;
+      margin: 0 auto 50px auto;
       position: relative;
       font-size: 13px;
+      max-width: 99%;
     }
 
     section.flow h2 {
       color: var(--target-red);
       margin-top: 0;
       font-size: 18px;
+      text-align: left;
+      margin-left: 10px;
     }
 
     .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 100px 90px;
+      justify-items: center;
+      align-items: start;
+      width: 100%;
+    }
+
+    .flow-steps.centered {
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 20px 30px;
-      position: relative;
+      gap: 80px;
+      flex-wrap: wrap;
+      width: 100%;
     }
 
     .step {
       background: var(--card-bg);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: 10px 12px;
+      padding: 14px 16px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-      flex: 0 1 180px;
+      width: 260px;
       text-align: center;
       position: relative;
     }
@@ -117,7 +122,7 @@
       display: block;
       color: var(--target-red);
       font-weight: 700;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
       font-size: 13px;
     }
 
@@ -127,6 +132,9 @@
       font-size: 10px;
       color: var(--muted);
       margin-top: 16px;
+      max-width: 96%;
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
 </head>
@@ -134,41 +142,39 @@
   <div class="page">
     <header>
       <h1>Story Flow: Multi-Intent IVA Resolution Journey</h1>
-      <div class="subtitle">Target + Genesys Cloud AI Demo</div>
+      <div class="subtitle">Genesys turns every Target interaction into loyalty, efficiency and revenue through real-time orchestration of people, data and AI.</div>
     </header>
-
-    <div class="banner">Multi-Intent Resolution Flow</div>
 
     <div class="scenario">
       <h3>Scenario</h3>
       <p>
-        A Target customer, Paul, calls to report a lost Target Circle Card. He requests a balance inquiry and replacement card delivery.
-        The Genesys Cloud <strong>Virtual Agent</strong> expresses empathy and begins to processes both of Paul's intents.
-        When the customer requests expedited shipping due to upcoming Black Friday, the <strong>Virtual Agent</strong> provides a <strong>Knowledge</strong> response, then escalates to a live Target agent.
-        Genesys <strong>Agent Copilot</strong> summarizes the interaction and assists the agent with real-time <strong>Knowledge Articles</strong> recommendations,
-        and <strong>Disposition</strong> suggestions.
+        A Target customer, <strong>Paul Dram</strong>, calls to report a lost Target Circle Card. He requests a balance inquiry and replacement card delivery. 
+        The Genesys Cloud <strong>Virtual Agent</strong>, named Christina, expresses empathy and begins processing both of Paul's intents. When Paul requests expedited 
+        shipping due to upcoming <strong>Black Friday</strong>, the Virtual Agent provides a <strong>Knowledge</strong> response, then escalates to a live Target agent.
+        Genesys <strong>Agent Copilot</strong> summarizes the interaction and assists the agent with <strong>Knowledge Articles</strong> and <strong>Disposition</strong> recommendations in real time.
       </p>
     </div>
 
     <section class="flow">
       <h2>Flow 1: Virtual Agent Interaction</h2>
       <div class="flow-steps">
-        <div class="step"><strong>Customer Call</strong><p>Paul calls Target support line via voice channel.</p></div>
-        <div class="step"><strong>Virtual Agent Greeting</strong><p>Genesys Cloud Virtual Agent greets and identifies the Paul</p></div>
-        <div class="step"><strong>Multi-Intent Request</strong><p>Paul requests his Circle Card balance and replacement card delivery</p></div>
-        <div class="step"><strong>Balance Inquiry Handling</strong><p>Virtual Agent provides the balance and verifies no fraudulent charges.</p></div>
-        <div class="step"><strong>Escalation Trigger</strong><p>Virtual Agent escalates to a live Target agent for further handling.</p></div>
-        <div class="step"><strong>Expedite Request</strong><p>Paul requests expedited delivery to arrive before Black Friday.</p></div>
-        <div class="step"><strong>Replacement Card Delivery Handling</strong><p>Virtual Agent offers to cancel Circle Card and send replacement; Paul accepts.</p></div>
+        <div class="step"><strong>Customer Call</strong><p>Paul calls Target’s customer service line via voice channel.</p></div>
+        <div class="step"><strong>Virtual Agent Greeting</strong><p>Christina, the Genesys Cloud Virtual Agent, greets and asks how she can help today.</p></div>
+        <div class="step"><strong>Balance Inquiry</strong><p>Paul asks to check his balance to verify no fraudulent charges.</p></div>
+        <div class="step"><strong>Fraud Review</strong><p>Virtual Agent confirms recent transactions and validates the last charge.</p></div>
+        <div class="step"><strong>Replacement Card Request</strong><p>Christina offers to issue a replacement card for Paul’s lost Circle Card.</p></div>
+        <div class="step"><strong>Address Confirmation</strong><p>Virtual Agent verifies Paul’s mailing address and processes the replacement order.</p></div>
+        <div class="step"><strong>Expedited Delivery Request</strong><p>Paul requests expedited shipping because Black Friday is approaching.</p></div>
+        <div class="step"><strong>Escalation Trigger</strong><p>Christina offers to transfer Paul to a live agent to review expedited shipping options.</p></div>
       </div>
     </section>
 
     <section class="flow">
       <h2>Flow 2: Live Agent & Copilot Experience</h2>
-      <div class="flow-steps">
-        <div class="step"><strong>Agent Handoff</strong><p>Genesys Agent Copilot summarizes the conversation for the Target agent.</p></div>
-        <div class="step"><strong>Contextual Guidance</strong><p>Copilot surfaces Knowledge Articles in real time.</p></div>
-        <div class="step"><strong>Predictive Wrap-Up</strong><p>Post-call, Copilot recommends the best Disposition to classify the interaction.</p></div>
+      <div class="flow-steps centered">
+        <div class="step"><strong>Agent Handoff</strong><p>Genesys Agent Copilot summarizes Paul’s virtual agent interaction for the live Target agent.</p></div>
+        <div class="step"><strong>Contextual Guidance</strong><p>Copilot provides real-time guidance and Knowledge Articles related to expedited card replacement.</p></div>
+        <div class="step"><strong>Disposition Suggestion</strong><p>After resolution, Copilot recommends the appropriate disposition code for the interaction.</p></div>
       </div>
     </section>
 
