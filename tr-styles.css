@@ -23,23 +23,24 @@
   color: #fff;
   padding: 14px 24px;
   display: flex;
-  justify-content: flex-start;   /* was space-between */
-  align-items: center;
+  justify-content: center;   /* center horizontally */
+  align-items: center;       /* center vertically */
+  text-align: center;
 }
 
-/* Logo container */
+/* Logo */
+.tr-logo {
+  height: 60px;     /* base desktop size; tweak as needed */
+  width: auto;
+  display: block;
+  margin: 0;
+}
+
+/* (Optional, now unused) Logo container */
 .tr-header-left {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-/* Logo size update */
-.tr-logo {
-  height: 54px;     /* <<< adjust size here */
-  width: auto;
-  display: block;
-  margin-right: 0;
 }
 
 /* Remove extra logo text (if still referenced elsewhere) */
@@ -307,5 +308,18 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+/* Responsive logo scaling */
+@media (max-width: 768px) {
+  .tr-logo {
+    height: 60px;   /* tablet / small laptop */
+  }
+}
+
+@media (max-width: 480px) {
+  .tr-logo {
+    height: 48px;   /* phones */
   }
 }
