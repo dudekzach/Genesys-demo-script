@@ -27,9 +27,11 @@
   align-items: center;       /* center vertically */
   text-align: center;
 
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 1000;             /* stay above cards & Messenger */
+  left: 0;
+  right: 0;
+  z-index: 1000;             /* stays above nav/cards/Messenger */
 }
 
 /* Logo */
@@ -61,11 +63,16 @@
 .tr-nav {
   background-color: #fff;
   border-bottom: 1px solid var(--border-subtle);
+
+  position: fixed;
+  top: 64px;        /* roughly header height; tweak if needed */
+  left: 0;
+  right: 0;
+  z-index: 999;
 }
 
-/* New inner container to align with main content width */
 .tr-nav-inner {
-  max-width: 1100px;          /* same as .tr-main */
+  max-width: 1100px;
   margin: 0 auto;
   display: flex;
   padding: 8px 24px;
@@ -105,7 +112,7 @@
 
 .tr-main {
   max-width: 1100px;
-  margin: 24px auto;
+  margin: 120px auto 24px;   /* top margin ~ header + nav height */
   padding: 0 16px;
 }
 
