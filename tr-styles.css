@@ -26,6 +26,10 @@
   justify-content: center;   /* center horizontally */
   align-items: center;       /* center vertically */
   text-align: center;
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;             /* stay above cards & Messenger */
 }
 
 /* Logo */
@@ -61,6 +65,10 @@
   padding: 8px 24px;
   gap: 16px;
   align-items: center;
+
+  position: sticky;
+  top: 60px;         /* roughly header height */
+  z-index: 999;
 }
 
 .tr-nav-link {
