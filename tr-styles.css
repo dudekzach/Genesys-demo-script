@@ -149,8 +149,11 @@
 }
 
 .tr-login-card {
-  width: 360px;
+  width: 100%;
+  max-width: 360px;        /* cap size on larger screens */
+  box-sizing: border-box;  /* include padding in width calc */
   text-align: center;
+  margin: 0 16px;          /* breathing room on small screens */
 }
 
 /* Typography */
