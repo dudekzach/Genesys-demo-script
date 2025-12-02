@@ -61,14 +61,16 @@
 .tr-nav {
   background-color: #fff;
   border-bottom: 1px solid var(--border-subtle);
+}
+
+/* New inner container to align with main content width */
+.tr-nav-inner {
+  max-width: 1100px;          /* same as .tr-main */
+  margin: 0 auto;
   display: flex;
   padding: 8px 24px;
   gap: 16px;
   align-items: center;
-
-  position: sticky;
-  top: 60px;         /* roughly header height */
-  z-index: 999;
 }
 
 .tr-nav-link {
