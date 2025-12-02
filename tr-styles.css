@@ -65,12 +65,13 @@
   border-bottom: 1px solid var(--border-subtle);
 
   position: fixed;
-  top: 64px;        /* roughly header height; tweak if needed */
+  top: 80px;        /* <- move it below the header */
   left: 0;
   right: 0;
   z-index: 999;
 }
 
+/* inner container stays as before */
 .tr-nav-inner {
   max-width: 1100px;
   margin: 0 auto;
@@ -112,7 +113,7 @@
 
 .tr-main {
   max-width: 1100px;
-  margin: 120px auto 24px;   /* top margin ~ header + nav height */
+  margin: 150px auto 24px;   /* header (~80) + nav (~50) + a little breathing room */
   padding: 0 16px;
 }
 
