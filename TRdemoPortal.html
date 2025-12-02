@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thomson Reuters CoCounsel Tax Portal</title>
+
+  <style>
+    :root {
+      --brand-color: #d64001;
+      --light-bg: #f7f7f7;
+      --card-bg: #ffffff;
+      --border-radius: 14px;
+      --text-color: #333;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-color);
+    }
+
+    /* HEADER */
+    header {
+      background-color: var(--brand-color);
+      color: white;
+      padding: 18px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    /* LOGIN SCREEN */
+    #login-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 75vh;
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      padding: 30px 38px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      width: 360px;
+      text-align: center;
+    }
+
+    .login-card input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background-color: var(--brand-color);
+      border: none;
+      padding: 12px;
+      width: 100%;
+      font-size: 1rem;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-primary:hover {
+      background-color: #b83500;
+    }
+
+    /* PRODUCT PAGE */
+    #product-section {
+      display: none;
+      padding: 40px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      padding: 32px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+    }
+
+    h2 {
+      color: var(--brand-color);
+    }
+
+    button.action-btn {
+      background-color: var(--brand-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 12px;
+    }
+
+    button.action-btn:hover {
+      background-color: #b83500;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <span>Thomson Reuters</span>
+    <span style="font-size: 1rem;">CoCounsel Tax Portal (Demo)</span>
+  </header>
+
+  <!-- LOGIN SCREEN -->
+  <section id="login-section">
+    <div class="login-card">
+      <h2>Sign In</h2>
+      <input type="email" id="emailInput" placeholder="Work Email" />
+      <input type="password" id="passwordInput" placeholder="Password" />
+      <button class="btn-primary" onclick="login()">Login</button>
+    </div>
+  </section>
+
+  <!-- PRODUCT EXPERIENCE -->
+  <section id="product-section">
+    <div class="product-card">
+      <h2>Welcome to CoCounsel Tax</h2>
+      <p style="font-size:1.1rem; margin-bottom:20px;">
+        Your AI-powered tax research and workflow assistant.
+      </p>
+
+      <p><strong>Common Actions:</strong></p>
+      <button class="action-btn">Research Tax Case</button>
+      <button class="action-btn">Analyze Document</button>
+      <button class="action-btn">Generate Summary</button>
+
+      <hr style="margin: 24px 0;">
+
+      <p style="font-size: 0.95rem; color: #666;">
+        Need help? Use the chat icon in the lower-right corner to contact support or try our AI assistant.
+      </p>
+    </div>
+  </section>
+
+  <!-- LOGIN LOGIC -->
+  <script>
+    function login() {
+      const email = document.getElementById("emailInput").value.trim();
+      const pass = document.getElementById("passwordInput").value.trim();
+      if (!email || !pass) {
+        alert("Please enter your email and password.");
+        return;
+      }
+
+      document.getElementById("login-section").style.display = "none";
+      document.getElementById("product-section").style.display = "block";
+    }
+  </script>
+
+  <!-- Genesys Web Messenger -->
+  <script type="text/javascript" charset="utf-8">
+    (function (g, e, n, es, ys) {
+      g['_genesysJs'] = e;
+      g[e] = g[e] || function () {
+        (g[e].q = g[e].q || []).push(arguments)
+      };
+      g[e].t = 1 * new Date();
+      g[e].c = es;
+      ys = document.createElement('script'); 
+      ys.async = 1; 
+      ys.src = n; 
+      ys.charset = 'utf-8'; 
+      document.head.appendChild(ys);
+    })(window, 'Genesys', 'https://apps.mypurecloud.com/genesys-bootstrap/genesys.min.js', {
+      environment: 'prod',
+      deploymentId: '0042b643-9e47-4c81-b7c3-fbe66fb52dd8'
+    });
+  </script>
+
+</body>
+</html>
