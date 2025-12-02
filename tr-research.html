@@ -8,146 +8,100 @@
 </head>
 
 <body class="tr-body">
-  <header class="tr-header">
-    <span class="tr-logo-text">Thomson Reuters</span>
-    <span class="tr-header-subtitle">CoCounsel Tax – Research</span>
-  </header>
+  <div id="shell"></div>
 
-  <nav class="tr-nav">
-    <a href="tr-dashboard.html" class="tr-nav-link">Dashboard</a>
-    <a href="tr-research.html" class="tr-nav-link tr-nav-active">Research</a>
-    <a href="tr-documents.html" class="tr-nav-link">Documents</a>
-    <a href="tr-billing.html" class="tr-nav-link">Billing</a>
-    <a href="TRdemoPortal.html" class="tr-nav-link tr-nav-right">Logout</a>
-  </nav>
-
-  <main class="tr-main">
+  <main class="tr-main tr-page-transition">
     <section class="tr-card">
       <h3>Tax Research</h3>
-      <p class="tr-muted">
-        Enter a tax question and see how CoCounsel surfaces relevant authority and summaries.
-      </p>
+      <p class="tr-muted">Enter a tax question and see how CoCounsel surfaces relevant authority.</p>
+
       <div class="tr-search-bar">
-        <input id="researchQuery" class="tr-input" placeholder="Ex: Can a pass-through entity deduct home office expenses under §162?" />
+        <input id="researchQuery" class="tr-input"
+               placeholder="Ex: Can a pass-through entity deduct home office expenses under §162?" />
         <button class="tr-btn-primary" onclick="runSearch()">Search</button>
       </div>
-      <p class="tr-hint">
-        Demo tip: type anything tax-related and click Search – results are pre-populated for storytelling.
-      </p>
+
+      <p class="tr-hint">Demo tip: Anything you type will show the same results.</p>
     </section>
 
+    <!-- Results -->
     <section id="resultsSection" class="tr-grid tr-results-grid">
-      <!-- Result 1 -->
       <article class="tr-card">
         <h4>IRC §162(a): Trade or Business Expenses</h4>
         <p class="tr-muted">26 U.S.C. §162(a)</p>
-        <p>
-          CoCounsel Summary: Allows deductions for ordinary and necessary expenses paid or incurred
-          in carrying on a trade or business, including certain home office expenses if principal place of business tests are met.
-        </p>
-        <p class="tr-citation">
-          Citation: IRC §162(a); Treas. Reg. §1.162-1, §1.280A-2
-        </p>
-        <button class="tr-btn-secondary" onclick="viewDoc('IRC §162(a) – Trade or Business Expenses')">
-          View Document
-        </button>
+        <p>CoCounsel Summary: Ordinary & necessary expenses may be deductible…</p>
+        <p class="tr-citation">Citations: IRC §162(a); Treas. Reg. §1.162-1</p>
+        <button class="tr-btn-secondary" onclick="viewDoc('IRC §162(a) – Trade or Business Expenses')">View Document</button>
       </article>
 
-      <!-- Result 2 -->
       <article class="tr-card">
-        <h4>Rev. Rul. 2020-20: Net Operating Loss Carrybacks</h4>
+        <h4>Rev. Rul. 2020-20: NOL Carrybacks</h4>
         <p class="tr-muted">Rev. Rul. 2020-20</p>
-        <p>
-          CoCounsel Insight: Clarifies application of CARES Act NOL carryback provisions, including
-          5-year carryback for certain tax years and interaction with §965 transition tax.
-        </p>
-        <p class="tr-citation">
-          Citation: Rev. Rul. 2020-20; IRC §172; Notice 2020-26
-        </p>
-        <button class="tr-btn-secondary" onclick="viewDoc('Rev. Rul. 2020-20 – NOL Carrybacks')">
-          View Document
-        </button>
+        <p>CoCounsel Insight: Clarifies CARES Act NOL carryback provisions…</p>
+        <p class="tr-citation">Citations: Rev. Rul. 2020-20; IRC §172</p>
+        <button class="tr-btn-secondary" onclick="viewDoc('Rev. Rul. 2020-20 – NOL Carrybacks')">View Document</button>
       </article>
 
-      <!-- Result 3 -->
       <article class="tr-card">
-        <h4>Smith v. Commissioner – Home Office Deduction</h4>
+        <h4>Smith v. Commissioner (2013)</h4>
         <p class="tr-muted">T.C. Memo. 2013-203</p>
-        <p>
-          CoCounsel Summary: Tax Court analyzes whether a taxpayer’s home office qualifies as
-          principal place of business; emphasizes regular and exclusive use requirements.
-        </p>
-        <p class="tr-citation">
-          Citation: Smith v. Comm’r, T.C. Memo. 2013-203; IRC §280A
-        </p>
-        <button class="tr-btn-secondary" onclick="viewDoc('Smith v. Commissioner – Home Office Case')">
-          View Document
-        </button>
+        <p>CoCounsel Summary: Home office test requires exclusive use…</p>
+        <p class="tr-citation">Citation: §280A; T.C. Memo. 2013-203</p>
+        <button class="tr-btn-secondary" onclick="viewDoc('Smith v. Commissioner – Home Office Case')">View Document</button>
       </article>
     </section>
 
-    <section id="previewSection" class="tr-card tr-doc-preview" style="display:none;">
+    <section id="previewSection" class="tr-card tr-doc-preview" style="display: none;">
       <h4 id="previewTitle">Document Preview</h4>
-      <p class="tr-muted">Excerpt (for demo purposes only)</p>
-      <p id="previewBody">
-        Lorem ipsum tax authority text goes here...
-      </p>
-      <p class="tr-citation">
-        Highlighted Citation: IRC §162(a); Treas. Reg. §1.162-1
-      </p>
-      <p class="tr-hint">
-        Demo tip: This is where CoCounsel’s AI summary, key citations, and “send to client memo” actions can be shown.
-      </p>
+      <p class="tr-muted">Excerpt</p>
+      <p id="previewBody">Lorem ipsum tax text…</p>
+      <p class="tr-citation">Highlighted Citation: IRC §162(a)</p>
+      <p class="tr-hint">AI summary available in CoCounselTax</p>
     </section>
   </main>
 
   <script>
     function runSearch() {
-      const q = document.getElementById("researchQuery").value.trim();
-      if (!q) {
-        alert("Enter a research question to continue.");
-        return;
-      }
-      // For demo: just ensure sections are visible; content is static.
       document.getElementById("resultsSection").scrollIntoView({ behavior: "smooth" });
     }
 
     function viewDoc(title) {
-      const preview = document.getElementById("previewSection");
-      const body = document.getElementById("previewBody");
-      const titleEl = document.getElementById("previewTitle");
-
-      titleEl.textContent = title;
-
-      body.textContent =
+      previewTitle.textContent = title;
+      previewBody.textContent =
         "Sample excerpt from " + title +
-        ": This section discusses the application of the relevant authority to taxpayers " +
-        "seeking to deduct business-related expenses. CoCounsel would surface key passages, " +
-        "summarize the holding, and highlight practical planning implications.";
-
-      preview.style.display = "block";
-      preview.scrollIntoView({ behavior: "smooth" });
+        ": CoCounsel highlights key passages, summarizes holdings…";
+      previewSection.style.display = "block";
+      previewSection.scrollIntoView({ behavior: "smooth" });
     }
   </script>
 
-  <!-- Genesys Web Messenger -->
+  <!-- Web Messenger -->
   <script type="text/javascript" charset="utf-8">
     (function (g, e, n, es, ys) {
       g['_genesysJs'] = e;
-      g[e] = g[e] || function () {
-        (g[e].q = g[e].q || []).push(arguments)
-      };
+      g[e] = g[e] || function () { (g[e].q = g[e].q || []).push(arguments) };
       g[e].t = 1 * new Date();
       g[e].c = es;
-      ys = document.createElement('script');
-      ys.async = 1;
-      ys.src = n;
-      ys.charset = 'utf-8';
-      document.head.appendChild(ys);
+      ys = document.createElement('script'); ys.async = 1; ys.src = n;
+      ys.charset = 'utf-8'; document.head.appendChild(ys);
     })(window, 'Genesys', 'https://apps.mypurecloud.com/genesys-bootstrap/genesys.min.js', {
-      environment: 'prod',
-      deploymentId: '0042b643-9e47-4c81-b7c3-fbe66fb52dd8'
+      environment: 'prod', deploymentId: '0042b643-9e47-4c81-b7c3-fbe66fb52dd8'
     });
+  </script>
+
+  <!-- Shell loader -->
+  <script>
+    fetch("tr-shell.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("shell").innerHTML = html;
+        navResearch.classList.add("tr-nav-active");
+
+        themeToggle.onclick = () => {
+          document.body.classList.toggle("dark");
+          themeToggle.textContent = document.body.classList.contains("dark") ? "🌙" : "☀️";
+        };
+      });
   </script>
 </body>
 </html>
