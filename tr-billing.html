@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoCounsel Tax – Billing</title>
+  <link rel="stylesheet" href="tr-styles.css" />
+</head>
+
+<body class="tr-body">
+  <header class="tr-header">
+    <span class="tr-logo-text">Thomson Reuters</span>
+    <span class="tr-header-subtitle">CoCounsel Tax – Billing</span>
+  </header>
+
+  <nav class="tr-nav">
+    <a href="tr-dashboard.html" class="tr-nav-link">Dashboard</a>
+    <a href="tr-research.html" class="tr-nav-link">Research</a>
+    <a href="tr-documents.html" class="tr-nav-link">Documents</a>
+    <a href="tr-billing.html" class="tr-nav-link tr-nav-active">Billing</a>
+    <a href="TRdemoPortal.html" class="tr-nav-link tr-nav-right">Logout</a>
+  </nav>
+
+  <main class="tr-main">
+    <section class="tr-grid">
+      <div class="tr-card">
+        <h3>Subscription</h3>
+        <p><strong>Plan:</strong> CoCounsel Tax – Enterprise</p>
+        <p><strong>Seats:</strong> 150</p>
+        <p><strong>Renewal Date:</strong> December 31, 2025</p>
+        <button class="tr-btn-primary">Request license update</button>
+      </div>
+
+      <div class="tr-card">
+        <h3>Billing Contacts</h3>
+        <ul class="tr-list">
+          <li>Primary: finance@clientfirm.com</li>
+          <li>Backup: taxops@clientfirm.com</li>
+        </ul>
+        <button class="tr-btn-secondary">Update billing contacts</button>
+      </div>
+
+      <div class="tr-card tr-table-card">
+        <h3>Recent Invoices</h3>
+        <table class="tr-table">
+          <thead>
+            <tr><th>Date</th><th>Invoice #</th><th>Amount</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>2025-01-01</td><td>INV-10482</td><td>$24,000</td><td>Paid</td></tr>
+            <tr><td>2024-10-01</td><td>INV-10317</td><td>$24,000</td><td>Paid</td></tr>
+            <tr><td>2024-07-01</td><td>INV-10192</td><td>$24,000</td><td>Paid</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Genesys Web Messenger -->
+  <script type="text/javascript" charset="utf-8">
+    (function (g, e, n, es, ys) {
+      g['_genesysJs'] = e;
+      g[e] = g[e] || function () {
+        (g[e].q = g[e].q || []).push(arguments)
+      };
+      g[e].t = 1 * new Date();
+      g[e].c = es;
+      ys = document.createElement('script');
+      ys.async = 1;
+      ys.src = n;
+      ys.charset = 'utf-8';
+      document.head.appendChild(ys);
+    })(window, 'Genesys', 'https://apps.mypurecloud.com/genesys-bootstrap/genesys.min.js', {
+      environment: 'prod',
+      deploymentId: '0042b643-9e47-4c81-b7c3-fbe66fb52dd8'
+    });
+  </script>
+</body>
+</html>
