@@ -8,20 +8,10 @@
 </head>
 
 <body class="tr-body">
-  <header class="tr-header">
-    <span class="tr-logo-text">Thomson Reuters</span>
-    <span class="tr-header-subtitle">CoCounsel Tax – Dashboard</span>
-  </header>
+  <!-- Persistent Shell -->
+  <div id="shell"></div>
 
-  <nav class="tr-nav">
-    <a href="tr-dashboard.html" class="tr-nav-link tr-nav-active">Dashboard</a>
-    <a href="tr-research.html" class="tr-nav-link">Research</a>
-    <a href="tr-documents.html" class="tr-nav-link">Documents</a>
-    <a href="tr-billing.html" class="tr-nav-link">Billing</a>
-    <a href="TRdemoPortal.html" class="tr-nav-link tr-nav-right">Logout</a>
-  </nav>
-
-  <main class="tr-main">
+  <main class="tr-main tr-page-transition">
     <section class="tr-grid">
       <div class="tr-card">
         <h3>Welcome back</h3>
@@ -45,8 +35,8 @@
       <div class="tr-card">
         <h4>Open Items</h4>
         <ul class="tr-list">
-          <li>Client: Apex Manufacturing – waiting on confirmation re: §199A treatment</li>
-          <li>Client: Westbridge Partners – pending review of state apportionment memo</li>
+          <li>Client: Apex Manufacturing — pending §199A review</li>
+          <li>Client: Westbridge Partners — apportionment memo pending</li>
         </ul>
       </div>
 
@@ -62,20 +52,31 @@
   <script type="text/javascript" charset="utf-8">
     (function (g, e, n, es, ys) {
       g['_genesysJs'] = e;
-      g[e] = g[e] || function () {
-        (g[e].q = g[e].q || []).push(arguments)
-      };
+      g[e] = g[e] || function () { (g[e].q = g[e].q || []).push(arguments) };
       g[e].t = 1 * new Date();
       g[e].c = es;
-      ys = document.createElement('script');
-      ys.async = 1;
-      ys.src = n;
-      ys.charset = 'utf-8';
-      document.head.appendChild(ys);
+      ys = document.createElement('script'); ys.async = 1; ys.src = n;
+      ys.charset = 'utf-8'; document.head.appendChild(ys);
     })(window, 'Genesys', 'https://apps.mypurecloud.com/genesys-bootstrap/genesys.min.js', {
-      environment: 'prod',
-      deploymentId: '0042b643-9e47-4c81-b7c3-fbe66fb52dd8'
+      environment: 'prod', deploymentId: '0042b643-9e47-4c81-b7c3-fbe66fb52dd8'
     });
+  </script>
+
+  <!-- Load Shell + Theme Toggle -->
+  <script>
+    fetch("tr-shell.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("shell").innerHTML = html;
+
+        navDash.classList.add("tr-nav-active");
+
+        const toggle = document.getElementById("themeToggle");
+        toggle.onclick = () => {
+          document.body.classList.toggle("dark");
+          toggle.textContent = document.body.classList.contains("dark") ? "🌙" : "☀️";
+        };
+      });
   </script>
 </body>
 </html>
