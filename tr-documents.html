@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoCounsel Tax – Documents</title>
+  <link rel="stylesheet" href="tr-styles.css" />
+</head>
+
+<body class="tr-body">
+  <header class="tr-header">
+    <span class="tr-logo-text">Thomson Reuters</span>
+    <span class="tr-header-subtitle">CoCounsel Tax – Documents</span>
+  </header>
+
+  <nav class="tr-nav">
+    <a href="tr-dashboard.html" class="tr-nav-link">Dashboard</a>
+    <a href="tr-research.html" class="tr-nav-link">Research</a>
+    <a href="tr-documents.html" class="tr-nav-link tr-nav-active">Documents</a>
+    <a href="tr-billing.html" class="tr-nav-link">Billing</a>
+    <a href="TRdemoPortal.html" class="tr-nav-link tr-nav-right">Logout</a>
+  </nav>
+
+  <main class="tr-main">
+    <section class="tr-layout-2col">
+      <aside class="tr-card tr-doc-list">
+        <h3>Document Library</h3>
+        <ul class="tr-doc-list-items">
+          <li onclick="selectDoc('IRS Notice 2023-14', 'Notice2023-14')">
+            IRS Notice 2023-14 – Energy Credits Guidance
+          </li>
+          <li onclick="selectDoc('Client Memo – NOL Planning', 'NOLMemo')">
+            Client Memo – NOL Planning (Apex Manufacturing)
+          </li>
+          <li onclick="selectDoc('State Tax Apportionment – Draft', 'ApportionmentDraft')">
+            State Tax Apportionment – Draft Analysis
+          </li>
+        </ul>
+      </aside>
+
+      <section class="tr-card tr-doc-preview">
+        <h3 id="docTitle">Select a document to preview</h3>
+        <p class="tr-muted">
+          CoCounsel Tax can summarize, extract key points, and highlight citations from complex tax documents.
+        </p>
+
+        <div id="docContent" class="tr-doc-content">
+          <p>
+            Choose a document from the left to see a sample excerpt and an AI-generated summary.
+          </p>
+        </div>
+
+        <div id="aiSummary" class="tr-ai-summary" style="display:none;">
+          <h4>CoCounsel AI Summary</h4>
+          <p id="aiSummaryBody"></p>
+          <button class="tr-btn-secondary">
+            Send summary to client workspace
+          </button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    function selectDoc(title, key) {
+      const docTitle = document.getElementById("docTitle");
+      const docContent = document.getElementById("docContent");
+      const aiSummary = document.getElementById("aiSummary");
+      const aiBody = document.getElementById("aiSummaryBody");
+
+      docTitle.textContent = title;
+      aiSummary.style.display = "block";
+
+      if (key === "Notice2023-14") {
+        docContent.innerHTML = `
+          <p><strong>Excerpt:</strong> This notice provides guidance on the availability and
+          computation of energy-related credits for tax year 2023, including limitations,
+          phase-outs, and interactions with prior-year credits.</p>
+          <p class="tr-citation">Citation: Notice 2023-14; IRC §§ 45, 48, 25D.</p>
+        `;
+        aiBody.textContent =
+          "CoCounsel highlights the key eligibility criteria for new energy credits, identifies " +
+          "carryforward opportunities, and flags potential amended return opportunities for prior years.";
+      } else if (key === "NOLMemo") {
+        docContent.innerHTML = `
+          <p><strong>Excerpt:</strong> This memorandum outlines planning considerations for
+          net operating loss carrybacks and carryforwards in light of recent legislative changes,
+          focusing on corporate clients with cyclical earnings.</p>
+          <p class="tr-citation">Citation: IRC §172; Rev. Rul. 2020-20.</p>
+        `;
+        aiBody.textContent =
+          "CoCounsel summarizes NOL utilization strategies, highlights optimal carryback periods, and " +
+          "surfaces relevant authority for client-facing recommendations.";
+      } else if (key === "ApportionmentDraft") {
+        docContent.innerHTML = `
+          <p><strong>Excerpt:</strong> Draft analysis of state tax apportionment methodologies,
+          comparing single-sales-factor and three-factor approaches across key jurisdictions.</p>
+          <p class="tr-citation">Citation: Various state statutes; UDITPA model rules.</p>
+        `;
+        aiBody.textContent =
+          "CoCounsel synthesizes the comparative impact of different apportionment methods and " +
+          "identifies states where planning opportunities may yield material savings.";
+      } else {
+        docContent.innerHTML = "<p>Sample document content.</p>";
+        aiBody.textContent =
+          "CoCounsel provides a concise summary and highlights key citations for this document.";
+      }
+    }
+  </script>
+
+  <!-- Genesys Web Messenger -->
+  <script type="text/javascript" charset="utf-8">
+    (function (g, e, n, es, ys) {
+      g['_genesysJs'] = e;
+      g[e] = g[e] || function () {
+        (g[e].q = g[e].q || []).push(arguments)
+      };
+      g[e].t = 1 * new Date();
+      g[e].c = es;
+      ys = document.createElement('script');
+      ys.async = 1;
+      ys.src = n;
+      ys.charset = 'utf-8';
+      document.head.appendChild(ys);
+    })(window, 'Genesys', 'https://apps.mypurecloud.com/genesys-bootstrap/genesys.min.js', {
+      environment: 'prod',
+      deploymentId: '0042b643-9e47-4c81-b7c3-fbe66fb52dd8'
+    });
+  </script>
+</body>
+</html>
