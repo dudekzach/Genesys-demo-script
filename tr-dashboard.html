@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoCounsel Tax – Dashboard</title>
+  <link rel="stylesheet" href="tr-styles.css" />
+</head>
+
+<body class="tr-body">
+  <header class="tr-header">
+    <span class="tr-logo-text">Thomson Reuters</span>
+    <span class="tr-header-subtitle">CoCounsel Tax – Dashboard</span>
+  </header>
+
+  <nav class="tr-nav">
+    <a href="tr-dashboard.html" class="tr-nav-link tr-nav-active">Dashboard</a>
+    <a href="tr-research.html" class="tr-nav-link">Research</a>
+    <a href="tr-documents.html" class="tr-nav-link">Documents</a>
+    <a href="tr-billing.html" class="tr-nav-link">Billing</a>
+    <a href="TRdemoPortal.html" class="tr-nav-link tr-nav-right">Logout</a>
+  </nav>
+
+  <main class="tr-main">
+    <section class="tr-grid">
+      <div class="tr-card">
+        <h3>Welcome back</h3>
+        <p class="tr-muted">
+          Quickly jump into research, review CoCounsel Tax insights, or pick up where you left off.
+        </p>
+        <button class="tr-btn-primary" onclick="window.location.href='tr-research.html'">
+          Start a new tax research query
+        </button>
+      </div>
+
+      <div class="tr-card">
+        <h4>Recent CoCounsel Tasks</h4>
+        <ul class="tr-list">
+          <li>Analyzed NOL carryback implications for corporate client</li>
+          <li>Summarized IRS Notice 2023-14 for internal newsletter</li>
+          <li>Reviewed state conformity for bonus depreciation</li>
+        </ul>
+      </div>
+
+      <div class="tr-card">
+        <h4>Open Items</h4>
+        <ul class="tr-list">
+          <li>Client: Apex Manufacturing – waiting on confirmation re: §199A treatment</li>
+          <li>Client: Westbridge Partners – pending review of state apportionment memo</li>
+        </ul>
+      </div>
+
+      <div class="tr-card">
+        <h4>System Status</h4>
+        <p class="tr-status-ok">All systems operational</p>
+        <p class="tr-muted">CoCounsel Tax · Document Intelligence · Research AI</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Genesys Web Messenger -->
+  <script type="text/javascript" charset="utf-8">
+    (function (g, e, n, es, ys) {
+      g['_genesysJs'] = e;
+      g[e] = g[e] || function () {
+        (g[e].q = g[e].q || []).push(arguments)
+      };
+      g[e].t = 1 * new Date();
+      g[e].c = es;
+      ys = document.createElement('script');
+      ys.async = 1;
+      ys.src = n;
+      ys.charset = 'utf-8';
+      document.head.appendChild(ys);
+    })(window, 'Genesys', 'https://apps.mypurecloud.com/genesys-bootstrap/genesys.min.js', {
+      environment: 'prod',
+      deploymentId: '0042b643-9e47-4c81-b7c3-fbe66fb52dd8'
+    });
+  </script>
+</body>
+</html>
