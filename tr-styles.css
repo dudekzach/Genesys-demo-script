@@ -173,6 +173,7 @@
 /* Inputs & Buttons */
 .tr-input {
   width: 100%;
+  box-sizing: border-box;    /* <<< Add this line */
   padding: 10px 12px;
   margin: 8px 0;
   border-radius: 8px;
