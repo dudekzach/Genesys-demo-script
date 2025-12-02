@@ -341,3 +341,14 @@
     height: 48px;   /* phones */
   }
 }
+
+/* Responsive layout for Documents page */
+@media (max-width: 768px) {
+  .tr-layout-2col {
+    grid-template-columns: 1fr;   /* stack vertical on smaller screens */
+  }
+
+  .tr-doc-preview {
+    margin-top: 12px;             /* small spacing between list and preview */
+  }
+}
