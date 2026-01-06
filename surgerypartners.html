@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Surgery Partners — Appointment Scheduling Script</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Inline CSS variables (defaults can be overridden via URL params) -->
+  <style>
+    :root{
+      /* Brand-aligned defaults (navy/white) */
+      --header-color: #243458;            /* {{HeaderColor}} default */
+      --button-color: #243458;            /* {{ButtonColor}} default */
+      --page-bg-color: #f6f8fb;           /* {{PageBackgroundColor}} soft gray/white */
+      --text-color: #1c2744;
+      --card-bg: #ffffff;
+      --border-soft: #e6e9ef;
+      --success: #16a34a;
+      --warning: #f59e0b;
+      --danger: #dc2626;
+      --info: #0ea5e9;
+      --muted: #6b7280;
+    }
+
+    html, body { height: 100%; background: var(--page-bg-color); color: var(--text-color); }
+    body { -webkit-font-smoothing: antialiased; }
+
+    /* App frame */
+    .app-shell { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--header-color);
+      color: #fff;
+      padding: 1rem;
+      box-shadow: 2px 0 12px rgba(0,0,0,.08);
+    }
+    .brand {
+      display:flex; align-items:center; gap:.6rem; margin-bottom:1rem;
+    }
+    .brand-badge{
+      width:36px;height:36px;border-radius:10px;background:#fff1; display:grid;place-items:center;
+      border:1px solid #ffffff22; color:#fff;
+      font-weight:700; letter-spacing:.5px;
+    }
+    .sidebar .nav-link{
+      color:#ffffffcc; border-radius:10px; padding:.6rem .75rem; font-weight:600;
+    }
+    .sidebar .nav-link.active, .sidebar .nav-link:hover{
+      color:#0d1117; background:#ffffff; box-shadow:0 4px 12px rgba(255,255,255,.15);
+    }
+
+    /* Header */
+    .page-header{
+      background: linear-gradient(180deg, var(--header-color), #1c2a4a);
+      color:#fff; border-bottom:1px solid #00000010;
+    }
+    .page-header h1{ font-size:1.3rem; margin:0; }
+
+    /* Cards */
+    .card{
+      background: var(--card-bg);
+      border:1px solid var(--border-soft);
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.05);
+    }
+    .card .card-header{
+      background: transparent; border-bottom:1px solid var(--border-soft);
+      font-weight:700; color:#1c2744;
+    }
+
+    /* Tabs */
+    .nav-tabs{
+      border:0; gap:.5rem; flex-wrap:wrap;
+    }
+    .nav-tabs .nav-link{
+      border:1px solid var(--border-soft);
+      color:#1c2744; border-radius:12px; font-weight:600; background:#fff;
+    }
+    .nav-tabs .nav-link.active{
+      background: var(--button-color); color:#fff; border-color: transparent;
+      box-shadow: 0 6px 18px rgba(36,52,88,.25);
+    }
+
+    /* Buttons */
+    .btn-primary{ background: var(--button-color); border-color: var(--button-color); }
+    .btn-outline-primary{ color: var(--button-color); border-color: var(--button-color); }
+    .btn-outline-primary:hover{ background:var(--button-color); color:#fff; }
+
+    /* Small helpers */
+    .readonly { background:#f9fafb; }
+    .kpi { font-weight:700; color:var(--header-color); }
+
+    /* Mobile responsiveness / iFrame safety */
+    @media (max-width: 991.98px){
+      .app-shell{ grid-template-columns: 1fr; }
+      .sidebar{ position:sticky; top:0; z-index:1020; border-bottom:1px solid #ffffff22; border-right:0; border-radius:0 0 16px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header class="page-header py-2 px-3 d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center gap-2">
+      <div class="rounded-3 bg-white d-inline-flex align-items-center justify-content-center" style="width:34px;height:34px;">
+        <span style="color:var(--header-color); font-weight:800;">SP</span>
+      </div>
+      <h1 class="mb-0">Appointment Scheduling — <span id="RoleTitle">Healthcare Agent</span></h1>
+    </div>
+    <small class="opacity-75">Interaction: <span id="InteractionID" class="kpi">—</span></small>
+  </header>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">SP</div>
+        <div>
+          <div style="font-weight:800; line-height:1;">Surgery Partners</div>
+          <small class="opacity-75">Agent Script</small>
+        </div>
+      </div>
+
+      <nav class="nav flex-column" id="SideLinks">
+        <a class="nav-link active" data-bs-toggle="tab" href="#tab-caller">Caller Info</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#tab-checklist">Call Checklist</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#tab-preferences">Contact Preferences</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#tab-scheduling">Scheduling</a>
+        <a class="nav-link" data-bs-toggle="tab" href="#tab-confirm">Confirmation</a>
+      </nav>
+
+      <hr class="border-light my-3 opacity-25">
+      <div class="d-grid gap-2">
+        <button id="BtnCreateCase" class="btn btn-light text-start">
+          <span id="Button1TEXT">Create Case</span>
+        </button>
+        <button id="BtnNotifySup" class="btn btn-outline-light text-start">
+          <span id="Button2TEXT">Notify Supervisor</span>
+        </button>
+        <button id="BtnEscalate" class="btn btn-warning text-start text-dark" data-bs-toggle="modal" data-bs-target="#EscalationModal">
+          Escalate
+        </button>
+      </div>
+
+      <div class="mt-3">
+        <small class="opacity-75 d-block">ANI: <span id="ANI" class="fw-bold">—</span></small>
+        <small class="opacity-75 d-block">Caller ID: <span id="CallerID" class="fw-bold">—</span></small>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="p-3">
+      <!-- Tabs -->
+      <ul class="nav nav-tabs mb-3" id="MainTabs" role="tablist">
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-caller" type="button">Caller Info</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-checklist" type="button">Call Checklist</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-preferences" type="button">Contact Preferences</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-scheduling" type="button">Scheduling</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-confirm" type="button">Confirmation</button></li>
+      </ul>
+
+      <div class="tab-content">
+
+        <!-- Caller Info -->
+        <section class="tab-pane fade show active" id="tab-caller">
+          <div class="card mb-3">
+            <div class="card-header">Caller Information</div>
+            <div class="card-body row g-3">
+              <div class="col-md-4">
+                <label class="form-label">First Name</label>
+                <input id="FNAME" class="form-control readonly" type="text" readonly>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Last Name</label>
+                <input id="LNAME" class="form-control readonly" type="text" readonly>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Date of Birth</label>
+                <input id="DOB" class="form-control readonly" type="text" readonly>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label">Phone</label>
+                <input id="PHONE" class="form-control readonly" type="text" readonly>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Email</label>
+                <input id="EMAIL" class="form-control readonly" type="text" readonly>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Member ID</label>
+                <input id="MEMBERID" class="form-control readonly" type="text" readonly>
+              </div>
+
+              <div class="col-12">
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                  <div class="me-2">ℹ️</div>
+                  <div>Read-only fields are injected via URL query string for iFrame-safe scripts.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Checklist -->
+        <section class="tab-pane fade" id="tab-checklist">
+          <div class="card mb-3">
+            <div class="card-header">Call Checklist</div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input checklist-toggle" type="checkbox" id="chkVerifyIdentity">
+                    <label class="form-check-label" for="chkVerifyIdentity">Identity verified</label>
+                  </div>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input checklist-toggle" type="checkbox" id="chkInsurance">
+                    <label class="form-check-label" for="chkInsurance">Insurance confirmed</label>
+                  </div>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input checklist-toggle" type="checkbox" id="chkConsent">
+                    <label class="form-check-label" for="chkConsent">Consent & disclosures read</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input checklist-toggle" type="checkbox" id="chkSymptoms">
+                    <label class="form-check-label" for="chkSymptoms">Symptoms captured</label>
+                  </div>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input checklist-toggle" type="checkbox" id="chkAvailability">
+                    <label class="form-check-label" for="chkAvailability">Preferred times gathered</label>
+                  </div>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input checklist-toggle" type="checkbox" id="chkFacility">
+                    <label class="form-check-label" for="chkFacility">Facility preference noted</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <button id="BtnReadDisclaimer" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#DisclaimerModal">
+                  Read Disclosures
+                </button>
+                <span id="ChecklistStatus" class="badge bg-secondary ms-2">Incomplete</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Preferences -->
+        <section class="tab-pane fade" id="tab-preferences">
+          <div class="card mb-3">
+            <div class="card-header">Contact Preferences</div>
+            <div class="card-body row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Preferred Contact Method</label>
+                <select id="PrefMethod" class="form-select">
+                  <option value="Phone">Phone</option>
+                  <option value="Text">Text</option>
+                  <option value="Email">Email</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Best Time to Reach</label>
+                <input id="PrefTime" class="form-control" type="text" placeholder="Morning / Afternoon / Evening">
+              </div>
+              <div class="col-12">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="PrefMarketing">
+                  <label class="form-check-label" for="PrefMarketing">Consent to receive reminders and updates</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Scheduling -->
+        <section class="tab-pane fade" id="tab-scheduling">
+          <div class="card mb-3">
+            <div class="card-header">Scheduling</div>
+            <div class="card-body row g-3">
+              <div class="col-md-4">
+                <label class="form-label">Preferred Facility</label>
+                <input id="Facility" class="form-control" type="text" placeholder="e.g., Center Name">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Procedure</label>
+                <input id="Procedure" class="form-control" type="text" placeholder="e.g., Endoscopy">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Urgency</label>
+                <select id="Urgency" class="form-select">
+                  <option>Routine</option>
+                  <option>Priority</option>
+                  <option>Urgent</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Preferred Date</label>
+                <input id="PrefDate" class="form-control" type="date">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Preferred Time Window</label>
+                <select id="PrefWindow" class="form-select">
+                  <option>Morning</option>
+                  <option>Afternoon</option>
+                  <option>Evening</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <div id="SchedHint" class="alert alert-warning d-none">Complete all checklist items before scheduling.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Confirmation -->
+        <section class="tab-pane fade" id="tab-confirm">
+          <div class="card mb-3">
+            <div class="card-header">Confirmation</div>
+            <div class="card-body">
+              <p class="text-muted mb-3">Review key details and submit.</p>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="p-3 border rounded-3 bg-light">
+                    <div class="fw-bold mb-2">Caller</div>
+                    <div><span id="SummaryName">—</span></div>
+                    <div><span id="SummaryPhone">—</span></div>
+                    <div><span id="SummaryEmail">—</span></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="p-3 border rounded-3 bg-light">
+                    <div class="fw-bold mb-2">Appointment</div>
+                    <div>Facility: <span id="SummaryFacility">—</span></div>
+                    <div>Procedure: <span id="SummaryProcedure">—</span></div>
+                    <div>Date/Time: <span id="SummaryWhen">—</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex gap-2 mt-3">
+                <button id="BtnCreateCase2" class="btn btn-outline-primary">
+                  <span id="Button1TEXT_Footer">Create Case</span>
+                </button>
+                <button id="BtnNotifySup2" class="btn btn-outline-secondary">
+                  <span id="Button2TEXT_Footer">Notify Supervisor</span>
+                </button>
+                <button id="BtnSubmit" class="btn btn-primary">
+                  <span id="Button3TEXT">Submit</span>
+                </button>
+              </div>
+
+              <div id="SubmitToast" class="toast align-items-center text-bg-success border-0 position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" style="z-index:2000;">
+                <div class="d-flex">
+                  <div class="toast-body">Submission sent to parent iFrame.</div>
+                  <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Disclaimer Modal -->
+  <div class="modal fade" id="DisclaimerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+        <div class="modal-header">
+          <h5 class="modal-title">Disclosures & Consent</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Please review disclosures with the caller. By proceeding, the caller consents to appointment coordination and follow-up communications.</p>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="AckDisclaimer">
+            <label class="form-check-label" for="AckDisclaimer">I read the disclosures to the caller.</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="BtnSaveDisclaimer" class="btn btn-primary" data-bs-dismiss="modal" disabled>Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Escalation Modal -->
+  <div class="modal fade" id="EscalationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+        <div class="modal-header">
+          <h5 class="modal-title">Escalation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Reason</label>
+            <select id="EscReason" class="form-select">
+              <option>Clinical concern</option>
+              <option>Insurance issue</option>
+              <option>Scheduling conflict</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Notes</label>
+            <textarea id="EscNotes" class="form-control" rows="3" placeholder="Brief context for supervisor"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="BtnSendEscalation" class="btn btn-warning text-dark">Send Escalation</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Inline JS: URL param injection, show/hide logic, iFrame-safe messaging -->
+  <script>
+    // --- Utilities ---
+    function getParam(name){
+      const q = new URLSearchParams(location.search);
+      // Support {{VAR}} style names too by stripping braces if passed
+      const normalized = name.replace(/[{}]/g, '');
+      return q.get(name) ?? q.get(normalized) ?? '';
+    }
+    function setIf(id, val){ const el = document.getElementById(id); if(el) el.value = val || ''; }
+    function setText(id, val){ const el = document.getElementById(id); if(el) el.textContent = val || '—'; }
+
+    // --- Theming via URL overrides ---
+    function applyTheme(){
+      const root = document.documentElement.style;
+      const header = getParam('HeaderColor');
+      const button = getParam('ButtonColor');
+      const pagebg = getParam('PageBackgroundColor');
+      if(header) root.setProperty('--header-color', header);
+      if(button) root.setProperty('--button-color', button);
+      if(pagebg) root.setProperty('--page-bg-color', pagebg);
+    }
+
+    // --- Populate read-only injected fields ---
+    function injectCaller(){
+      setIf('FNAME', getParam('FNAME'));
+      setIf('LNAME', getParam('LNAME'));
+      setIf('DOB', getParam('DOB'));
+      setIf('PHONE', getParam('PHONE'));
+      setIf('EMAIL', getParam('EMAIL'));
+      setIf('MEMBERID', getParam('MEMBERID'));
+
+      setText('ANI', getParam('ANI') || getParam('PHONE'));
+      setText('CallerID', getParam('CALLERID'));
+      setText('InteractionID', getParam('INTERACTIONID') || getParam('INTRID') || getParam('IXNID') || '—');
+
+      setText('RoleTitle', getParam('ROLE') || 'Healthcare Agent');
+    }
+
+    // --- Dynamic button labels ---
+    function applyButtonText(){
+      const b1 = getParam('Button1TEXT') || 'Create Case';
+      const b2 = getParam('Button2TEXT') || 'Notify Supervisor';
+      const b3 = getParam('Button3TEXT') || 'Submit';
+      ['Button1TEXT','Button1TEXT_Footer'].forEach(id => setText(id, b1));
+      ['Button2TEXT','Button2TEXT_Footer'].forEach(id => setText(id, b2));
+      setText('Button3TEXT', b3);
+    }
+
+    // --- Checklist gating logic ---
+    function checklistStatus(){
+      const toggles = Array.from(document.querySelectorAll('.checklist-toggle'));
+      const allOn = toggles.every(t => t.checked);
+      const badge = document.getElementById('ChecklistStatus');
+      if(badge){
+        badge.className = 'badge ' + (allOn ? 'bg-success' : 'bg-secondary');
+        badge.textContent = allOn ? 'Complete' : 'Incomplete';
+      }
+      // Gate scheduling fields
+      document.getElementById('SchedHint')?.classList.toggle('d-none', allOn);
+      // Disable main scheduling inputs when not complete
+      ['Facility','Procedure','Urgency','PrefDate','PrefWindow'].forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.disabled = !allOn;
+      });
+      return allOn;
+    }
+
+    // --- Disclaimer modal logic ---
+    function wireDisclaimer(){
+      const chk = document.getElementById('AckDisclaimer');
+      const save = document.getElementById('BtnSaveDisclaimer');
+      if(chk && save){
+        chk.addEventListener('change', ()=> save.disabled = !chk.checked);
+        save.addEventListener('click', ()=> {
+          // Mark checklist item if needed
+          const consent = document.getElementById('chkConsent');
+          if(consent && chk.checked) { consent.checked = true; checklistStatus(); }
+        });
+      }
+    }
+
+    // --- Escalation & Submit messaging (iFrame-safe) ---
+    function safePost(type, payload){
+      try{
+        // Do not assume cross-origin; send to parent safely
+        window.parent && window.parent.postMessage({ source:'GenesysScript', type, payload }, '*');
+      }catch(e){ console.log('postMessage skipped', e); }
+    }
+
+    function wireActions(){
+      const toastEl = document.getElementById('SubmitToast');
+      const toast = toastEl ? new bootstrap.Toast(toastEl) : null;
+
+      const createCase = ()=> safePost('create_case', {
+        fname:getParam('FNAME'), lname:getParam('LNAME'),
+        phone:getParam('PHONE'), email:getParam('EMAIL'),
+        interactionId:getParam('INTERACTIONID')
+      });
+      const notifySup = ()=> safePost('notify_supervisor', { reason:'agent_request', interactionId:getParam('INTERACTIONID') });
+      const submit = ()=> {
+        // Build summary
+        const details = {
+          caller:{ fname:getParam('FNAME'), lname:getParam('LNAME'), phone:getParam('PHONE'), email:getParam('EMAIL') },
+          appointment:{
+            facility: document.getElementById('Facility')?.value || '',
+            procedure: document.getElementById('Procedure')?.value || '',
+            date: document.getElementById('PrefDate')?.value || '',
+            window: document.getElementById('PrefWindow')?.value || ''
+          },
+          preferences:{
+            method: document.getElementById('PrefMethod')?.value || '',
+            time: document.getElementById('PrefTime')?.value || '',
+            marketing: document.getElementById('PrefMarketing')?.checked || false
+          }
+        };
+        safePost('submit', details);
+        toast && toast.show();
+      };
+
+      // Bind buttons (both sidebar and footer)
+      document.getElementById('BtnCreateCase')?.addEventListener('click', createCase);
+      document.getElementById('BtnCreateCase2')?.addEventListener('click', createCase);
+      document.getElementById('BtnNotifySup')?.addEventListener('click', notifySup);
+      document.getElementById('BtnNotifySup2')?.addEventListener('click', notifySup);
+      document.getElementById('BtnSubmit')?.addEventListener('click', submit);
+
+      document.getElementById('BtnSendEscalation')?.addEventListener('click', ()=>{
+        safePost('escalate', {
+          reason: document.getElementById('EscReason')?.value || '',
+          notes: document.getElementById('EscNotes')?.value || '',
+          interactionId:getParam('INTERACTIONID')
+        });
+        const modal = bootstrap.Modal.getInstance(document.getElementById('EscalationModal'));
+        modal && modal.hide();
+      });
+    }
+
+    // --- Populate Confirmation summary ---
+    function populateSummary(){
+      const fullName = [getParam('FNAME'), getParam('LNAME')].filter(Boolean).join(' ');
+      setText('SummaryName', fullName || '—');
+      setText('SummaryPhone', getParam('PHONE'));
+      setText('SummaryEmail', getParam('EMAIL'));
+      const facility = document.getElementById('Facility')?.value || '—';
+      const procedure = document.getElementById('Procedure')?.value || '—';
+      const when = (document.getElementById('PrefDate')?.value || '—') + ' ' + (document.getElementById('PrefWindow')?.value || '');
+      setText('SummaryFacility', facility);
+      setText('SummaryProcedure', procedure);
+      setText('SummaryWhen', when.trim());
+    }
+
+    // --- Step changes update summary live ---
+    function wireLiveSummary(){
+      ['Facility','Procedure','PrefDate','PrefWindow'].forEach(id=>{
+        const el = document.getElementById(id);
+        el && el.addEventListener('input', populateSummary);
+        el && el.addEventListener('change', populateSummary);
+      });
+    }
+
+    // --- Init ---
+    document.addEventListener('DOMContentLoaded', ()=>{
+      applyTheme();
+      injectCaller();
+      applyButtonText();
+      document.querySelectorAll('.checklist-toggle').forEach(el => el.addEventListener('change', checklistStatus));
+      checklistStatus();
+      wireDisclaimer();
+      wireActions();
+      wireLiveSummary();
+      populateSummary();
+
+      // Make sidebar links reflect active tab
+      document.querySelectorAll('.sidebar .nav-link').forEach(link=>{
+        link.addEventListener('shown.bs.tab', ()=>{
+          document.querySelectorAll('.sidebar .nav-link').forEach(a=>a.classList.remove('active'));
+          link.classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
