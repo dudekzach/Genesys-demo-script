@@ -1,105 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yahoo Support - Inbound Voice Script</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-top: 6px solid #6001d2; /* Yahoo Purple */
-        }
-        h1 { color: #6001d2; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .section { margin-bottom: 25px; padding: 15px; border-left: 4px solid #6001d2; background: #f9f9ff; }
-        .step-title { font-weight: bold; color: #444; text-transform: uppercase; font-size: 0.9em; margin-bottom: 10px; display: block; }
-        .script-box { font-style: italic; color: #2c3e50; font-size: 1.1em; }
-        .action-items { margin-top: 10px; background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 4px; }
-        .badge { display: inline-block; padding: 2px 8px; background: #6001d2; color: white; border-radius: 12px; font-size: 0.8em; margin-bottom: 5px; }
-        .alert { background: #fff3cd; border: 1px solid #ffeeba; padding: 10px; border-radius: 4px; margin-top: 10px; font-size: 0.9em; }
-        button { cursor: pointer; background: #6001d2; color: white; border: none; padding: 10px 15px; border-radius: 4px; transition: 0.3s; }
-        button:hover { background: #4a00a0; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Yahoo - Email Lockout Support Script</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #f9f9fb; color: #333; }
+    header { background: #410093; color: #fff; padding: 1rem; text-align: center; }
+    main { padding: 1rem; max-width: 900px; margin: auto; }
+    section { margin-bottom: 2rem; }
+    h2 { color: #410093; }
+    label { display: block; margin: 0.5rem 0 0.25rem; font-weight: 600; }
+    input, select, textarea { width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
+    .checklist { margin-top: 0.5rem; }
+    .checklist label { display: flex; align-items: center; font-weight: normal; }
+    .checklist input[type="checkbox"] { margin-right: 0.5rem; }
+    .panel { border: 1px solid #ccc; border-radius: 6px; background: #fff; margin-top: 1rem; }
+    .panel summary { background: #eee; padding: 0.75rem; cursor: pointer; font-weight: bold; border-radius: 6px 6px 0 0; }
+    .panel-content { padding: 1rem; }
+    button { background: #410093; color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; margin-right: 0.5rem; }
+    button:hover { background: #5c0dcf; }
+    .toast { position: fixed; bottom: 1rem; right: 1rem; background: #333; color: #fff; padding: 1rem; border-radius: 4px; opacity: 0.9; display: none; }
+    .status { font-weight: bold; margin-top: 0.5rem; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
+    .modal-content { background: #fff; padding: 2rem; border-radius: 8px; width: 300px; text-align: center; }
+    .modal button { margin-top: 1rem; width: 100%; }
+  </style>
 </head>
 <body>
+  <!--
+    Scenario: Yahoo customer locked out of email; password reset failed.
+    Demo Talk Track:
+    1. Agent greets and verifies the customer.
+    2. Identifies issue details and recent attempts.
+    3. Simulates pulling account and security status.
+    4. Suggests alternative unlock process.
+    5. Simulates resolution and confirms success.
+    6. Captures wrap-up notes.
+    7. Shows compliance reminders and coaching cues.
 
-<div class="container">
-    <header>
-        <h1>Yahoo Customer Care</h1>
-        <p><strong>Agent Role:</strong> Technical Support & Account Security</p>
-    </header>
+    Key Value Moments:
+    - Simulated account lookup and security status
+    - Coaching cue when escalation might be needed
+    - Modal for confirming secure reset
+    - Reset Demo for instant reuse
+  -->
+  <header>
+    <h1>Yahoo Email Lockout - Agent Support Script</h1>
+  </header>
+  <main>
+    <section>
+      <h2>1. Opening</h2>
+      <p><strong>Script:</strong> "Thank you for calling Yahoo Support. My name is [Your Name]. Who am I speaking with today?"</p>
+      <label for="callerName">Customer Name</label>
+      <input id="callerName" type="text" placeholder="e.g., John Smith" />
+      <div class="checklist">
+        <label><input type="checkbox" /> Greeted customer warmly</label>
+        <label><input type="checkbox" /> Captured customer name</label>
+      </div>
+    </section>
 
-    <hr>
+    <section>
+      <h2>2. Verification</h2>
+      <p><strong>Script:</strong> "For security, I’ll need to verify a few details on your account."</p>
+      <label>Email Address</label><input type="email" placeholder="e.g., john.smith@yahoo.com" />
+      <label>Last 4 digits of recovery phone</label><input type="text" maxlength="4" />
+      <label>Security question answer (if applicable)</label><input type="text" />
+      <div class="checklist">
+        <label><input type="checkbox" /> Verified recovery phone/email</label>
+        <label><input type="checkbox" /> Confirmed identity with security question</label>
+      </div>
+    </section>
 
-    <div class="section">
-        <span class="step-title">1. Opening Script</span>
-        <p class="script-box">
-            "Thank you for calling Yahoo Support. My name is <strong>[Your Name]</strong>. May I start with your first and last name, please?"
-        </p>
-        <div class="action-items">
-            <input type="checkbox"> Confirm spelling of the name.<br>
-            <input type="checkbox"> Ask for the Yahoo email address in question.
-        </div>
+    <section>
+      <h2>3. Discovery</h2>
+      <p><strong>Script:</strong> "Let’s walk through what’s happening. When did the issue begin, and what steps have you already tried?"</p>
+      <label>Issue Description</label>
+      <textarea rows="3" placeholder="Customer describes lockout and password reset attempt"></textarea>
+      <div class="checklist">
+        <label><input type="checkbox" /> Customer attempted password reset</label>
+        <label><input type="checkbox" /> Customer receiving error message</label>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. Resolution</h2>
+      <p><strong>Script:</strong> "Thanks for confirming. I’m going to check your account and walk through a different way to help you regain access."</p>
+      <div class="checklist">
+        <label><input type="checkbox" /> Guided customer through alternative unlock</label>
+        <label><input type="checkbox" /> Confirmed successful login</label>
+      </div>
+      <div class="status" id="unlockStatus">Status: Awaiting action</div>
+    </section>
+
+    <section>
+      <h2>5. Confirmation</h2>
+      <p><strong>Script:</strong> "Are you able to log in now? Is everything working as expected?"</p>
+      <label>Customer Confirmation</label>
+      <select>
+        <option value="">Select...</option>
+        <option>Yes, issue resolved</option>
+        <option>No, needs further help</option>
+      </select>
+    </section>
+
+    <section>
+      <h2>6. Wrap-Up</h2>
+      <p><strong>Script:</strong> "I’m glad we got that sorted. Is there anything else I can help with before we finish?"</p>
+      <label>Agent Notes</label>
+      <textarea rows="3" placeholder="Summary of issue and actions taken"></textarea>
+      <button onclick="resetDemo()">Reset Demo</button>
+    </section>
+
+    <details class="panel">
+      <summary>SYSTEM ACTIONS</summary>
+      <div class="panel-content">
+        <button onclick="pullAccount()">Pull Account</button>
+        <button onclick="retrieveSecurityStatus()">Check Security Status</button>
+        <button onclick="confirmUnlock()">Securely Unlock Account</button>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>CUSTOMER CONTEXT</summary>
+      <div class="panel-content">
+        <p><strong>Name:</strong> John Smith</p>
+        <p><strong>Email:</strong> john.smith@yahoo.com</p>
+        <p><strong>Account Status:</strong> <span id="accountStatus">Unknown</span></p>
+        <p><strong>Last Login Attempt:</strong> Jan 4, 2026 - Failed</p>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>COMPLIANCE & COACHING</summary>
+      <div class="panel-content">
+        <p>🛡️ <strong>Reminder:</strong> Never ask for full passwords or PINs.</p>
+        <p>💡 <strong>Coaching:</strong> If 2+ reset attempts fail, escalate to Tier 2 Support.</p>
+      </div>
+    </details>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <p>Confirm secure unlock of this account?</p>
+      <button onclick="finalizeUnlock()">Yes, Unlock</button>
+      <button onclick="closeModal()">Cancel</button>
     </div>
+  </div>
 
-    <div class="section" style="border-left-color: #ff9900;">
-        <span class="step-title">2. Verification (Security First)</span>
-        <div class="badge">REQUIRED</div>
-        <p class="script-box">
-            "For your security, I’ve sent a verification code to your recovery [phone/email]. Could you please read that back to me?"
-        </p>
-        <div class="alert">
-            <strong>Pro-Tip:</strong> If they cannot access recovery info, pivot to <em>Account Recovery Specialist</em> transfer or the <em>Sign-in Helper</em> tool.
-        </div>
-    </div>
+  <script>
+    const state = {
+      accountPulled: false,
+      securityStatus: '',
+      unlocked: false
+    };
 
-    <div class="section">
-        <span class="step-title">3. Empathy & Discovery</span>
-        <p class="script-box">
-            "I understand how important it is to get back into your account. Can you tell me exactly what happens when you try to sign in?"
-        </p>
-        <div class="action-items">
-            <strong>Common Issues:</strong>
-            <ul>
-                <li>Forgotten Password</li>
-                <li>Account Locked (Too many attempts)</li>
-                <li>Spam/Hacking concerns</li>
-                <li>Yahoo Mail Sync (Mobile App)</li>
-            </ul>
-        </div>
-    </div>
+    function showToast(message, color = '#333') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.background = color;
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display = 'none', 3000);
+    }
 
-    <div class="section">
-        <span class="step-title">4. The Solution</span>
-        <p class="script-box">
-            "I am going to guide you through the <strong>[Procedure Name]</strong> now. Please keep the window open while we complete this..."
-        </p>
-        <button onclick="alert('Guidance: Walk user through password reset or clear browser cache.')">View Troubleshooting Steps</button>
-    </div>
+    function pullAccount() {
+      showToast('Pulling account info...');
+      setTimeout(() => {
+        state.accountPulled = true;
+        document.getElementById('accountStatus').textContent = 'Locked';
+        showToast('Account data retrieved', '#410093');
+      }, 1000);
+    }
 
-    <div class="section">
-        <span class="step-title">5. Closing & Survey</span>
-        <p class="script-box">
-            "Is there anything else I can assist you with today, <strong>[Customer Name]</strong>? ... Thank you for choosing Yahoo. You may receive a short survey regarding my performance; we’d love to hear your feedback. Have a great day!"
-        </p>
-    </div>
+    function retrieveSecurityStatus() {
+      if (!state.accountPulled) {
+        showToast('Error: Pull account first.', 'darkred');
+        return;
+      }
+      showToast('Checking security settings...');
+      setTimeout(() => {
+        state.securityStatus = 'Password reset blocked due to suspicious activity';
+        showToast('Security status updated', '#410093');
+        document.getElementById('unlockStatus').textContent = 'Status: Manual unlock required';
+      }, 1000);
+    }
 
-    <footer style="text-align: center; font-size: 0.8em; color: #888; margin-top: 40px;">
-        &copy; 2026 Yahoo Internal Training - Confidential
-    </footer>
-</div>
+    function confirmUnlock() {
+      if (!state.accountPulled) {
+        showToast('Error: Pull account first.', 'darkred');
+        return;
+      }
+      document.getElementById('modal').style.display = 'flex';
+    }
 
+    function finalizeUnlock() {
+      state.unlocked = true;
+      document.getElementById('modal').style.display = 'none';
+      document.getElementById('unlockStatus').textContent = 'Status: Account unlocked';
+      showToast('Account successfully unlocked', '#28a745');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    function resetDemo() {
+      location.reload();
+    }
+  </script>
 </body>
 </html>
