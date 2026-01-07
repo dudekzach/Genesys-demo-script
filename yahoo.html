@@ -2,318 +2,328 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Yahoo Email Lockout Support Script</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yahoo! – Email Unlock Support Script</title>
   <style>
+    :root {
+      --primary: #6001d2;
+      --primary-light: #f3edfa;
+      --bg: #fafbfc;
+      --card-bg: #fff;
+      --text-main: #23004d;
+      --text-muted: #646a77;
+      --radius: 14px;
+      --shadow: 0 4px 16px rgba(48,0,77,0.06);
+      --danger: #c62828;
+      --danger-light: #fbeaea;
+    }
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f5f7fa;
-      padding: 24px;
-      color: #333;
+      background: var(--bg);
+      font-family: "Segoe UI", "Arial", sans-serif;
+      color: var(--text-main);
+      padding: 20px 10px;
     }
-    .app-container {
-      max-width: 1300px;
+    .container {
+      max-width: 1120px;
       margin: auto;
-      background: #fff;
-      padding: 24px;
-      border-radius: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
-    h2 {
-      margin-top: 0;
+    .header {
+      background: var(--primary);
+      color: #fff;
+      padding: 18px 28px;
+      border-radius: var(--radius);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 26px;
+      text-align: center;
+      letter-spacing: 0.01em;
+    }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      border-bottom: 2px solid #e3dcf5;
+      margin-bottom: 18px;
+    }
+    .tab {
+      padding: 12px 18px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 3px solid transparent;
+      background: none;
+      transition: color 0.18s, border-bottom 0.18s;
+      white-space: nowrap;
+    }
+    .tab.active {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      background: var(--primary-light);
     }
     .card {
-      background: #fafbfd;
-      border: 1px solid #e0e6ed;
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 24px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      background: var(--card-bg);
+      padding: 26px 20px;
+      margin-bottom: 18px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
     }
-    .card h3 {
+    h3 {
       margin-top: 0;
-    }
-    .section-content {
-      display: grid;
-      gap: 16px;
+      color: var(--primary);
+      font-size: 1.13rem;
+      font-weight: 700;
+      margin-bottom: 16px;
     }
     label {
       display: block;
+      font-size: 0.89rem;
+      margin-bottom: 7px;
       font-weight: 600;
-      margin-bottom: 4px;
+      color: var(--text-muted);
     }
-    input, select, button, textarea {
+    input, select {
       width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid #ccd6e0;
-      font-size: 14px;
+      padding: 12px;
+      border: 1px solid #d2b5f7;
+      border-radius: var(--radius);
+      margin-bottom: 18px;
+      font-size: 1rem;
+      box-sizing: border-box;
     }
-    input:focus, select:focus, button:focus, textarea:focus {
-      outline: none;
-      border-color: #5b9df9;
-      box-shadow: 0 0 0 2px rgba(91, 157, 249, 0.2);
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
     }
-    button {
-      background-color: #5b9df9;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s ease;
+    @media (max-width: 750px) {
+      .grid-2 { grid-template-columns: 1fr; }
     }
-    button:hover {
-      background-color: #4a8ae0;
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-bottom: 16px;
+      font-size: 1.01rem;
     }
-    .checklist {
+    .check-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      accent-color: var(--primary);
+    }
+    .actions {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 14px;
+      margin-top: 18px;
     }
-    .checklist label {
-      font-weight: normal;
-    }
-    .collapsible {
-      background: none;
+    .btn {
+      padding: 15px;
+      border-radius: var(--radius);
       border: none;
-      color: #3367d6;
-      font-weight: 600;
+      font-size: 1.01rem;
+      font-weight: 700;
       cursor: pointer;
-      padding: 0;
-      margin-top: 8px;
+      transition: background 0.17s;
     }
-    .collapsible:focus {
-      outline: none;
-      text-decoration: underline;
-    }
-    .collapsible-content {
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: #410b87; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { background: #982020; }
+    .supervisor-card {
+      background: var(--danger-light);
+      border-left: 4px solid var(--danger);
+      padding: 14px 16px;
+      margin-top: 10px;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
       display: none;
-      margin-top: 12px;
-      padding: 12px;
-      background: #f0f4fa;
-      border-left: 4px solid #3367d6;
-      border-radius: 8px;
+    }
+    .supervisor-option {
+      padding: 7px 0;
+      cursor: pointer;
+      font-size: 0.96rem;
+    }
+    .supervisor-option:hover { text-decoration: underline; }
+    .timeline {
+      border-left: 3px solid var(--primary);
+      padding-left: 18px;
+    }
+    .event { margin-bottom: 18px; }
+    .event .date { font-size: 0.82rem; font-weight: 600; color: var(--primary); }
+    .event .type {
+      font-size: 0.8rem;
+      background: var(--primary-light);
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-block;
+      margin: 3px 0;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .event .summary { font-size: 0.97rem; color: var(--text-muted); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .toast-container {
+      position: fixed; top: 18px; right: 18px; z-index: 3000;
     }
     .toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #333;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 12px;
+      background: var(--danger);
+      color: #fff;
+      padding: 13px 20px;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(-10px);
       transition: opacity 0.3s, transform 0.3s;
-      z-index: 1000;
+      font-size: 0.96rem;
+      font-weight: 700;
     }
     .toast.show {
       opacity: 1;
       transform: translateY(0);
     }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.3);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-    }
-    .modal {
-      background: white;
-      border-radius: 16px;
-      padding: 24px;
-      max-width: 500px;
-      width: 90%;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    }
-    .modal h4 {
-      margin-top: 0;
-    }
-    .modal-buttons {
-      margin-top: 24px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-    }
   </style>
 </head>
 <body>
-  <!--
-    Scenario: Caller is locked out of Yahoo email, password reset unsuccessful.
-    Talk Track:
-    1. Greet and verify the caller.
-    2. Confirm issue: account lockout and failed reset.
-    3. Identify customer via backup info.
-    4. Simulate backend check & unlock process.
-    5. Provide secure access path.
-    6. Confirm login and satisfaction.
-    7. Close with recap and follow-up option.
-
-    Key Value Moments:
-    - Identity verification workflow
-    - Simulated unlock + error handling
-    - Quick resolution with clear communication
-    - Compliance + coaching expandable panels
-    - Reset Demo option
-  -->
-
-  <div class="app-container">
-    <h2>Yahoo Support Interaction Script</h2>
-
-    <div class="card">
-      <h3>1. Opening</h3>
-      <div class="section-content">
-        <p>"Thank you for contacting Yahoo Support, this is [Agent Name]. May I have your full name and the email address you're calling about today?"</p>
+  <div class="toast-container" id="toastContainer"></div>
+  <div class="container">
+    <div class="header">Yahoo! – Email Unlock Support Script</div>
+    <div class="tabs">
+      <div class="tab active" data-tab="context">Caller Context</div>
+      <div class="tab" data-tab="verify">ID Verification</div>
+      <div class="tab" data-tab="workflow">Unlock Workflow</div>
+      <div class="tab" data-tab="prefs">Contact Preferences</div>
+      <div class="tab" data-tab="history">Interaction History</div>
+      <div class="tab" data-tab="supervisor">Supervisor Actions</div>
+    </div>
+    <!-- Caller Context -->
+    <div id="context" class="tab-content active">
+      <div class="card">
+        <h3>Caller Context</h3>
         <div class="grid-2">
-          <div>
-            <label for="callerName">Caller Name</label>
-            <input id="callerName" type="text" />
+          <div><label>Name</label><input id="callerName" placeholder="Caller Name" readonly></div>
+          <div><label>Email Address</label><input id="callerEmail" placeholder="user@yahoo.com" readonly></div>
+          <div><label>Phone Number</label><input id="callerPhone" placeholder="(xxx) xxx-xxxx" readonly></div>
+          <div><label>Last Login</label><input id="lastLogin" placeholder="YYYY-MM-DD HH:MM" readonly></div>
+          <div><label>Account Status</label><input id="accountStatus" value="Locked" readonly></div>
+          <div><label>Location (Last Login)</label><input id="callerLocation" placeholder="City, State or IP" readonly></div>
+        </div>
+      </div>
+    </div>
+    <!-- ID Verification -->
+    <div id="verify" class="tab-content">
+      <div class="card">
+        <h3>ID Verification Checklist</h3>
+        <div class="check-item"><input type="checkbox">Confirm full name on account</div>
+        <div class="check-item"><input type="checkbox">Confirm recovery phone or email</div>
+        <div class="check-item"><input type="checkbox">Ask most recent login location/device</div>
+        <div class="check-item"><input type="checkbox">Ask security question(s)</div>
+        <div class="check-item"><input type="checkbox">Verify recent activity (e.g., last email sent)</div>
+      </div>
+    </div>
+    <!-- Unlock Workflow -->
+    <div id="workflow" class="tab-content">
+      <div class="card">
+        <h3>Account Unlock Workflow</h3>
+        <div class="check-item"><input type="checkbox">ID verification completed</div>
+        <div class="check-item"><input type="checkbox">Unlock account in Yahoo! admin tools</div>
+        <div class="check-item"><input type="checkbox">Reset account password (if required)</div>
+        <div class="check-item"><input type="checkbox">Notify caller of next steps</div>
+        <div class="check-item"><input type="checkbox">Log case and notes in CRM</div>
+        <div class="actions">
+          <button class="btn btn-danger" onclick="toggleSupervisorCard()">Escalate to Supervisor</button>
+          <div id="supervisorCard" class="supervisor-card">
+            <div class="supervisor-option">Request Supervisor Join</div>
+            <div class="supervisor-option">Flag for Fraud/Abuse Review</div>
+            <div class="supervisor-option">Transfer to Yahoo! Security</div>
           </div>
-          <div>
-            <label for="email">Yahoo Email Address</label>
-            <input id="email" type="email" />
-          </div>
         </div>
       </div>
     </div>
-
-    <div class="card">
-      <h3>2. Verification</h3>
-      <div class="section-content">
-        <p>"To keep your account secure, I’ll need to verify some information."</p>
-        <div class="checklist">
-          <label><input type="checkbox" /> Last 4 digits of recovery phone number</label>
-          <label><input type="checkbox" /> Backup email address</label>
-          <label><input type="checkbox" /> Last successful login location</label>
-        </div>
-        <button onclick="simulateVerification()">Verify Identity</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>3. Discovery</h3>
-      <div class="section-content">
-        <p>"Thanks for confirming your identity. Can you describe what happens when you try to sign in?"</p>
-        <textarea rows="3" placeholder="Customer's description of the issue..."></textarea>
-        <div class="checklist">
-          <label><input type="checkbox" /> Password reset attempted</label>
-          <label><input type="checkbox" /> Error message captured</label>
-          <label><input type="checkbox" /> Device/browser confirmed</label>
+    <!-- Contact Preferences -->
+    <div id="prefs" class="tab-content">
+      <div class="card">
+        <h3>Contact Preferences</h3>
+        <div class="check-item"><input type="checkbox" id="prefSMS">SMS</div>
+        <div class="check-item"><input type="checkbox" id="prefEmail">Email</div>
+        <div class="check-item"><input type="checkbox" id="prefVoice" checked>Voice</div>
+        <div class="actions">
+          <button class="btn btn-primary" id="updatePrefsBtn">Update Preferences</button>
         </div>
       </div>
     </div>
-
-    <div class="card">
-      <h3>4. Resolution</h3>
-      <div class="section-content">
-        <p>"I'm going to try and unlock the account from our side. This will take a few moments."</p>
-        <button onclick="simulateUnlock()">Initiate Account Unlock</button>
-        <button onclick="simulateUnlockFail()">Simulate Unlock Failure</button>
-
-        <button class="collapsible" onclick="togglePanel(this)">+ System Actions</button>
-        <div class="collapsible-content">
-          <ul>
-            <li>✔ Verified caller identity</li>
-            <li>✔ Retrieved account lock reason</li>
-            <li>✔ Sent unlock token to recovery email</li>
-            <li>✔ Confirmed token delivery and login success</li>
-          </ul>
+    <!-- Interaction History -->
+    <div id="history" class="tab-content">
+      <div class="card">
+        <h3>Interaction History</h3>
+        <div class="timeline">
+          <div class="event"><div class="date">Jan 6, 2026</div><div class="type">Lockout</div><div class="summary">Account locked after failed logins from Chicago, IL.</div></div>
+          <div class="event"><div class="date">Jan 5, 2026</div><div class="type">Support Call</div><div class="summary">Assisted with password reset.</div></div>
+          <div class="event"><div class="date">Jan 3, 2026</div><div class="type">Password Reset</div><div class="summary">Password changed successfully.</div></div>
+          <div class="event"><div class="date">Dec 28, 2025</div><div class="type">Security Email</div><div class="summary">Unusual sign-in alert sent to user.</div></div>
         </div>
       </div>
     </div>
-
-    <div class="card">
-      <h3>5. Confirmation</h3>
-      <div class="section-content">
-        <p>"Can you please confirm that you're now able to sign in?"</p>
-        <div class="checklist">
-          <label><input type="checkbox" /> Customer confirmed login success</label>
-          <label><input type="checkbox" /> Walked through additional recovery options</label>
-        </div>
-        <button class="collapsible" onclick="togglePanel(this)">+ Customer Context</button>
-        <div class="collapsible-content">
-          <p>Customer recently traveled. Login attempts from new IP flagged as suspicious. Frequent password resets noted.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>6. Wrap-Up</h3>
-      <div class="section-content">
-        <p>"I’m glad we got you back into your account. Is there anything else I can assist you with today?"</p>
-        <div class="checklist">
-          <label><input type="checkbox" /> Offered help articles</label>
-          <label><input type="checkbox" /> Provided support case number</label>
-          <label><input type="checkbox" /> Thanked the customer</label>
-        </div>
-        <button class="collapsible" onclick="togglePanel(this)">+ Compliance / Coaching</button>
-        <div class="collapsible-content">
-          <ul>
-            <li>✅ Verified 2+ pieces of customer information</li>
-            <li>✅ No PII repeated back unnecessarily</li>
-            <li>✅ Clear confirmation of successful outcome</li>
-            <li>✅ Offered follow-up assistance</li>
-          </ul>
-        </div>
-        <button onclick="resetDemo()" style="margin-top: 16px; background: #999;">Reset Demo</button>
+    <!-- Supervisor Actions -->
+    <div id="supervisor" class="tab-content">
+      <div class="card">
+        <h3>Supervisor Actions & Notes</h3>
+        <div class="check-item"><input type="checkbox">Supervisor joined call</div>
+        <div class="check-item"><input type="checkbox">Case flagged for fraud review</div>
+        <div class="check-item"><input type="checkbox">Escalation notes added to CRM</div>
       </div>
     </div>
   </div>
-
-  <div class="toast" id="toast"></div>
-
-  <div class="modal-backdrop" id="modalBackdrop">
-    <div class="modal">
-      <h4>Unlock Failed</h4>
-      <p>We encountered an error unlocking this account. Please escalate to Tier 2 support.</p>
-      <div class="modal-buttons">
-        <button onclick="closeModal()">Close</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
+    // Tabs
+    const tabs = document.querySelectorAll(".tab");
+    const contents = document.querySelectorAll(".tab-content");
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        contents.forEach(c => c.classList.remove("active"));
+        document.getElementById(tab.dataset.tab).classList.add("active");
+      });
+    });
+    // Supervisor toggle
+    function toggleSupervisorCard() {
+      const card = document.getElementById("supervisorCard");
+      card.style.display = (card.style.display === "block") ? "none" : "block";
     }
-
-    function togglePanel(btn) {
-      const panel = btn.nextElementSibling;
-      panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    window.toggleSupervisorCard = toggleSupervisorCard;
+    // Toast system
+    function showToast(text) {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.innerText = text + " ✓";
+      container.appendChild(toast);
+      setTimeout(() => toast.classList.add("show"), 10);
+      setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+      }, 2600);
     }
-
-    function simulateVerification() {
-      showToast("Identity verified successfully.");
-    }
-
-    function simulateUnlock() {
-      showToast("Account unlocked. Token sent to recovery email.");
-    }
-
-    function simulateUnlockFail() {
-      document.getElementById('modalBackdrop').style.display = 'flex';
-    }
-
-    function closeModal() {
-      document.getElementById('modalBackdrop').style.display = 'none';
-    }
-
-    function resetDemo() {
-      document.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(el => el.value = '');
-      document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
-      document.querySelectorAll('.collapsible-content').forEach(el => el.style.display = 'none');
-      showToast("Demo reset.");
-    }
+    // Supervisor option click events
+    document.addEventListener("DOMContentLoaded", function() {
+      document.querySelectorAll(".supervisor-option").forEach(option => {
+        option.addEventListener("click", () => {
+          showToast(option.innerText.trim());
+          document.getElementById("supervisorCard").style.display = "none";
+        });
+      });
+      const updatePrefsBtn = document.getElementById("updatePrefsBtn");
+      if (updatePrefsBtn) {
+        updatePrefsBtn.addEventListener("click", () => {
+          showToast("Preferences updated");
+        });
+      }
+    });
   </script>
 </body>
 </html>
