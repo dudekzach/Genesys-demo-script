@@ -3,211 +3,316 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Yahoo - Email Lockout Support Script</title>
+  <title>Yahoo Email Lockout Support Script</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #f9f9fb; color: #333; }
-    header { background: #410093; color: #fff; padding: 1rem; text-align: center; }
-    main { padding: 1rem; max-width: 900px; margin: auto; }
-    section { margin-bottom: 2rem; }
-    h2 { color: #410093; }
-    label { display: block; margin: 0.5rem 0 0.25rem; font-weight: 600; }
-    input, select, textarea { width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; border: 1px solid #ccc; border-radius: 4px; }
-    .checklist { margin-top: 0.5rem; }
-    .checklist label { display: flex; align-items: center; font-weight: normal; }
-    .checklist input[type="checkbox"] { margin-right: 0.5rem; }
-    .panel { border: 1px solid #ccc; border-radius: 6px; background: #fff; margin-top: 1rem; }
-    .panel summary { background: #eee; padding: 0.75rem; cursor: pointer; font-weight: bold; border-radius: 6px 6px 0 0; }
-    .panel-content { padding: 1rem; }
-    button { background: #410093; color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; margin-right: 0.5rem; }
-    button:hover { background: #5c0dcf; }
-    .toast { position: fixed; bottom: 1rem; right: 1rem; background: #333; color: #fff; padding: 1rem; border-radius: 4px; opacity: 0.9; display: none; }
-    .status { font-weight: bold; margin-top: 0.5rem; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
-    .modal-content { background: #fff; padding: 2rem; border-radius: 8px; width: 300px; text-align: center; }
-    .modal button { margin-top: 1rem; width: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f7fa;
+      padding: 24px;
+      color: #333;
+    }
+    .app-container {
+      max-width: 1300px;
+      margin: auto;
+      background: #fff;
+      padding: 24px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    h2 {
+      margin-top: 0;
+    }
+    .card {
+      background: #fafbfd;
+      border: 1px solid #e0e6ed;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .card h3 {
+      margin-top: 0;
+    }
+    .section-content {
+      display: grid;
+      gap: 16px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    input, select, button, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #ccd6e0;
+      font-size: 14px;
+    }
+    input:focus, select:focus, button:focus, textarea:focus {
+      outline: none;
+      border-color: #5b9df9;
+      box-shadow: 0 0 0 2px rgba(91, 157, 249, 0.2);
+    }
+    button {
+      background-color: #5b9df9;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background-color: #4a8ae0;
+    }
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .checklist label {
+      font-weight: normal;
+    }
+    .collapsible {
+      background: none;
+      border: none;
+      color: #3367d6;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      margin-top: 8px;
+    }
+    .collapsible:focus {
+      outline: none;
+      text-decoration: underline;
+    }
+    .collapsible-content {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      background: #f0f4fa;
+      border-left: 4px solid #3367d6;
+      border-radius: 8px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #333;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 1000;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .modal h4 {
+      margin-top: 0;
+    }
+    .modal-buttons {
+      margin-top: 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
   </style>
 </head>
 <body>
   <!--
-    Scenario: Yahoo customer locked out of email; password reset failed.
-    Demo Talk Track:
-    1. Agent greets and verifies the customer.
-    2. Identifies issue details and recent attempts.
-    3. Simulates pulling account and security status.
-    4. Suggests alternative unlock process.
-    5. Simulates resolution and confirms success.
-    6. Captures wrap-up notes.
-    7. Shows compliance reminders and coaching cues.
+    Scenario: Caller is locked out of Yahoo email, password reset unsuccessful.
+    Talk Track:
+    1. Greet and verify the caller.
+    2. Confirm issue: account lockout and failed reset.
+    3. Identify customer via backup info.
+    4. Simulate backend check & unlock process.
+    5. Provide secure access path.
+    6. Confirm login and satisfaction.
+    7. Close with recap and follow-up option.
 
     Key Value Moments:
-    - Simulated account lookup and security status
-    - Coaching cue when escalation might be needed
-    - Modal for confirming secure reset
-    - Reset Demo for instant reuse
+    - Identity verification workflow
+    - Simulated unlock + error handling
+    - Quick resolution with clear communication
+    - Compliance + coaching expandable panels
+    - Reset Demo option
   -->
-  <header>
-    <h1>Yahoo Email Lockout - Agent Support Script</h1>
-  </header>
-  <main>
-    <section>
-      <h2>1. Opening</h2>
-      <p><strong>Script:</strong> "Thank you for calling Yahoo Support. My name is [Your Name]. Who am I speaking with today?"</p>
-      <label for="callerName">Customer Name</label>
-      <input id="callerName" type="text" placeholder="e.g., John Smith" />
-      <div class="checklist">
-        <label><input type="checkbox" /> Greeted customer warmly</label>
-        <label><input type="checkbox" /> Captured customer name</label>
+
+  <div class="app-container">
+    <h2>Yahoo Support Interaction Script</h2>
+
+    <div class="card">
+      <h3>1. Opening</h3>
+      <div class="section-content">
+        <p>"Thank you for contacting Yahoo Support, this is [Agent Name]. May I have your full name and the email address you're calling about today?"</p>
+        <div class="grid-2">
+          <div>
+            <label for="callerName">Caller Name</label>
+            <input id="callerName" type="text" />
+          </div>
+          <div>
+            <label for="email">Yahoo Email Address</label>
+            <input id="email" type="email" />
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <section>
-      <h2>2. Verification</h2>
-      <p><strong>Script:</strong> "For security, I’ll need to verify a few details on your account."</p>
-      <label>Email Address</label><input type="email" placeholder="e.g., john.smith@yahoo.com" />
-      <label>Last 4 digits of recovery phone</label><input type="text" maxlength="4" />
-      <label>Security question answer (if applicable)</label><input type="text" />
-      <div class="checklist">
-        <label><input type="checkbox" /> Verified recovery phone/email</label>
-        <label><input type="checkbox" /> Confirmed identity with security question</label>
+    <div class="card">
+      <h3>2. Verification</h3>
+      <div class="section-content">
+        <p>"To keep your account secure, I’ll need to verify some information."</p>
+        <div class="checklist">
+          <label><input type="checkbox" /> Last 4 digits of recovery phone number</label>
+          <label><input type="checkbox" /> Backup email address</label>
+          <label><input type="checkbox" /> Last successful login location</label>
+        </div>
+        <button onclick="simulateVerification()">Verify Identity</button>
       </div>
-    </section>
+    </div>
 
-    <section>
-      <h2>3. Discovery</h2>
-      <p><strong>Script:</strong> "Let’s walk through what’s happening. When did the issue begin, and what steps have you already tried?"</p>
-      <label>Issue Description</label>
-      <textarea rows="3" placeholder="Customer describes lockout and password reset attempt"></textarea>
-      <div class="checklist">
-        <label><input type="checkbox" /> Customer attempted password reset</label>
-        <label><input type="checkbox" /> Customer receiving error message</label>
+    <div class="card">
+      <h3>3. Discovery</h3>
+      <div class="section-content">
+        <p>"Thanks for confirming your identity. Can you describe what happens when you try to sign in?"</p>
+        <textarea rows="3" placeholder="Customer's description of the issue..."></textarea>
+        <div class="checklist">
+          <label><input type="checkbox" /> Password reset attempted</label>
+          <label><input type="checkbox" /> Error message captured</label>
+          <label><input type="checkbox" /> Device/browser confirmed</label>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <section>
-      <h2>4. Resolution</h2>
-      <p><strong>Script:</strong> "Thanks for confirming. I’m going to check your account and walk through a different way to help you regain access."</p>
-      <div class="checklist">
-        <label><input type="checkbox" /> Guided customer through alternative unlock</label>
-        <label><input type="checkbox" /> Confirmed successful login</label>
+    <div class="card">
+      <h3>4. Resolution</h3>
+      <div class="section-content">
+        <p>"I'm going to try and unlock the account from our side. This will take a few moments."</p>
+        <button onclick="simulateUnlock()">Initiate Account Unlock</button>
+        <button onclick="simulateUnlockFail()">Simulate Unlock Failure</button>
+
+        <button class="collapsible" onclick="togglePanel(this)">+ System Actions</button>
+        <div class="collapsible-content">
+          <ul>
+            <li>✔ Verified caller identity</li>
+            <li>✔ Retrieved account lock reason</li>
+            <li>✔ Sent unlock token to recovery email</li>
+            <li>✔ Confirmed token delivery and login success</li>
+          </ul>
+        </div>
       </div>
-      <div class="status" id="unlockStatus">Status: Awaiting action</div>
-    </section>
+    </div>
 
-    <section>
-      <h2>5. Confirmation</h2>
-      <p><strong>Script:</strong> "Are you able to log in now? Is everything working as expected?"</p>
-      <label>Customer Confirmation</label>
-      <select>
-        <option value="">Select...</option>
-        <option>Yes, issue resolved</option>
-        <option>No, needs further help</option>
-      </select>
-    </section>
-
-    <section>
-      <h2>6. Wrap-Up</h2>
-      <p><strong>Script:</strong> "I’m glad we got that sorted. Is there anything else I can help with before we finish?"</p>
-      <label>Agent Notes</label>
-      <textarea rows="3" placeholder="Summary of issue and actions taken"></textarea>
-      <button onclick="resetDemo()">Reset Demo</button>
-    </section>
-
-    <details class="panel">
-      <summary>SYSTEM ACTIONS</summary>
-      <div class="panel-content">
-        <button onclick="pullAccount()">Pull Account</button>
-        <button onclick="retrieveSecurityStatus()">Check Security Status</button>
-        <button onclick="confirmUnlock()">Securely Unlock Account</button>
+    <div class="card">
+      <h3>5. Confirmation</h3>
+      <div class="section-content">
+        <p>"Can you please confirm that you're now able to sign in?"</p>
+        <div class="checklist">
+          <label><input type="checkbox" /> Customer confirmed login success</label>
+          <label><input type="checkbox" /> Walked through additional recovery options</label>
+        </div>
+        <button class="collapsible" onclick="togglePanel(this)">+ Customer Context</button>
+        <div class="collapsible-content">
+          <p>Customer recently traveled. Login attempts from new IP flagged as suspicious. Frequent password resets noted.</p>
+        </div>
       </div>
-    </details>
+    </div>
 
-    <details class="panel">
-      <summary>CUSTOMER CONTEXT</summary>
-      <div class="panel-content">
-        <p><strong>Name:</strong> John Smith</p>
-        <p><strong>Email:</strong> john.smith@yahoo.com</p>
-        <p><strong>Account Status:</strong> <span id="accountStatus">Unknown</span></p>
-        <p><strong>Last Login Attempt:</strong> Jan 4, 2026 - Failed</p>
+    <div class="card">
+      <h3>6. Wrap-Up</h3>
+      <div class="section-content">
+        <p>"I’m glad we got you back into your account. Is there anything else I can assist you with today?"</p>
+        <div class="checklist">
+          <label><input type="checkbox" /> Offered help articles</label>
+          <label><input type="checkbox" /> Provided support case number</label>
+          <label><input type="checkbox" /> Thanked the customer</label>
+        </div>
+        <button class="collapsible" onclick="togglePanel(this)">+ Compliance / Coaching</button>
+        <div class="collapsible-content">
+          <ul>
+            <li>✅ Verified 2+ pieces of customer information</li>
+            <li>✅ No PII repeated back unnecessarily</li>
+            <li>✅ Clear confirmation of successful outcome</li>
+            <li>✅ Offered follow-up assistance</li>
+          </ul>
+        </div>
+        <button onclick="resetDemo()" style="margin-top: 16px; background: #999;">Reset Demo</button>
       </div>
-    </details>
-
-    <details class="panel">
-      <summary>COMPLIANCE & COACHING</summary>
-      <div class="panel-content">
-        <p>🛡️ <strong>Reminder:</strong> Never ask for full passwords or PINs.</p>
-        <p>💡 <strong>Coaching:</strong> If 2+ reset attempts fail, escalate to Tier 2 Support.</p>
-      </div>
-    </details>
-  </main>
+    </div>
+  </div>
 
   <div class="toast" id="toast"></div>
 
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <p>Confirm secure unlock of this account?</p>
-      <button onclick="finalizeUnlock()">Yes, Unlock</button>
-      <button onclick="closeModal()">Cancel</button>
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <h4>Unlock Failed</h4>
+      <p>We encountered an error unlocking this account. Please escalate to Tier 2 support.</p>
+      <div class="modal-buttons">
+        <button onclick="closeModal()">Close</button>
+      </div>
     </div>
   </div>
 
   <script>
-    const state = {
-      accountPulled: false,
-      securityStatus: '',
-      unlocked: false
-    };
-
-    function showToast(message, color = '#333') {
+    function showToast(message) {
       const toast = document.getElementById('toast');
       toast.textContent = message;
-      toast.style.background = color;
-      toast.style.display = 'block';
-      setTimeout(() => toast.style.display = 'none', 3000);
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    function pullAccount() {
-      showToast('Pulling account info...');
-      setTimeout(() => {
-        state.accountPulled = true;
-        document.getElementById('accountStatus').textContent = 'Locked';
-        showToast('Account data retrieved', '#410093');
-      }, 1000);
+    function togglePanel(btn) {
+      const panel = btn.nextElementSibling;
+      panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
     }
 
-    function retrieveSecurityStatus() {
-      if (!state.accountPulled) {
-        showToast('Error: Pull account first.', 'darkred');
-        return;
-      }
-      showToast('Checking security settings...');
-      setTimeout(() => {
-        state.securityStatus = 'Password reset blocked due to suspicious activity';
-        showToast('Security status updated', '#410093');
-        document.getElementById('unlockStatus').textContent = 'Status: Manual unlock required';
-      }, 1000);
+    function simulateVerification() {
+      showToast("Identity verified successfully.");
     }
 
-    function confirmUnlock() {
-      if (!state.accountPulled) {
-        showToast('Error: Pull account first.', 'darkred');
-        return;
-      }
-      document.getElementById('modal').style.display = 'flex';
+    function simulateUnlock() {
+      showToast("Account unlocked. Token sent to recovery email.");
     }
 
-    function finalizeUnlock() {
-      state.unlocked = true;
-      document.getElementById('modal').style.display = 'none';
-      document.getElementById('unlockStatus').textContent = 'Status: Account unlocked';
-      showToast('Account successfully unlocked', '#28a745');
+    function simulateUnlockFail() {
+      document.getElementById('modalBackdrop').style.display = 'flex';
     }
 
     function closeModal() {
-      document.getElementById('modal').style.display = 'none';
+      document.getElementById('modalBackdrop').style.display = 'none';
     }
 
     function resetDemo() {
-      location.reload();
+      document.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(el => el.value = '');
+      document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+      document.querySelectorAll('.collapsible-content').forEach(el => el.style.display = 'none');
+      showToast("Demo reset.");
     }
   </script>
 </body>
