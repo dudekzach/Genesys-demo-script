@@ -1,165 +1,207 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Yahoo! — Locked Out Email Account Recovery — Workforce Script</title>
-<style>
-:root {
-  --brand-primary: #410093; /* Yahoo! Indigo brand color */ 
-  --brand-accent: #ffffff;
-  --brand-ink: #111827;
-  --brand-muted: #6b7280;
-  --brand-border: #d1d5db;
-}
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 16px;
-  color: var(--brand-ink);
-}
-header {
-  background: var(--brand-primary);
-  color: var(--brand-accent);
-  padding: 12px;
-  text-align: center;
-}
-h1, h2 {
-  margin-top: 0;
-}
-section {
-  margin-bottom: 24px;
-}
-label {
-  font-weight: bold;
-}
-input, select, textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid var(--brand-border);
-  margin-top: 4px;
-  margin-bottom: 12px;
-}
-button {
-  background: var(--brand-primary);
-  color: var(--brand-accent);
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-}
-button:hover {
-  opacity: 0.9;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-th, td {
-  border: 1px solid var(--brand-border);
-  padding: 8px;
-}
-th {
-  background: var(--brand-muted);
-  color: var(--brand-accent);
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yahoo! Support Agent Script - Account Recovery</title>
+    <style>
+        :root {
+            --yahoo-purple: #6001d2;
+            --yahoo-hover: #4d00b0;
+            --text-dark: #222;
+            --bg-light: #f5f8fa;
+            --white: #ffffff;
+            --success: #2d862d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* Sidebar Navigation */
+        #sidebar {
+            width: 250px;
+            background-color: var(--yahoo-purple);
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #sidebar h2 { font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; }
+
+        .nav-item {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: 0.3s;
+        }
+
+        .nav-item.active {
+            opacity: 1;
+            background: rgba(255,255,255,0.1);
+            font-weight: bold;
+        }
+
+        /* Main Content Area */
+        #main-content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .script-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .customer-info {
+            background: #eee;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--yahoo-purple);
+        }
+
+        h1 { color: var(--yahoo-purple); margin-top: 0; }
+        
+        .instruction {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .dialogue {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            background: #f9f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0ff;
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-primary { background: var(--yahoo-purple); color: white; }
+        .btn-primary:hover { background: var(--yahoo-hover); }
+        .btn-outline { background: transparent; border: 2px solid var(--yahoo-purple); color: var(--yahoo-purple); }
+        .btn-outline:hover { background: #f0e6ff; }
+
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
 
-<header>
-  <h1>Yahoo! Locked Out Email Account — Agent Script</h1>
-  <!-- Theme source: https://www.yahoo.com | primary: #410093 | accent: #ffffff | confidence: medium -->
-</header>
+    <div id="sidebar">
+        <h2>Process Flow</h2>
+        <div id="nav-1" class="nav-item active">1. Opening</div>
+        <div id="nav-2" class="nav-item">2. Verification</div>
+        <div id="nav-3" class="nav-item">3. Recovery Steps</div>
+        <div id="nav-4" class="nav-item">4. Security Wrap-up</div>
+        <div id="nav-5" class="nav-item">5. Closing</div>
+    </div>
 
-<section id="customer-context">
-  <h2>Customer Context</h2>
-  <p>The caller is a Yahoo! email user who is locked out of their email account and contacting support for help restoring access.</p>
-</section>
+    <div id="main-content">
+        <div class="customer-info">
+            <strong>Client:</strong> Yahoo! &nbsp; | &nbsp; 
+            <strong>Case:</strong> Email Account Lockout &nbsp; | &nbsp;
+            <strong>URL:</strong> <a href="https://www.yahoo.com" target="_blank">yahoo.com</a>
+        </div>
 
-<section id="scenario">
-  <h2>Scenario Overview</h2>
-  <p>Guide the caller through verification, account recovery steps, and resolution of their locked email account.</p>
-</section>
+        <div id="step-1" class="script-card">
+            <p class="instruction">Greeting & Empathy</p>
+            <div class="dialogue">
+                "Thank you for calling Yahoo! Customer Support. My name is <strong>[Agent Name]</strong>. I’m sorry to hear you’re having trouble accessing your email today. I know how important it is to stay connected. I can certainly help you regain access. May I start with your Yahoo! email address?"
+            </div>
+            <div class="actions">
+                <button class="btn-primary" onclick="showStep(2)">Customer Provided Email</button>
+            </div>
+        </div>
 
-<section id="prep">
-  <h2>Preparation</h2>
-  <p>Ensure you have access to Yahoo’s internal recovery tools and verification prompts before connecting.</p>
-</section>
+        <div id="step-2" class="script-card hidden">
+            <p class="instruction">Account Verification</p>
+            <div class="dialogue">
+                "Thank you. To protect your account security, I have sent a verification code to the recovery phone number/email we have on file ending in <strong>[XX]</strong>. Could you please read that code back to me once you receive it?"
+            </div>
+            <div class="actions">
+                <button class="btn-primary" onclick="showStep(3)">Code Verified Successfully</button>
+                <button class="btn-outline" onclick="alert('Redirecting to Manual Identity Verification Flow...')">Customer No Longer Has Access to Recovery Method</button>
+            </div>
+        </div>
 
-<section id="script">
-  <h2>Agent Script Flow</h2>
+        <div id="step-3" class="script-card hidden">
+            <p class="instruction">Restoring Access</p>
+            <div class="dialogue">
+                "That code matches. Thank you. I have successfully unlocked your account. For your security, the system requires a new password. Please go to the Yahoo sign-in page now. I will stay on the line while you create a new password and confirm you can see your inbox."
+            </div>
+            <div class="actions">
+                <button class="btn-primary" onclick="showStep(4)">Login Confirmed</button>
+            </div>
+        </div>
 
-  <p class="system"><span class="label">SYSTEM:</span> Begin call and display caller’s partial info.</p>
-  <p class="agent"><span class="label">AGENT:</span> “Thank you for contacting Yahoo! Support. My name is <strong>________</strong>. May I have your full name, please?”</p>
+        <div id="step-4" class="script-card hidden">
+            <p class="instruction">Account Hardening</p>
+            <div class="dialogue">
+                "Great! Now that you're back in, I recommend checking your 'Account Security' settings to ensure your recovery info is up to date. I also suggest enabling <strong>Yahoo Account Key</strong> or Two-Step Verification to prevent future lockouts. Would you like me to walk you through that?"
+            </div>
+            <div class="actions">
+                <button class="btn-primary" onclick="showStep(5)">Continue to Closing</button>
+            </div>
+        </div>
 
-  <p class="agent"><span class="label">AGENT:</span> “To help you regain access to your email, I need to verify your identity. Can you please confirm your recovery email or phone on file?”</p>
+        <div id="step-5" class="script-card hidden">
+            <p class="instruction">Final Summary</p>
+            <div class="dialogue">
+                "It was a pleasure assisting you today. We've unlocked your Yahoo! account and updated your security. Is there anything else I can help you with? ... Thank you for choosing Yahoo!, have a wonderful day!"
+            </div>
+            <div class="actions">
+                <button class="btn-outline" onclick="location.reload()">Reset Script for Next Call</button>
+            </div>
+        </div>
+    </div>
 
-  <p class="customer"><span class="label">CUSTOMER:</span> “________”</p>
-  
-  <p class="agent"><span class="label">AGENT:</span> “Thank you. Next, I’m going to ask a few questions about your account usage to verify it’s really you.”</p>
-  
-  <ul>
-    <li>Recent email subject line you sent</li>
-    <li>Date of last successful login</li>
-    <li>Two-factor code if enabled</li>
-  </ul>
+    <script>
+        function showStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.script-card').forEach(card => {
+                card.classList.add('hidden');
+            });
+            
+            // Show the selected step
+            document.getElementById('step-' + stepNumber).classList.remove('hidden');
 
-  <p class="agent"><span class="label">AGENT:</span> “I’m now initiating the account recovery flow. Please stay on the line.”</p>
-</section>
-
-<section id="branches">
-  <h2>Branches</h2>
-
-  <details>
-    <summary>Account Recovered Successfully</summary>
-    <p class="agent"><span class="label">AGENT:</span> “Great! Your identity is verified, and I’ve reset your access. Are you able to log in now?”</p>
-  </details>
-
-  <details>
-    <summary>Verification Failed / Escalate to Supervisor</summary>
-    <p class="agent"><span class="label">AGENT:</span> “I’m sorry, but I couldn’t verify your account with the details provided. I will escalate this to a supervisor who can assist further.”</p>
-  </details>
-</section>
-
-<section id="data-capture">
-  <h2>Data Capture Table</h2>
-  <table>
-    <tr><th>Field</th><th>Entry Control</th><th>Purpose</th></tr>
-    <tr>
-      <td>Full Name</td>
-      <td><input type="text" placeholder="Enter customer full name"></td>
-      <td>Identify caller</td>
-    </tr>
-    <tr>
-      <td>Recovery Email/Phone</td>
-      <td><input type="text" placeholder="Recovery email or phone provided by caller"></td>
-      <td>Verification</td>
-    </tr>
-    <tr>
-      <td>Verification Answers</td>
-      <td><textarea placeholder="Enter answers to verification questions"></textarea></td>
-      <td>Proof of ownership</td>
-    </tr>
-  </table>
-</section>
-
-<section id="compliance">
-  <h2>Compliance Notes</h2>
-  <p>Ensure you follow all privacy and security protocols before accessing or resetting account details.</p>
-</section>
-
-<section id="after-interaction">
-  <h2>After Interaction Checklist</h2>
-  <label><input type="checkbox"> Document verification details</label><br>
-  <label><input type="checkbox"> Note resolution steps taken</label><br>
-  <label><input type="checkbox"> Confirm caller not locked out anymore</label>
-</section>
-
-<section id="questions">
-  <h2>Open Questions</h2>
-  <p>None at this time — proceed with script.</p>
-</section>
-
+            // Update Sidebar
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById('nav-' + stepNumber).classList.add('active');
+        }
+    </script>
 </body>
 </html>
-
