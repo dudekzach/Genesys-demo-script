@@ -1,1 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Yahoo! — Locked Out Email Account Recovery — Workforce Script</title>
+<style>
+:root {
+  --brand-primary: #410093; /* Yahoo! Indigo brand color */ 
+  --brand-accent: #ffffff;
+  --brand-ink: #111827;
+  --brand-muted: #6b7280;
+  --brand-border: #d1d5db;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 16px;
+  color: var(--brand-ink);
+}
+header {
+  background: var(--brand-primary);
+  color: var(--brand-accent);
+  padding: 12px;
+  text-align: center;
+}
+h1, h2 {
+  margin-top: 0;
+}
+section {
+  margin-bottom: 24px;
+}
+label {
+  font-weight: bold;
+}
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--brand-border);
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+button {
+  background: var(--brand-primary);
+  color: var(--brand-accent);
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+button:hover {
+  opacity: 0.9;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid var(--brand-border);
+  padding: 8px;
+}
+th {
+  background: var(--brand-muted);
+  color: var(--brand-accent);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Yahoo! Locked Out Email Account — Agent Script</h1>
+  <!-- Theme source: https://www.yahoo.com | primary: #410093 | accent: #ffffff | confidence: medium -->
+</header>
+
+<section id="customer-context">
+  <h2>Customer Context</h2>
+  <p>The caller is a Yahoo! email user who is locked out of their email account and contacting support for help restoring access.</p>
+</section>
+
+<section id="scenario">
+  <h2>Scenario Overview</h2>
+  <p>Guide the caller through verification, account recovery steps, and resolution of their locked email account.</p>
+</section>
+
+<section id="prep">
+  <h2>Preparation</h2>
+  <p>Ensure you have access to Yahoo’s internal recovery tools and verification prompts before connecting.</p>
+</section>
+
+<section id="script">
+  <h2>Agent Script Flow</h2>
+
+  <p class="system"><span class="label">SYSTEM:</span> Begin call and display caller’s partial info.</p>
+  <p class="agent"><span class="label">AGENT:</span> “Thank you for contacting Yahoo! Support. My name is <strong>________</strong>. May I have your full name, please?”</p>
+
+  <p class="agent"><span class="label">AGENT:</span> “To help you regain access to your email, I need to verify your identity. Can you please confirm your recovery email or phone on file?”</p>
+
+  <p class="customer"><span class="label">CUSTOMER:</span> “________”</p>
+  
+  <p class="agent"><span class="label">AGENT:</span> “Thank you. Next, I’m going to ask a few questions about your account usage to verify it’s really you.”</p>
+  
+  <ul>
+    <li>Recent email subject line you sent</li>
+    <li>Date of last successful login</li>
+    <li>Two-factor code if enabled</li>
+  </ul>
+
+  <p class="agent"><span class="label">AGENT:</span> “I’m now initiating the account recovery flow. Please stay on the line.”</p>
+</section>
+
+<section id="branches">
+  <h2>Branches</h2>
+
+  <details>
+    <summary>Account Recovered Successfully</summary>
+    <p class="agent"><span class="label">AGENT:</span> “Great! Your identity is verified, and I’ve reset your access. Are you able to log in now?”</p>
+  </details>
+
+  <details>
+    <summary>Verification Failed / Escalate to Supervisor</summary>
+    <p class="agent"><span class="label">AGENT:</span> “I’m sorry, but I couldn’t verify your account with the details provided. I will escalate this to a supervisor who can assist further.”</p>
+  </details>
+</section>
+
+<section id="data-capture">
+  <h2>Data Capture Table</h2>
+  <table>
+    <tr><th>Field</th><th>Entry Control</th><th>Purpose</th></tr>
+    <tr>
+      <td>Full Name</td>
+      <td><input type="text" placeholder="Enter customer full name"></td>
+      <td>Identify caller</td>
+    </tr>
+    <tr>
+      <td>Recovery Email/Phone</td>
+      <td><input type="text" placeholder="Recovery email or phone provided by caller"></td>
+      <td>Verification</td>
+    </tr>
+    <tr>
+      <td>Verification Answers</td>
+      <td><textarea placeholder="Enter answers to verification questions"></textarea></td>
+      <td>Proof of ownership</td>
+    </tr>
+  </table>
+</section>
+
+<section id="compliance">
+  <h2>Compliance Notes</h2>
+  <p>Ensure you follow all privacy and security protocols before accessing or resetting account details.</p>
+</section>
+
+<section id="after-interaction">
+  <h2>After Interaction Checklist</h2>
+  <label><input type="checkbox"> Document verification details</label><br>
+  <label><input type="checkbox"> Note resolution steps taken</label><br>
+  <label><input type="checkbox"> Confirm caller not locked out anymore</label>
+</section>
+
+<section id="questions">
+  <h2>Open Questions</h2>
+  <p>None at this time — proceed with script.</p>
+</section>
+
+</body>
+</html>
 
