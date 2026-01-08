@@ -1,245 +1,172 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1st Source Bank - Fraud & Transaction Inquiry</title>
-    <style>
-        :root {
-            --bank-gold: #b38e5d;
-            --bank-blue: #002d72;
-            --bank-gray: #f2f2f2;
-            --danger: #d9534f;
-            --text: #333;
-        }
-
-        body {
-            font-family: 'Georgia', serif;
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            background-color: var(--bank-gray);
-            color: var(--text);
-        }
-
-        /* Sidebar */
-        #sidebar {
-            width: 280px;
-            background-color: var(--bank-blue);
-            color: white;
-            padding: 25px;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
-        }
-
-        #sidebar h2 { 
-            font-size: 1.1rem; 
-            color: var(--bank-gold);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 2px solid var(--bank-gold);
-            padding-bottom: 10px;
-        }
-
-        .nav-item {
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            opacity: 0.6;
-            transition: 0.3s;
-        }
-
-        .nav-item.active {
-            opacity: 1;
-            background: rgba(255,255,255,0.1);
-            border-left: 4px solid var(--bank-gold);
-        }
-
-        /* Content */
-        #main-content {
-            flex-grow: 1;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .header-bar {
-            background: white;
-            padding: 15px 30px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .script-card {
-            background: white;
-            padding: 35px;
-            border-radius: 2px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            max-width: 900px;
-            margin: auto;
-            border-top: 6px solid var(--bank-blue);
-        }
-
-        .instruction {
-            color: var(--bank-gold);
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .dialogue {
-            font-size: 1.15rem;
-            line-height: 1.7;
-            color: #444;
-            padding-left: 20px;
-            border-left: 2px solid #ddd;
-            margin-bottom: 25px;
-        }
-
-        /* Transaction Log */
-        .transaction-log {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        .transaction-log th { background: var(--bank-blue); color: white; padding: 10px; text-align: left; }
-        .transaction-log td { padding: 10px; border-bottom: 1px solid #ddd; }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        button {
-            padding: 12px 20px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-family: 'Arial', sans-serif;
-            transition: 0.2s;
-        }
-
-        .btn-next { background: var(--bank-blue); color: white; }
-        .btn-next:hover { background: #001a45; }
-        .btn-fraud { background: var(--danger); color: white; }
-        .btn-fraud:hover { background: #b52b27; }
-
-        .hidden { display: none; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>1stSourceBank — Fraudulent Transaction Reporting — Workforce Script</title>
+  <style>
+    :root {
+      --brand-primary: #015D91;
+      --brand-accent: #CF4520;
+      --brand-ink: #111827;
+      --brand-muted: #F8F8F8;
+      --brand-border: #d1d5db;
+    }
+    body, input, select, textarea, button {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      color: var(--brand-ink);
+      margin: 0;
+    }
+    header {
+      background: var(--brand-primary);
+      color: white;
+      padding: 12px;
+      text-align: center;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 3fr 2fr;
+      gap: 1px;
+      height: 100vh;
+      background: var(--brand-border);
+    }
+    nav, .workspace, .sidebar {
+      background: white;
+      padding: 12px;
+      overflow-y: auto;
+    }
+    nav {
+      border-right: 1px solid var(--brand-border);
+    }
+    nav a {
+      display: block;
+      padding: 6px 0;
+      color: var(--brand-primary);
+      text-decoration: none;
+    }
+    h2 {
+      margin-top: 0;
+      color: var(--brand-primary);
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .field-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .field-table th, .field-table td {
+      border: 1px solid var(--brand-border);
+      padding: 6px;
+    }
+    .checkbox-list label {
+      display: block;
+      margin-bottom: 6px;
+    }
+    details {
+      margin-bottom: 12px;
+      border: 1px solid var(--brand-border);
+      padding: 6px;
+      background: var(--brand-muted);
+    }
+  </style>
 </head>
 <body>
+<header>
+  <h1>1stSourceBank — Fraudulent Transaction Activity Verification</h1>
+  <p>Version: 1.0 | Date: 01/08/2026 | Channel: Branch Teller | Duration: ~10–15 min</p>
+</header>
 
-    <div id="sidebar">
-        <h2>Teller Workflow</h2>
-        <div id="nav-1" class="nav-item active">Member Identification</div>
-        <div id="nav-2" class="nav-item">Transaction Review</div>
-        <div id="nav-3" class="nav-item">Fraud Affidavit</div>
-        <div id="nav-4" class="nav-item">Account Protection</div>
-        <div id="nav-5" class="nav-item">Closing & Receipt</div>
-    </div>
+<div class="container">
+  <nav>
+    <a href="#greeting">Greeting</a>
+    <a href="#verification">Verification</a>
+    <a href="#transaction-review">Transaction Review</a>
+    <a href="#report-fraud">Report Fraud</a>
+    <a href="#confirmation-wrapup">Confirm & Wrap-Up</a>
+    <a href="#after-interaction">After Interaction</a>
+  </nav>
 
-    <div id="main-content">
-        <div class="header-bar">
-            <span><strong>Client:</strong> 1st Source Bank</span>
-            <span><strong>Portal:</strong> <a href="https://www.1stsource.com/" target="_blank" style="color: var(--bank-blue);">1stsource.com</a></span>
-        </div>
+  <main class="workspace">
+    <section id="greeting" class="section">
+      <h2>Greeting</h2>
+      <p class="agent"><span class="label">Agent:</span> “Good <em>morning/afternoon</em>, thank you for calling 1stSourceBank. My name is <strong>[Your Name]</strong>. How can I assist you today?”</p>
+      <button onclick="location.href='#verification'">Next</button>
+    </section>
 
-        <div id="step-1" class="script-card">
-            <span class="instruction">Opening & Verification</span>
-            <div class="dialogue">
-                "Welcome to 1st Source Bank. My name is <strong>[Teller Name]</strong>, how may I help you today?... I’m sorry to hear you’ve noticed unusual activity. We take your account security very seriously. To protect your information, may I please have your full name and a form of identification, or your account number?"
-            </div>
-            <div class="actions">
-                <button class="btn-next" onclick="showStep(2)">Identity Verified</button>
-            </div>
-        </div>
+    <section id="verification" class="section">
+      <h2>Verification</h2>
+      <p class="system">Purpose: Confirm identity before accessing account details.</p>
+      <p class="agent"><span class="label">Agent:</span> “Before we review your account, can I please have your full name, date of birth, and the last four of your SSN?”</p>
+      <p class="agent"><span class="label">Agent:</span> “For security, can you confirm your current mailing address?”</p>
+      <button onclick="location.href='#transaction-review'">Next</button>
+    </section>
 
-        <div id="step-2" class="script-card hidden">
-            <span class="instruction">Reviewing Statement</span>
-            <div class="dialogue">
-                "I am looking at your recent activity now. I see several pending and cleared transactions. Let's go through them together. Please tell me which of these you do not recognize."
-            </div>
-            
-            <table class="transaction-log">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Amount</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Current</td>
-                        <td>POS WRT-ONLINE-RETAIL</td>
-                        <td>$142.50</td>
-                        <td><button class="btn-fraud" onclick="markFraud(this)">Flag as Fraud</button></td>
-                    </tr>
-                    <tr>
-                        <td>Current</td>
-                        <td>ATM WITHDRAWAL - DISTANT</td>
-                        <td>$200.00</td>
-                        <td><button class="btn-fraud" onclick="markFraud(this)">Flag as Fraud</button></td>
-                    </tr>
-                </tbody>
-            </table>
+    <section id="transaction-review" class="section">
+      <h2>Review Recent Transactions</h2>
+      <p class="agent"><span class="label">Agent:</span> “Thank you. I will look up your recent transactions. Can you tell me which charges you are questioning?”</p>
+      <p class="agent">Display account transactions and ask:</p>
+      <ul>
+        <li>“I see these charges — are these the ones you do not recognize?”</li>
+        <li>“Were any of these authorized by you?”</li>
+      </ul>
+      <button onclick="location.href='#report-fraud'">Next</button>
+    </section>
 
-            <div class="actions">
-                <button class="btn-next" onclick="showStep(3)">Initiate Fraud Claims</button>
-            </div>
-        </div>
+    <section id="report-fraud" class="section">
+      <h2>Report Fraudulent Charges</h2>
+      <p class="agent"><span class="label">Agent:</span> “Thanks for pointing those out. Let’s report the ones you believe are fraudulent.”</p>
+      <p class="system">Action: Mark selected transactions as disputed in system and create a fraud report.</p>
+      <details>
+        <summary>Common Exception: Customer missing card but transactions are expected</summary>
+        <p class="agent">“I understand the card was lost, but did you authorize any transactions before reporting it lost?”</p>
+        <p class="agent">If yes: confirm and only flag unauthorized ones.</p>
+      </details>
+      <details>
+        <summary>Alternate: Customer unsure about a merchant name</summary>
+        <p class="agent">“Sometimes merchant names differ. Could this be a name you recognize on your statement?”</p>
+      </details>
+      <button onclick="location.href='#confirmation-wrapup'">Next</button>
+    </section>
 
-        <div id="step-3" class="script-card hidden">
-            <span class="instruction">Formal Reporting</span>
-            <div class="dialogue">
-                "I have flagged those transactions. To begin the recovery process, I am opening a fraud claim. Do you still have your debit card in your possession, or has it been lost or stolen? I will need to restrict the current card immediately to prevent further charges."
-            </div>
-            <div class="actions">
-                <button class="btn-fraud" onclick="showStep(4)">Close Card & Issue New</button>
-            </div>
-        </div>
+    <section id="confirmation-wrapup" class="section">
+      <h2>Confirmation and Customer Wrap-Up</h2>
+      <p class="agent"><span class="label">Agent:</span> “I’ve submitted the dispute for these transactions. You will receive confirmation and next steps via your preferred contact method.”</p>
+      <p class="agent"><span class="label">Agent:</span> “Is there anything else I can help you with today?”</p>
+      <button onclick="location.href='#after-interaction'">Next</button>
+    </section>
 
-        <div id="step-4" class="script-card hidden">
-            <span class="instruction">Security Hardening</span>
-            <div class="dialogue">
-                "Your old card is now deactivated. A new card will arrive at your home address within 5-7 business days. In the meantime, I recommend we set up <strong>Mobile Banking Alerts</strong> so you get a text message for every transaction. Would you like me to enable that for you now?"
-            </div>
-            <div class="actions">
-                <button class="btn-next" onclick="showStep(5)">Complete Hardening</button>
-            </div>
-        </div>
+    <section id="after-interaction" class="section">
+      <h2>After Interaction Checklist</h2>
+      <div class="checkbox-list">
+        <label><input type="checkbox"> Fraud report submitted</label>
+        <label><input type="checkbox"> Notes added to customer record</label>
+        <label><input type="checkbox"> Contact preference updated</label>
+        <label><input type="checkbox"> Confirmation text/email sent</label>
+      </div>
+    </section>
+  </main>
 
-        <div id="step-5" class="script-card hidden">
-            <span class="instruction">Final Wrap-up</span>
-            <div class="dialogue">
-                "The claim is filed, and your account is secure. You will receive a summary of the dispute via mail. Is there anything else I can assist you with at this 1st Source branch today? ... Thank you for banking with us."
-            </div>
-            <div class="actions">
-                <button class="btn-next" onclick="location.reload()">New Session</button>
-            </div>
-        </div>
-    </div>
+  <aside class="sidebar">
+    <section class="section">
+      <h2>Data Capture</h2>
+      <table class="field-table">
+        <tr><th>Field</th><th>Control</th></tr>
+        <tr><td>Customer Name</td><td><input type="text" placeholder="Enter full name"></td></tr>
+        <tr><td>Date of Birth</td><td><input type="date"></td></tr>
+        <tr><td>SSN Last 4</td><td><input type="text" maxlength="4" placeholder="XXXX"></td></tr>
+        <tr><td>Address</td><td><input type="text" placeholder="Current mailing address"></td></tr>
+        <tr><td>Questioned Transactions</td><td><textarea placeholder="List transaction dates/amounts"></textarea></td></tr>
+      </table>
+    </section>
+    <section class="section">
+      <h2>Customer Context</h2>
+      <p>Use notes here to capture customer’s explanation of disputed charges and any relevant context.</p>
+      <textarea rows="8" placeholder="Enter details…"></textarea>
+    </section>
+  </aside>
+</div>
 
-    <script>
-        function showStep(stepNumber) {
-            document.querySelectorAll('.script-card').forEach(card => card.classList.add('hidden'));
-            document.getElementById('step-' + stepNumber).classList.remove('hidden');
-            
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            document.getElementById('nav-' + stepNumber).classList.add('active');
-        }
-
-        function markFraud(btn) {
-            btn.innerText = "FLAGGED";
-            btn.style.background = "#666";
-            btn.disabled = true;
-        }
-    </script>
 </body>
 </html>
