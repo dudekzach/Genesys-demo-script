@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>1st Source Bank – Advanced Service Script</title>
+
+<style>
+  :root {
+    --primary: #004a99;
+    --primary-light: #e8f1fb;
+    --bg: #f4f6f8;
+    --card-bg: #ffffff;
+    --text-main: #1f2d3d;
+    --text-muted: #5f6c7b;
+    --radius: 14px;
+    --shadow: 0 4px 14px rgba(0,0,0,0.08);
+    --danger: #d32f2f;
+    --danger-light: #f9e5e5;
+    --success: #2e7d32;
+    --warning: #ff9800;
+  }
+
+  body { margin: 0; background: var(--bg); font-family: "Segoe UI", sans-serif; color: var(--text-main); padding: 20px 16px; }
+  .container { max-width: 1150px; margin: auto; }
+  .header { background: var(--primary); color: #fff; padding: 16px 24px; border-radius: var(--radius); font-size: 1.25rem; font-weight: 600; margin-bottom: 22px; text-align: center; box-shadow: var(--shadow); }
+  
+  /* TABS */
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; border-bottom: 2px solid #d7e0ea; margin-bottom: 20px; }
+  .tab { padding: 10px 14px; cursor: pointer; font-size: 0.92rem; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; transition: all 0.25s ease; }
+  .tab.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
+  .tab-danger { color: var(--danger); }
+  .tab-danger.active { border-bottom-color: var(--danger); }
+
+  /* CARDS */
+  .card { background: var(--card-bg); padding: 22px; margin-bottom: 20px; border-radius: var(--radius); box-shadow: var(--shadow); position: relative; overflow: hidden; }
+  h3 { margin-top: 0; color: var(--primary); font-size: 1.15rem; margin-bottom: 16px; }
+  
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+
+  /* WHAT-IF ALERT STYLE */
+  .alert-mode { border: 2px solid var(--danger); background: var(--danger-light); }
+  .panic-button { background: var(--danger); color: white; padding: 10px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
+
+  /* BACK-OFFICE VISUALS */
+  .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; text-align: center; }
+  .stat-val { display: block; font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+  .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+
+  /* UI COMPONENTS */
+  input { width: 100%; padding: 10px; border: 1px solid #cbd7e3; border-radius: 8px; margin-bottom: 12px; font-size: 0.92rem; box-sizing: border-box; }
+  .btn { padding: 12px 20px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+  .btn-primary { background: var(--primary); color: white; }
+  
+  .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+  .toast { background: var(--primary); color: #fff; padding: 12px 18px; border-radius: 10px; margin-bottom: 10px; font-size: 0.9rem; transform: translateX(120%); transition: 0.3s; }
+  .toast.show { transform: translateX(0); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  
+  .fraud-tag { background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+  <div class="header">1st Source Bank – Agent Assist Console</div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="workflow">Standard Workflow</div>
+    <div class="tab" data-tab="backoffice">Back-Office Dashboard</div>
+    <div id="whatIfTab" class="tab tab-danger" data-tab="whatif">⚠️ WHAT-IF: Security Breach</div>
+  </div>
+
+  <div id="workflow" class="tab-content active">
+    <div class="card">
+      <h3>Active Interaction: Cameron Loyal</h3>
+      <div class="grid-2">
+        <div>
+          <label>Status</label>
+          <input value="Verified via Voice Biometrics" readonly style="color: var(--success); font-weight: bold;">
+          <label>Recent Decline</label>
+          <input value="$342.15 - Chicago, IL" readonly>
+        </div>
+        <div>
+          <label>Script Path</label>
+          <p style="font-size: 0.9rem; font-style: italic; color: var(--text-muted);">"I've identified the travel block on your card. I am authorizing the Chicago hotel transaction now. Would you like to set a permanent travel notice for the rest of the week?"</p>
+          <button class="btn btn-primary" onclick="showToast('Travel Notice Created (Jan 9-16)')">Set Travel Notice</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="backoffice" class="tab-content">
+    <div class="card">
+      <h3>Fraud Operations View (Live Feed)</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Visualization of the Genesys Cloud + Salesforce back-office data for 1st Source Bank Analysts.</p>
+      
+      <div class="grid-3">
+        <div class="stat-card">
+          <span class="stat-label">Active Card Blocks</span>
+          <span class="stat-val">12</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">System Trust Score</span>
+          <span class="stat-val" style="color: var(--success);">94%</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Agent Resolution Rate</span>
+          <span class="stat-val">89%</span>
+        </div>
+      </div>
+
+      <h4 style="margin-top:25px;">Real-Time Queue Events</h4>
+      <div style="font-size: 0.85rem; background: #f1f5f9; padding: 10px; border-radius: 8px;">
+        <div style="display:flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #ddd;">
+          <span><strong>Client:</strong> Cameron Loyal</span>
+          <span class="fraud-tag">TRAVEL BLOCK</span>
+          <span><strong>Agent:</strong> You</span>
+        </div>
+        <div style="display:flex; justify-content: space-between; padding: 5px 0;">
+          <span><strong>Client:</strong> Sarah Jenkins</span>
+          <span class="fraud-tag" style="background:#fef3c7; color:#92400e;">POSSIBLE PHISHING</span>
+          <span><strong>Agent:</strong> Queued</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="whatif" class="tab-content">
+    <div class="card alert-mode">
+      <h3 style="color: var(--danger);">Emergency Protocol: Identity Fraud Suspected</h3>
+      <p><strong>Scenario:</strong> During the call, Cameron mentions he never authorized a $1,200 purchase in Miami (happening simultaneously).</p>
+      
+      <div class="grid-2">
+        <div style="background: white; padding: 15px; border-radius: 10px; border: 1px solid var(--danger);">
+          <label>Immediate Actions</label>
+          <ul style="font-size: 0.85rem; padding-left: 20px;">
+            <li>Kill-switch: Terminate all active sessions</li>
+            <li>Flag Account for "Hard Freeze"</li>
+            <li>Initiate Dispute Case #FR-9901</li>
+          </ul>
+        </div>
+        <div>
+          <button class="panic-button" onclick="showToast('ACCOUNT FROZEN - FRAUD OPS NOTIFIED')">EXECUTE TOTAL ACCOUNT FREEZE</button>
+          <p style="font-size: 0.75rem; margin-top: 10px; color: var(--danger);">*This triggers a high-priority Microsoft Teams alert to the 1st Source Security Team.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Tab Switching
+  const tabs = document.querySelectorAll(".tab");
+  const contents = document.querySelectorAll(".tab-content");
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      contents.forEach(c => c.classList.remove("active"));
+      document.getElementById(tab.dataset.tab).classList.add("active");
+    });
+  });
+
+  // Toast System
+  function showToast(text) {
+    const container = document.getElementById("toastContainer");
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.innerText = text + " ✓";
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.add("show"), 10);
+    setTimeout(() => {
+      toast.classList.remove("show");
+      setTimeout(() => toast.remove(), 3000);
+    }, 3000);
+  }
+</script>
+
+</body>
+</html>
