@@ -1,171 +1,68 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>1stSourceBank — Fraudulent Transaction Reporting — Workforce Script</title>
-  <style>
-    :root {
-      --brand-primary: #015D91;
-      --brand-accent: #CF4520;
-      --brand-ink: #111827;
-      --brand-muted: #F8F8F8;
-      --brand-border: #d1d5db;
-    }
-    body, input, select, textarea, button {
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      color: var(--brand-ink);
-      margin: 0;
-    }
-    header {
-      background: var(--brand-primary);
-      color: white;
-      padding: 12px;
-      text-align: center;
-    }
-    .container {
-      display: grid;
-      grid-template-columns: 1fr 3fr 2fr;
-      gap: 1px;
-      height: 100vh;
-      background: var(--brand-border);
-    }
-    nav, .workspace, .sidebar {
-      background: white;
-      padding: 12px;
-      overflow-y: auto;
-    }
-    nav {
-      border-right: 1px solid var(--brand-border);
-    }
-    nav a {
-      display: block;
-      padding: 6px 0;
-      color: var(--brand-primary);
-      text-decoration: none;
-    }
-    h2 {
-      margin-top: 0;
-      color: var(--brand-primary);
-    }
-    .section {
-      margin-bottom: 20px;
-    }
-    .field-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .field-table th, .field-table td {
-      border: 1px solid var(--brand-border);
-      padding: 6px;
-    }
-    .checkbox-list label {
-      display: block;
-      margin-bottom: 6px;
-    }
-    details {
-      margin-bottom: 12px;
-      border: 1px solid var(--brand-border);
-      padding: 6px;
-      background: var(--brand-muted);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1st Source Bank Demo Script</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
+        .header { background-color: #004a99; color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }
+        .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 5px solid #004a99; }
+        .role-cust { color: #d32f2f; font-weight: bold; }
+        .role-agent { color: #2e7d32; font-weight: bold; }
+        .system-cue { background-color: #e3f2fd; padding: 10px; border-radius: 4px; font-style: italic; margin: 10px 0; border: 1px dashed #004a99; }
+        .highlight { background-color: #fff9c4; font-weight: bold; padding: 2px 5px; }
+        h2 { margin-top: 0; color: #004a99; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .footer { text-align: center; font-size: 0.8em; color: #777; margin-top: 40px; }
+        .compliance-note { font-size: 0.9em; background: #fff3e0; padding: 10px; border-radius: 4px; margin-top: 10px; border-left: 4px solid #ff9800; }
+    </style>
 </head>
 <body>
-<header>
-  <h1>1stSourceBank — Fraudulent Transaction Activity Verification</h1>
-  <p>Version: 1.0 | Date: 01/08/2026 | Channel: Branch Teller | Duration: ~10–15 min</p>
-</header>
 
-<div class="container">
-  <nav>
-    <a href="#greeting">Greeting</a>
-    <a href="#verification">Verification</a>
-    <a href="#transaction-review">Transaction Review</a>
-    <a href="#report-fraud">Report Fraud</a>
-    <a href="#confirmation-wrapup">Confirm & Wrap-Up</a>
-    <a href="#after-interaction">After Interaction</a>
-  </nav>
+<div class="header">
+    <h1>1st Source Bank: Demo Experience</h1>
+    <p>Declined Debit Card Handoff | Genesys Cloud + Salesforce + Teams</p>
+</div>
 
-  <main class="workspace">
-    <section id="greeting" class="section">
-      <h2>Greeting</h2>
-      <p class="agent"><span class="label">Agent:</span> “Good <em>morning/afternoon</em>, thank you for calling 1stSourceBank. My name is <strong>[Your Name]</strong>. How can I assist you today?”</p>
-      <button onclick="location.href='#verification'">Next</button>
-    </section>
+<div class="section">
+    <h2>Phase 1: The Virtual Agent (IVR)</h2>
+    <div class="system-cue">Visual: Start with the Genesys Cloud Architect flow or a simulated call landing on the phone.</div>
+    <p><strong>Virtual Agent:</strong> "Welcome to 1st Source Bank. I see you're calling from a number associated with [Customer Name]. Are you calling about the declined transaction in Chicago this morning?"</p>
+    <p><strong>Customer:</strong> "Yes! I'm trying to pay for my hotel and my card was just rejected."</p>
+    <p><strong>Virtual Agent:</strong> "I understand. For your security, I am transferring you to a specialist who can verify your travel status and unlock your card immediately."</p>
+</div>
 
-    <section id="verification" class="section">
-      <h2>Verification</h2>
-      <p class="system">Purpose: Confirm identity before accessing account details.</p>
-      <p class="agent"><span class="label">Agent:</span> “Before we review your account, can I please have your full name, date of birth, and the last four of your SSN?”</p>
-      <p class="agent"><span class="label">Agent:</span> “For security, can you confirm your current mailing address?”</p>
-      <button onclick="location.href='#transaction-review'">Next</button>
-    </section>
+<div class="section">
+    <h2>Phase 2: The Intelligent Handoff</h2>
+    <div class="system-cue">Visual: Show the Salesforce screen. The Genesys Cloud Embeddable Framework pops up. Point out the <strong>Screen Pop</strong> containing the customer's profile and the reason for the call.</div>
+    <p><span class="role-agent">Agent:</span> "Good morning, [Customer Name]. This is [Your Name] with 1st Source. I see the Virtual Agent started a travel security flag for your account regarding that declined hotel charge in Chicago. I’m here to get that cleared up for you right away."</p>
+    <p><em>(Value Prop: No repetition. The agent knows the 'Why' before saying hello.)</em></p>
+</div>
 
-    <section id="transaction-review" class="section">
-      <h2>Review Recent Transactions</h2>
-      <p class="agent"><span class="label">Agent:</span> “Thank you. I will look up your recent transactions. Can you tell me which charges you are questioning?”</p>
-      <p class="agent">Display account transactions and ask:</p>
-      <ul>
-        <li>“I see these charges — are these the ones you do not recognize?”</li>
-        <li>“Were any of these authorized by you?”</li>
-      </ul>
-      <button onclick="location.href='#report-fraud'">Next</button>
-    </section>
+<div class="section">
+    <h2>Phase 3: Context & Collaboration</h2>
+    <div class="system-cue">Visual: Navigate to the "Travel Plans" tab in Salesforce. Show the <strong>Teams Integration</strong>.</div>
+    <p><span class="role-agent">Agent:</span> "I see you're on a business trip. While I verify this, I'm quickly reaching out to our Fraud Operations team via our integrated Microsoft Teams channel to ensure no other blocks are pending on your profile."</p>
+    <div class="compliance-note">
+        <strong>Compliance Check:</strong> "I have successfully verified your identity via our secure voice biometric/PIN system. For your protection, this call is being recorded for quality and compliance."
+    </div>
+</div>
 
-    <section id="report-fraud" class="section">
-      <h2>Report Fraudulent Charges</h2>
-      <p class="agent"><span class="label">Agent:</span> “Thanks for pointing those out. Let’s report the ones you believe are fraudulent.”</p>
-      <p class="system">Action: Mark selected transactions as disputed in system and create a fraud report.</p>
-      <details>
-        <summary>Common Exception: Customer missing card but transactions are expected</summary>
-        <p class="agent">“I understand the card was lost, but did you authorize any transactions before reporting it lost?”</p>
-        <p class="agent">If yes: confirm and only flag unauthorized ones.</p>
-      </details>
-      <details>
-        <summary>Alternate: Customer unsure about a merchant name</summary>
-        <p class="agent">“Sometimes merchant names differ. Could this be a name you recognize on your statement?”</p>
-      </details>
-      <button onclick="location.href='#confirmation-wrapup'">Next</button>
-    </section>
+<div class="section">
+    <h2>Phase 4: Resolution & Day-Two Excellence</h2>
+    <div class="system-cue">Visual: Toggle the status in Salesforce to 'Travel Approved'. Show the 'Low Effort' outcome.</div>
+    <p><span class="role-agent">Agent:</span> "Great news. I've updated your travel profile through next Friday. You can try that card again in about 30 seconds. To make things easier for next time, would you like me to show you how to set travel notices yourself in our mobile app?"</p>
+    <p><span class="role-cust">Customer:</span> "That would be perfect, thank you for making this so easy."</p>
+</div>
 
-    <section id="confirmation-wrapup" class="section">
-      <h2>Confirmation and Customer Wrap-Up</h2>
-      <p class="agent"><span class="label">Agent:</span> “I’ve submitted the dispute for these transactions. You will receive confirmation and next steps via your preferred contact method.”</p>
-      <p class="agent"><span class="label">Agent:</span> “Is there anything else I can help you with today?”</p>
-      <button onclick="location.href='#after-interaction'">Next</button>
-    </section>
+<div class="section">
+    <h2>Phase 5: Wrap-Up & Reporting</h2>
+    <div class="system-cue">Visual: Close the interaction. Show the Genesys <strong>Wrap-up code</strong> and how it syncs back to Salesforce activity history.</div>
+    <p><strong>Key Takeaway:</strong> We reduced the customer's effort from a 10-minute frustration to a 2-minute resolution using a seamless blend of AI, CRM, and Collaboration tools.</p>
+</div>
 
-    <section id="after-interaction" class="section">
-      <h2>After Interaction Checklist</h2>
-      <div class="checkbox-list">
-        <label><input type="checkbox"> Fraud report submitted</label>
-        <label><input type="checkbox"> Notes added to customer record</label>
-        <label><input type="checkbox"> Contact preference updated</label>
-        <label><input type="checkbox"> Confirmation text/email sent</label>
-      </div>
-    </section>
-  </main>
-
-  <aside class="sidebar">
-    <section class="section">
-      <h2>Data Capture</h2>
-      <table class="field-table">
-        <tr><th>Field</th><th>Control</th></tr>
-        <tr><td>Customer Name</td><td><input type="text" placeholder="Enter full name"></td></tr>
-        <tr><td>Date of Birth</td><td><input type="date"></td></tr>
-        <tr><td>SSN Last 4</td><td><input type="text" maxlength="4" placeholder="XXXX"></td></tr>
-        <tr><td>Address</td><td><input type="text" placeholder="Current mailing address"></td></tr>
-        <tr><td>Questioned Transactions</td><td><textarea placeholder="List transaction dates/amounts"></textarea></td></tr>
-      </table>
-    </section>
-    <section class="section">
-      <h2>Customer Context</h2>
-      <p>Use notes here to capture customer’s explanation of disputed charges and any relevant context.</p>
-      <textarea rows="8" placeholder="Enter details…"></textarea>
-    </section>
-  </aside>
+<div class="footer">
+    Confidential Demo Script - 1st Source Bank - Powered by Genesys Cloud CX
 </div>
 
 </body>
