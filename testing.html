@@ -1,117 +1,388 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Genesys Cloud | Agent Assist Script</title>
-    <style>
-        :root {
-            --primary-blue: #004a99; /* 1st Source Bank Brand Blue */
-            --success-green: #2e7d32;
-            --warning-orange: #ed6c02;
-            --bg-light: #f8f9fa;
-            --border-color: #d1d5db;
-        }
-        body { font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; margin: 0; background: var(--bg-light); color: #333; font-size: 14px; }
-        
-        /* Header & Progress Bar */
-        .script-header { background: #fff; padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .status-badge { background: #e3f2fd; color: var(--primary-blue); padding: 4px 12px; border-radius: 15px; font-weight: bold; font-size: 12px; border: 1px solid var(--primary-blue); }
-        
-        .stepper { display: flex; justify-content: space-around; padding: 10px; background: #fff; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); }
-        .step { color: #9ca3af; font-weight: 600; font-size: 11px; text-transform: uppercase; }
-        .step.active { color: var(--primary-blue); border-bottom: 2px solid var(--primary-blue); }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>1st Source Bank – Agent Service Script</title>
 
-        /* Main Content Grid */
-        .container { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; padding: 15px; }
-        
-        /* Left Column: Scripting */
-        .card { background: white; border-radius: 8px; border: 1px solid var(--border-color); padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .talk-track { font-size: 16px; line-height: 1.5; color: #1f2937; margin-bottom: 20px; padding-left: 15px; border-left: 4px solid var(--primary-blue); }
-        .action-items { list-style: none; padding: 0; }
-        .action-items li { padding: 10px; border: 1px solid #e5e7eb; margin-bottom: 8px; border-radius: 6px; display: flex; align-items: center; }
-        .action-items li:before { content: '☐'; margin-right: 10px; color: var(--primary-blue); font-weight: bold; }
+<style>
+  :root {
+    --primary: #004a99; /* 1st Source Bank Blue */
+    --primary-light: #e8f1fb;
+    --bg: #f4f6f8;
+    --card-bg: #ffffff;
+    --text-main: #1f2d3d;
+    --text-muted: #5f6c7b;
+    --radius: 14px;
+    --shadow: 0 4px 14px rgba(0,0,0,0.08);
+    --danger: #d32f2f;
+    --danger-light: #f9e5e5;
+    --success: #2e7d32;
+  }
 
-        /* Right Column: Context/Teams */
-        .sidebar-card { background: white; border-radius: 8px; border: 1px solid var(--border-color); padding: 15px; margin-bottom: 15px; }
-        .sidebar-card h4 { margin: 0 0 10px 0; font-size: 12px; color: #6b7280; text-transform: uppercase; }
-        .data-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
-        .data-label { color: #6b7280; }
-        .data-value { font-weight: 600; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    font-family: "Segoe UI", sans-serif;
+    color: var(--text-main);
+    padding: 20px 16px;
+  }
 
-        /* Mock Teams Widget */
-        .teams-widget { background: #5b5fc7; color: white; padding: 10px; border-radius: 6px; font-size: 12px; }
-        .teams-msg { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 4px; margin-top: 5px; }
+  .container {
+    max-width: 1100px;
+    margin: auto;
+  }
 
-        .btn-primary { background: var(--primary-blue); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; }
-    </style>
+  .header {
+    background: var(--primary);
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: var(--radius);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 22px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+
+  /* -------------------- TABS --------------------- */
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    border-bottom: 2px solid #d7e0ea;
+    margin-bottom: 20px;
+  }
+
+  .tab {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 3px solid transparent;
+    transition: color 0.25s ease, border-bottom 0.25s ease;
+    white-space: nowrap;
+  }
+
+  .tab.active {
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+  }
+
+  /* ------------------- CARDS -------------------- */
+  .card {
+    background: var(--card-bg);
+    padding: 22px;
+    margin-bottom: 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  h3 {
+    margin-top: 0;
+    color: var(--primary);
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.82rem;
+    margin-bottom: 4px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd7e3;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 0.92rem;
+    box-sizing: border-box;
+    background-color: #fcfcfc;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 700px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  /* ---------------- CHECKBOXES ------------------ */
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+
+  .check-item input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  /* ---------------- ACTION BUTTONS -------------- */
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .btn {
+    padding: 14px;
+    border-radius: var(--radius);
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .btn:active { transform: scale(0.98); }
+
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-primary { background: var(--primary); color: #fff; }
+
+  /* ---------------- TEAMS / COLLAB CARD -------------- */
+  .supervisor-card {
+    background: #f0f2f5;
+    border-left: 4px solid #5b5fc7; /* Teams Purple */
+    padding: 14px 16px;
+    margin-top: 8px;
+    border-radius: 10px;
+    display: none;
+  }
+
+  .collab-option {
+    padding: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    background: white;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  .collab-option:hover { background: #f9f9f9; border-color: #5b5fc7; }
+
+  /* ---------------- TIMELINE -------------------- */
+  .timeline {
+    border-left: 3px solid var(--primary);
+    padding-left: 16px;
+  }
+  .event { margin-bottom: 16px; }
+  .event .date { font-size: 0.8rem; font-weight: 600; color: var(--primary); }
+  .event .type {
+    font-size: 0.75rem;
+    background: var(--primary-light);
+    padding: 4px 8px;
+    border-radius: 999px;
+    display: inline-block;
+    margin: 4px 0;
+    font-weight: 600;
+    color: var(--primary);
+  }
+  .event .summary { font-size: 0.9rem; color: var(--text-muted); }
+
+  /* ---------------- TOASTS -------------------- */
+  .toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 3000;
+  }
+  .toast {
+    background: var(--success);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .talk-track {
+    background: #fff9c4;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #fbc02d;
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+
+</style>
 </head>
+
 <body>
 
-<div class="script-header">
-    <div><strong>Interaction Script:</strong> Transaction Dispute/Declined Card</div>
-    <div class="status-badge">LIVE HANDOFF FROM VIRTUAL AGENT</div>
-</div>
-
-<div class="stepper">
-    <div class="step">1. Authenticate</div>
-    <div class="step active">2. Resolution</div>
-    <div class="step">3. Cross-Sell/Education</div>
-    <div class="step">4. Wrap-up</div>
-</div>
+<div class="toast-container" id="toastContainer"></div>
 
 <div class="container">
+
+  <div class="header">1st Source Bank – Client Support Console</div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="context">Client Context</div>
+    <div class="tab" data-tab="workflow">Resolution Workflow</div>
+    <div class="tab" data-tab="preferences">Client Preferences</div>
+    <div class="tab" data-tab="journey">Client Journey</div>
+    <div class="tab" data-tab="fraud">Fraud Verification</div>
+  </div>
+
+  <div id="context" class="tab-content active">
     <div class="card">
-        <h3>Guided Talk Track</h3>
-        <p class="talk-track">
-            "Hello <strong>Mr. Henderson</strong>, I see you're currently in <strong>Chicago</strong> and your debit card was just declined at the <strong>Marriott Marquis</strong>. I've already pulled up your travel profile—let me get that card released for you right now."
-        </p>
-        
-        <h4>Required Compliance Steps:</h4>
-        <ul class="action-items">
-            <li>Verify Transaction Amount: $342.15</li>
-            <li>Confirm Travel End Date (Currently set to: Jan 12)</li>
-            <li>Offer to enable "Real-Time Fraud Alerts" via SMS</li>
-        </ul>
+      <h3>Live Interaction Context</h3>
+      <div class="talk-track">
+        "Good morning, Mr. Loyal. I see you're calling about your card being declined in Chicago. I have your travel profile pulled up and can help you with that right now."
+      </div>
 
-        <button class="btn-primary">Resolve & Unlock Card</button>
+      <div class="grid-2">
+        <div><label>Client Name</label><input value="Cameron Loyal" readonly></div>
+        <div><label>Client Tier</label><input value="Private Client" readonly style="color: var(--primary); font-weight: bold;"></div>
+
+        <div><label>Account Number (Last 4)</label><input value="**** 8821" readonly></div>
+        <div><label>Phone Number</label><input value="(574) 555-0199" readonly></div>
+
+        <div><label>Declined Transaction</label><input value="$342.15 - Marriott Marquis" readonly></div>
+        <div><label>Location</label><input value="Chicago, IL" readonly></div>
+      </div>
     </div>
+  </div>
 
-    <div>
-        <div class="sidebar-card">
-            <h4>Customer Insights (Salesforce)</h4>
-            <div class="data-row">
-                <span class="data-label">Tier:</span>
-                <span class="data-value" style="color:var(--primary-blue)">Private Client</span>
-            </div>
-            <div class="data-row">
-                <span class="data-label">Home Branch:</span>
-                <span class="data-value">South Bend - Main</span>
-            </div>
-            <div class="data-row">
-                <span class="data-label">Last Contact:</span>
-                <span class="data-value">2 Days ago (IVR)</span>
-            </div>
-        </div>
+  <div id="workflow" class="tab-content">
+    <div class="card">
+      <h3>Declined Card Workflow (Voice Handoff)</h3>
 
-        <div class="sidebar-card">
-            <h4>Teams Collaboration (Fraud Ops)</h4>
-            <div class="teams-widget">
-                <strong>Internal Chat: #Fraud-Support</strong>
-                <div class="teams-msg">
-                    <strong>Agent:</strong> Flagging false positive for Henderson.
-                </div>
-                <div class="teams-msg" style="background: rgba(255,255,255,0.2);">
-                    <strong>FraudBot:</strong> Security block removed. Card active in 30s.
-                </div>
-            </div>
-        </div>
+      <div class="check-item"><input type="checkbox" class="task-check">Confirm client identity (Voice Biometrics Verified)</div>
+      <div class="check-item"><input type="checkbox" class="task-check">Verify Chicago travel dates</div>
+      <div class="check-item"><input type="checkbox" class="task-check">Temporary block removal via Fraud Ops</div>
+      <div class="check-item"><input type="checkbox" class="task-check">Confirm card is now active for $342.15 charge</div>
+      <div class="check-item"><input type="checkbox" class="task-check">Educate client on Mobile App Travel Notices</div>
 
-        <div class="sidebar-card" style="border-left: 4px solid var(--warning-orange);">
-            <h4>Agent Tip</h4>
-            <p style="font-size: 12px; margin: 0;">Henderson has high mobile app usage. <strong>Recommend</strong> the "Travel Notice" feature in the 1st Source App to reduce future calls.</p>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="showToast('Travel Override Active - 30s Sync Time')">Authorize Transaction</button>
+        <button class="btn btn-danger" onclick="toggleSupervisorCard()">Internal Collaboration (Teams)</button>
+
+        <div id="supervisorCard" class="supervisor-card">
+          <label style="color: #5b5fc7;">MS Teams - Fraud Operations</label>
+          <div class="collab-option" onclick="chatTeams('Requesting override for Cameron Loyal')">Chat with Fraud Ops</div>
+          <div class="collab-option" onclick="chatTeams('Verifying secondary card status')">Check Secondary Card Block</div>
+          <div class="collab-option" onclick="chatTeams('Flagging false positive for training')">Flag as False Positive</div>
         </div>
+      </div>
     </div>
+  </div>
+
+  <div id="preferences" class="tab-content">
+    <div class="card">
+      <h3>Security & Notification Preferences</h3>
+
+      <div class="check-item"><input type="checkbox" checked> SMS Fraud Alerts (Real-time)</div>
+      <div class="check-item"><input type="checkbox"> Email Monthly Summaries</div>
+      <div class="check-item"><input type="checkbox" checked> Voice Callback Authorized</div>
+      <div class="check-item"><input type="checkbox" id="appPush"> Mobile App Travel Notifications Enabled</div>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="showToast('Preferences Synced to Salesforce & Core Banking')">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="journey" class="tab-content">
+    <div class="card">
+      <h3>Client Contact History (Multi-Channel)</h3>
+
+      <div class="timeline">
+        <div class="event"><div class="date">Jan 9, 2026 (Now)</div><div class="type">Inbound Voice</div><div class="summary">Declined card at Marriott Chicago. Handoff from VA.</div></div>
+        <div class="event"><div class="date">Jan 9, 2026 (5 mins ago)</div><div class="type">Virtual Agent</div><div class="summary">Identified decline, attempted self-service.</div></div>
+        <div class="event"><div class="date">Jan 5, 2026</div><div class="type">Web Login</div><div class="summary">Viewed checking account balance.</div></div>
+        <div class="event"><div class="date">Dec 15, 2025</div><div class="type">Inbound Voice</div><div class="summary">General inquiry regarding loan rates.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="fraud" class="tab-content">
+    <div class="card">
+      <h3>Fraud Engine Insights</h3>
+      <table style="width:100%; font-size: 0.9rem; border-collapse: collapse;">
+        <tr style="border-bottom: 1px solid #eee; height: 35px;"><td><strong>Risk Score:</strong></td><td style="color:var(--danger); font-weight:bold;">High (Travel Discrepancy)</td></tr>
+        <tr style="border-bottom: 1px solid #eee; height: 35px;"><td><strong>Reason:</strong></td><td>Geographic Shift (Indiana to Illinois)</td></tr>
+        <tr style="border-bottom: 1px solid #eee; height: 35px;"><td><strong>Biometric Match:</strong></td><td style="color:var(--success);">98% Verified</td></tr>
+        <tr style="border-bottom: 1px solid #eee; height: 35px;"><td><strong>Authorized Limit:</strong></td><td>$5,000.00 / Day</td></tr>
+      </table>
+    </div>
+  </div>
+
 </div>
+
+<script>
+  /* ----- Tabs Logic ----- */
+  const tabs = document.querySelectorAll(".tab");
+  const contents = document.querySelectorAll(".tab-content");
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      contents.forEach(c => c.classList.remove("active"));
+      document.getElementById(tab.dataset.tab).classList.add("active");
+    });
+  });
+
+  /* ----- Toast System ----- */
+  function showToast(text) {
+    const container = document.getElementById("toastContainer");
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.innerText = text + " ✓";
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.add("show"), 10);
+    setTimeout(() => {
+      toast.classList.remove("show");
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  /* ----- Interactive Checkboxes ----- */
+  document.querySelectorAll('input[type="checkbox"]').forEach(box => {
+    box.addEventListener('change', (e) => {
+        if(e.target.checked) {
+            showToast("Requirement Met");
+        }
+    });
+  });
+
+  /* ----- Supervisor/Teams Toggle ----- */
+  function toggleSupervisorCard() {
+    const card = document.getElementById("supervisorCard");
+    card.style.display = (card.style.display === "block") ? "none" : "block";
+  }
+
+  function chatTeams(msg) {
+    showToast("Teams Message Sent: " + msg);
+    document.getElementById("supervisorCard").style.display = "none";
+  }
+
+</script>
 
 </body>
 </html>
