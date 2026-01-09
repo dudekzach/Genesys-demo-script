@@ -2,67 +2,115 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1st Source Bank Demo Script</title>
+    <title>Genesys Cloud | Agent Assist Script</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
-        .header { background-color: #004a99; color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }
-        .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 5px solid #004a99; }
-        .role-cust { color: #d32f2f; font-weight: bold; }
-        .role-agent { color: #2e7d32; font-weight: bold; }
-        .system-cue { background-color: #e3f2fd; padding: 10px; border-radius: 4px; font-style: italic; margin: 10px 0; border: 1px dashed #004a99; }
-        .highlight { background-color: #fff9c4; font-weight: bold; padding: 2px 5px; }
-        h2 { margin-top: 0; color: #004a99; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-        .footer { text-align: center; font-size: 0.8em; color: #777; margin-top: 40px; }
-        .compliance-note { font-size: 0.9em; background: #fff3e0; padding: 10px; border-radius: 4px; margin-top: 10px; border-left: 4px solid #ff9800; }
+        :root {
+            --primary-blue: #004a99; /* 1st Source Bank Brand Blue */
+            --success-green: #2e7d32;
+            --warning-orange: #ed6c02;
+            --bg-light: #f8f9fa;
+            --border-color: #d1d5db;
+        }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; margin: 0; background: var(--bg-light); color: #333; font-size: 14px; }
+        
+        /* Header & Progress Bar */
+        .script-header { background: #fff; padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .status-badge { background: #e3f2fd; color: var(--primary-blue); padding: 4px 12px; border-radius: 15px; font-weight: bold; font-size: 12px; border: 1px solid var(--primary-blue); }
+        
+        .stepper { display: flex; justify-content: space-around; padding: 10px; background: #fff; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+        .step { color: #9ca3af; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+        .step.active { color: var(--primary-blue); border-bottom: 2px solid var(--primary-blue); }
+
+        /* Main Content Grid */
+        .container { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; padding: 15px; }
+        
+        /* Left Column: Scripting */
+        .card { background: white; border-radius: 8px; border: 1px solid var(--border-color); padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .talk-track { font-size: 16px; line-height: 1.5; color: #1f2937; margin-bottom: 20px; padding-left: 15px; border-left: 4px solid var(--primary-blue); }
+        .action-items { list-style: none; padding: 0; }
+        .action-items li { padding: 10px; border: 1px solid #e5e7eb; margin-bottom: 8px; border-radius: 6px; display: flex; align-items: center; }
+        .action-items li:before { content: '☐'; margin-right: 10px; color: var(--primary-blue); font-weight: bold; }
+
+        /* Right Column: Context/Teams */
+        .sidebar-card { background: white; border-radius: 8px; border: 1px solid var(--border-color); padding: 15px; margin-bottom: 15px; }
+        .sidebar-card h4 { margin: 0 0 10px 0; font-size: 12px; color: #6b7280; text-transform: uppercase; }
+        .data-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
+        .data-label { color: #6b7280; }
+        .data-value { font-weight: 600; }
+
+        /* Mock Teams Widget */
+        .teams-widget { background: #5b5fc7; color: white; padding: 10px; border-radius: 6px; font-size: 12px; }
+        .teams-msg { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 4px; margin-top: 5px; }
+
+        .btn-primary { background: var(--primary-blue); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>1st Source Bank: Demo Experience</h1>
-    <p>Declined Debit Card Handoff | Genesys Cloud + Salesforce + Teams</p>
+<div class="script-header">
+    <div><strong>Interaction Script:</strong> Transaction Dispute/Declined Card</div>
+    <div class="status-badge">LIVE HANDOFF FROM VIRTUAL AGENT</div>
 </div>
 
-<div class="section">
-    <h2>Phase 1: The Virtual Agent (IVR)</h2>
-    <div class="system-cue">Visual: Start with the Genesys Cloud Architect flow or a simulated call landing on the phone.</div>
-    <p><strong>Virtual Agent:</strong> "Welcome to 1st Source Bank. I see you're calling from a number associated with [Customer Name]. Are you calling about the declined transaction in Chicago this morning?"</p>
-    <p><strong>Customer:</strong> "Yes! I'm trying to pay for my hotel and my card was just rejected."</p>
-    <p><strong>Virtual Agent:</strong> "I understand. For your security, I am transferring you to a specialist who can verify your travel status and unlock your card immediately."</p>
+<div class="stepper">
+    <div class="step">1. Authenticate</div>
+    <div class="step active">2. Resolution</div>
+    <div class="step">3. Cross-Sell/Education</div>
+    <div class="step">4. Wrap-up</div>
 </div>
 
-<div class="section">
-    <h2>Phase 2: The Intelligent Handoff</h2>
-    <div class="system-cue">Visual: Show the Salesforce screen. The Genesys Cloud Embeddable Framework pops up. Point out the <strong>Screen Pop</strong> containing the customer's profile and the reason for the call.</div>
-    <p><span class="role-agent">Agent:</span> "Good morning, [Customer Name]. This is [Your Name] with 1st Source. I see the Virtual Agent started a travel security flag for your account regarding that declined hotel charge in Chicago. I’m here to get that cleared up for you right away."</p>
-    <p><em>(Value Prop: No repetition. The agent knows the 'Why' before saying hello.)</em></p>
-</div>
+<div class="container">
+    <div class="card">
+        <h3>Guided Talk Track</h3>
+        <p class="talk-track">
+            "Hello <strong>Mr. Henderson</strong>, I see you're currently in <strong>Chicago</strong> and your debit card was just declined at the <strong>Marriott Marquis</strong>. I've already pulled up your travel profile—let me get that card released for you right now."
+        </p>
+        
+        <h4>Required Compliance Steps:</h4>
+        <ul class="action-items">
+            <li>Verify Transaction Amount: $342.15</li>
+            <li>Confirm Travel End Date (Currently set to: Jan 12)</li>
+            <li>Offer to enable "Real-Time Fraud Alerts" via SMS</li>
+        </ul>
 
-<div class="section">
-    <h2>Phase 3: Context & Collaboration</h2>
-    <div class="system-cue">Visual: Navigate to the "Travel Plans" tab in Salesforce. Show the <strong>Teams Integration</strong>.</div>
-    <p><span class="role-agent">Agent:</span> "I see you're on a business trip. While I verify this, I'm quickly reaching out to our Fraud Operations team via our integrated Microsoft Teams channel to ensure no other blocks are pending on your profile."</p>
-    <div class="compliance-note">
-        <strong>Compliance Check:</strong> "I have successfully verified your identity via our secure voice biometric/PIN system. For your protection, this call is being recorded for quality and compliance."
+        <button class="btn-primary">Resolve & Unlock Card</button>
     </div>
-</div>
 
-<div class="section">
-    <h2>Phase 4: Resolution & Day-Two Excellence</h2>
-    <div class="system-cue">Visual: Toggle the status in Salesforce to 'Travel Approved'. Show the 'Low Effort' outcome.</div>
-    <p><span class="role-agent">Agent:</span> "Great news. I've updated your travel profile through next Friday. You can try that card again in about 30 seconds. To make things easier for next time, would you like me to show you how to set travel notices yourself in our mobile app?"</p>
-    <p><span class="role-cust">Customer:</span> "That would be perfect, thank you for making this so easy."</p>
-</div>
+    <div>
+        <div class="sidebar-card">
+            <h4>Customer Insights (Salesforce)</h4>
+            <div class="data-row">
+                <span class="data-label">Tier:</span>
+                <span class="data-value" style="color:var(--primary-blue)">Private Client</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Home Branch:</span>
+                <span class="data-value">South Bend - Main</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Last Contact:</span>
+                <span class="data-value">2 Days ago (IVR)</span>
+            </div>
+        </div>
 
-<div class="section">
-    <h2>Phase 5: Wrap-Up & Reporting</h2>
-    <div class="system-cue">Visual: Close the interaction. Show the Genesys <strong>Wrap-up code</strong> and how it syncs back to Salesforce activity history.</div>
-    <p><strong>Key Takeaway:</strong> We reduced the customer's effort from a 10-minute frustration to a 2-minute resolution using a seamless blend of AI, CRM, and Collaboration tools.</p>
-</div>
+        <div class="sidebar-card">
+            <h4>Teams Collaboration (Fraud Ops)</h4>
+            <div class="teams-widget">
+                <strong>Internal Chat: #Fraud-Support</strong>
+                <div class="teams-msg">
+                    <strong>Agent:</strong> Flagging false positive for Henderson.
+                </div>
+                <div class="teams-msg" style="background: rgba(255,255,255,0.2);">
+                    <strong>FraudBot:</strong> Security block removed. Card active in 30s.
+                </div>
+            </div>
+        </div>
 
-<div class="footer">
-    Confidential Demo Script - 1st Source Bank - Powered by Genesys Cloud CX
+        <div class="sidebar-card" style="border-left: 4px solid var(--warning-orange);">
+            <h4>Agent Tip</h4>
+            <p style="font-size: 12px; margin: 0;">Henderson has high mobile app usage. <strong>Recommend</strong> the "Travel Notice" feature in the 1st Source App to reduce future calls.</p>
+        </div>
+    </div>
 </div>
 
 </body>
