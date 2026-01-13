@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>1st Source Bank – Client Support Console</title>
+<title>1st Source Bank – Agent Service Script</title>
 
 <style>
   :root {
@@ -19,58 +19,60 @@
     --danger-light: #f9e5e5;
     --success: #2e7d32;
     --warning: #ed6c02;
+    --teams: #5b5fc7;
   }
 
   body { margin: 0; background: var(--bg); font-family: "Segoe UI", sans-serif; color: var(--text-main); padding: 20px 16px; }
   .container { max-width: 1100px; margin: auto; }
+
+  /* --- VISUAL ALERT BANNERS --- */
+  .system-alerts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .alert-box { padding: 12px; border-radius: 10px; text-align: center; font-weight: 700; font-size: 0.85rem; box-shadow: var(--shadow); border: 1px solid transparent; }
+  .alert-success { background: #e8f5e9; color: var(--success); border-color: var(--success); }
+  .alert-fraud { background: #ffebee; color: var(--danger); border-color: var(--danger); animation: pulse 2s infinite; }
+  .alert-info { background: #e3f2fd; color: var(--primary); border-color: var(--primary); }
+  @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
   .header { background: var(--primary); color: #fff; padding: 16px 24px; border-radius: var(--radius); font-size: 1.25rem; font-weight: 600; margin-bottom: 22px; text-align: center; box-shadow: var(--shadow); }
 
-  /* TABS */
+  /* --- TABS --- */
   .tabs { display: flex; flex-wrap: wrap; gap: 6px; border-bottom: 2px solid #d7e0ea; margin-bottom: 20px; }
   .tab { padding: 10px 14px; cursor: pointer; font-size: 0.92rem; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; transition: all 0.25s ease; white-space: nowrap; }
   .tab.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
-  .tab-danger { color: var(--danger); font-weight: bold; }
-  .tab-danger.active { border-bottom-color: var(--danger); }
 
-  /* CARDS */
+  /* --- CARDS --- */
   .card { background: var(--card-bg); padding: 22px; margin-bottom: 20px; border-radius: var(--radius); box-shadow: var(--shadow); }
   h3 { margin-top: 0; color: var(--primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; }
   
   label { display: block; font-size: 0.82rem; margin-bottom: 4px; font-weight: 600; color: var(--text-muted); }
   input { width: 100%; padding: 10px; border: 1px solid #cbd7e3; border-radius: 8px; margin-bottom: 16px; font-size: 0.92rem; box-sizing: border-box; background: #fcfcfc; }
-
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
 
-  /* COMPONENTS */
-  .talk-track { background: #fff9c4; padding: 15px; border-radius: 8px; border-left: 4px solid #fbc02d; font-style: italic; margin-bottom: 20px; font-size: 0.95rem; }
-  .check-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 0.95rem; cursor: pointer; }
+  /* --- KNOWLEDGE TRIGGERS --- */
+  .kb-panel { background: #fff9c4; border-left: 4px solid #fbc02d; padding: 12px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; }
+  .kb-title { font-weight: bold; color: #856404; display: block; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 5px; }
+
+  /* --- ACTION ITEMS --- */
+  .check-item { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; font-size: 0.95rem; cursor: pointer; }
   .check-item input { width: 18px; height: 18px; cursor: pointer; }
   .btn { padding: 14px; border-radius: var(--radius); border: none; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.1s; }
   .btn-primary { background: var(--primary); color: #fff; width: 100%; }
-  .btn-danger { background: var(--danger); color: #fff; width: 100%; }
+  .btn-teams { background: var(--teams); color: #fff; width: 100%; margin-top: 10px; }
 
-  /* BACK OFFICE STATS */
-  .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; text-align: center; }
-  .stat-val { display: block; font-size: 1.3rem; font-weight: bold; color: var(--primary); }
-  .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
-
-  /* TIMELINE */
+  /* --- TIMELINE --- */
   .timeline { border-left: 3px solid var(--primary); padding-left: 16px; }
   .event { margin-bottom: 16px; }
   .event .date { font-size: 0.8rem; font-weight: 600; color: var(--primary); }
   .event .type { font-size: 0.75rem; background: var(--primary-light); padding: 4px 8px; border-radius: 999px; display: inline-block; margin: 4px 0; font-weight: 600; color: var(--primary); }
   .event .summary { font-size: 0.9rem; color: var(--text-muted); }
 
-  /* TOASTS */
+  /* --- TOASTS --- */
   .toast-container { position: fixed; top: 20px; right: 20px; z-index: 3000; }
   .toast { background: var(--success); color: #fff; padding: 12px 18px; border-radius: 10px; box-shadow: var(--shadow); margin-bottom: 10px; opacity: 0; transform: translateY(-10px); transition: 0.3s; font-size: 0.9rem; font-weight: 600; }
   .toast.show { opacity: 1; transform: translateY(0); }
 
   .tab-content { display: none; }
   .tab-content.active { display: block; }
-  
-  .fraud-alert-card { border: 2px solid var(--danger); background: var(--danger-light); padding: 20px; border-radius: var(--radius); }
 </style>
 </head>
 <body>
@@ -78,86 +80,77 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <div class="container">
+
+  <div class="system-alerts">
+    <div class="alert-box alert-success">AUTHENTICATED: SUCCESS</div>
+    <div class="alert-box alert-fraud">FRAUD ALERT: DEBIT BLOCK ACTIVE</div>
+    <div class="alert-box alert-info">INTENT: FRAUD PROTECTION</div>
+  </div>
+
   <div class="header">1st Source Bank – Client Support Console</div>
 
   <div class="tabs">
     <div class="tab active" data-tab="context">Client Context</div>
     <div class="tab" data-tab="workflow">Workflow</div>
-    <div class="tab" data-tab="preferences">Preferences</div>
     <div class="tab" data-tab="journey">Client Journey</div>
     <div class="tab" data-tab="backoffice">Back-Office Insights</div>
-    <div class="tab tab-danger" data-tab="whatif">⚠️ WHAT-IF: Breach</div>
   </div>
 
   <div id="context" class="tab-content active">
     <div class="card">
-      <h3>Interaction Summary: Cameron Loyal</h3>
-      <div class="talk-track">
-        "I've identified the travel block on your card for that Chicago transaction, Mr. Loyal. I'm ready to authorize that now."
+      <h3>Active Interaction: Cameron Loyal</h3>
+      <div class="kb-panel">
+        <span class="kb-title">Virtual Agent Context Transfer</span>
+        "Mr. Loyal, I have your verified details in front of me regarding the fraud block in Chicago. I see you've already discussed the alert triggers with our virtual assistant—let's get this resolved for you."
       </div>
       <div class="grid-2">
         <div><label>Client Name</label><input value="Cameron Loyal" readonly></div>
-        <div><label>Tier</label><input value="Private Client" readonly style="font-weight: bold; color: var(--primary);"></div>
-        <div><label>Phone Number</label><input value="(574) 555-0199" readonly></div>
+        <div><label>Tier</label><input value="Private Client" readonly style="color: var(--primary); font-weight: bold;"></div>
         <div><label>Recent Decline</label><input value="$342.15 - Chicago, IL" readonly></div>
+        <div><label>Verification Status</label><input value="Authenticated" readonly style="color: var(--success); font-weight: bold;"></div>
       </div>
     </div>
   </div>
 
   <div id="workflow" class="tab-content">
     <div class="card">
-      <h3>Resolution Steps</h3>
-      <div class="check-item"><input type="checkbox" class="task-check"> Verify identity via Voice Biometrics</div>
-      <div class="check-item"><input type="checkbox" class="task-check"> Confirm travel dates in Chicago</div>
-      <div class="check-item"><input type="checkbox" class="task-check"> Release security block via Fraud Ops</div>
-      <div class="check-item"><input type="checkbox" class="task-check"> Suggest Mobile App travel notices</div>
-      <button class="btn btn-primary" onclick="showToast('Transaction Authorized Successfully')">Process Override</button>
-    </div>
-  </div>
+      <h3>Fraud Protection Workflow</h3>
+      <div class="check-item"><input type="checkbox" class="task-check"> Verify current location and travel proximity</div>
+      <div class="check-item"><input type="checkbox" class="task-check"> Confirm legitimate transaction: $342.15 at Marriott Marquis</div>
+      <div class="check-item"><input type="checkbox" class="task-check"> Review and update travel dates for card whitelist</div>
+      <div class="check-item"><input type="checkbox" class="task-check"> Facilitate mobile travel notice education</div>
 
-  <div id="preferences" class="tab-content">
-    <div class="card">
-      <h3>Communication Settings</h3>
-      <div class="check-item"><input type="checkbox" checked> SMS Fraud Alerts</div>
-      <div class="check-item"><input type="checkbox"> Email Marketing</div>
-      <div class="check-item"><input type="checkbox" checked> Voice Callback</div>
-      <button class="btn btn-primary" onclick="showToast('Preferences Saved')">Update Salesforce</button>
+      <div style="margin-top: 25px;">
+        <button class="btn btn-primary" onclick="showToast('Fraud Restriction Removed')">Release Fraud Block</button>
+        <button class="btn btn-teams" onclick="showToast('Security Desk Notified')">Escalate to Fraud Ops (Teams)</button>
+      </div>
     </div>
   </div>
 
   <div id="journey" class="tab-content">
     <div class="card">
-      <h3>Interaction History</h3>
+      <h3>Interaction Timeline</h3>
       <div class="timeline">
-        <div class="event"><div class="date">Today</div><div class="type">Inbound Voice</div><div class="summary">Declined card at Marriott Chicago.</div></div>
-        <div class="event"><div class="date">Jan 5, 2026</div><div class="type">Web Portal</div><div class="summary">Online Banking Login - Success.</div></div>
-        <div class="event"><div class="date">Dec 20, 2025</div><div class="type">Outbound SMS</div><div class="summary">Fraud alert sent for suspicious gas station charge.</div></div>
+        <div class="event"><div class="date">Now</div><div class="type">Inbound Voice</div><div class="summary">Transferred to Live Agent. Intent: Fraud Protection.</div></div>
+        <div class="event"><div class="date">3 Mins Ago</div><div class="type">Virtual Agent</div><div class="summary">Customer successfully authenticated and intent captured.</div></div>
+        <div class="event"><div class="date">Jan 13, 2026</div><div class="type">System Alert</div><div class="summary">Fraud Block triggered: Out-of-state transaction.</div></div>
+        <div class="event"><div class="date">Jan 5, 2026</div><div class="type">Web Portal</div><div class="summary">Search: "Using my card in Chicago"</div></div>
       </div>
     </div>
   </div>
 
   <div id="backoffice" class="tab-content">
     <div class="card">
-      <h3>Back-Office Live Monitoring</h3>
-      <div class="grid-3">
-        <div class="stat-card"><span class="stat-label">Fraud Score</span><span class="stat-val">12/100</span></div>
-        <div class="stat-card"><span class="stat-label">Trust Index</span><span class="stat-val" style="color:var(--success);">High</span></div>
-        <div class="stat-card"><span class="stat-label">Network Location</span><span class="stat-val">Verified</span></div>
-      </div>
-      <h4 style="margin-top:20px;">Internal Fraud Feed</h4>
-      <p style="font-size: 0.85rem; border-left: 3px solid var(--warning); padding-left: 10px; background: #fffaf0;">
-        System matched voice print to 1st Source Enrollment ID: 99821. No current global security alerts for this profile.
-      </p>
-    </div>
-  </div>
-
-  <div id="whatif" class="tab-content">
-    <div class="fraud-alert-card">
-      <h3 style="color:var(--danger);">WHAT-IF: Identity Breach</h3>
-      <p style="font-size: 0.9rem;">Scenario: Client confirms the Chicago charge but identifies an unknown $2,500 purchase in Paris.</p>
+      <h3>Integrated Ecosystem</h3>
       <div class="grid-2">
-        <button class="btn btn-danger" onclick="showToast('ACCOUNT KILLED - EMERGENCY FREEZE ACTIVE')">EMERGENCY ACCOUNT FREEZE</button>
-        <button class="btn" style="background:#5b5fc7; color:white;" onclick="showToast('Teams Security Channel Notified')">Escalate to Cyber-Security</button>
+        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+          <h4 style="margin:0 0 10px 0; font-size: 0.8rem; color:var(--primary);">SALESFORCE CRM</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Interaction logged automatically. High-value client status flagged for priority routing.</p>
+        </div>
+        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+          <h4 style="margin:0 0 10px 0; font-size: 0.8rem; color:var(--teams);">MICROSOFT TEAMS</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Fraud Recovery channel active. Analyst presence: Available.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -191,9 +184,11 @@
     }, 3000);
   }
 
-  // Interactive Checkboxes
-  document.querySelectorAll('input[type="checkbox"]').forEach(box => {
-    box.addEventListener('change', (e) => { if(e.target.checked) showToast("Verified"); });
+  // Checkbox interactions
+  document.querySelectorAll('.task-check').forEach(box => {
+    box.addEventListener('change', (e) => {
+        if(e.target.checked) showToast("Verified");
+    });
   });
 </script>
 
