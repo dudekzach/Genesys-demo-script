@@ -25,7 +25,7 @@
   body { margin: 0; background: var(--bg); font-family: "Segoe UI", sans-serif; color: var(--text-main); padding: 20px 16px; }
   .container { max-width: 1100px; margin: auto; }
 
-  /* --- VISUAL ALERT BANNERS (New System Insight) --- */
+  /* --- VISUAL ALERT BANNERS --- */
   .system-alerts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
   .alert-box { padding: 12px; border-radius: 10px; text-align: center; font-weight: 700; font-size: 0.85rem; box-shadow: var(--shadow); border: 1px solid transparent; }
   .alert-success { background: #e8f5e9; color: var(--success); border-color: var(--success); }
@@ -48,7 +48,7 @@
   input { width: 100%; padding: 10px; border: 1px solid #cbd7e3; border-radius: 8px; margin-bottom: 16px; font-size: 0.92rem; box-sizing: border-box; background: #fcfcfc; }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-  /* --- KNOWLEDGE TRIGGERS (RAG) --- */
+  /* --- KNOWLEDGE TRIGGERS --- */
   .kb-panel { background: #fff9c4; border-left: 4px solid #fbc02d; padding: 12px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; }
   .kb-title { font-weight: bold; color: #856404; display: block; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 5px; }
 
@@ -84,7 +84,7 @@
   <div class="system-alerts">
     <div class="alert-box alert-success">AUTHENTICATED: SUCCESS</div>
     <div class="alert-box alert-fraud">FRAUD ALERT: DEBIT BLOCK ACTIVE</div>
-    <div class="alert-box alert-info">INTENT: CHICAGO TRAVEL</div>
+    <div class="alert-box alert-info">INTENT: FRAUD PROTECTION</div>
   </div>
 
   <div class="header">1st Source Bank – Client Support Console</div>
@@ -101,31 +101,29 @@
       <h3>Active Interaction: Cameron Loyal</h3>
       <div class="kb-panel">
         <span class="kb-title">Virtual Agent Context Transfer</span>
-        "I see you're calling from Chicago, Mr. Loyal. I've noted the decline at the Marriott Marquis and I'm ready to help you resolve this immediately."
+        "Mr. Loyal, I have your verified details in front of me regarding the fraud block in Chicago. I see you've already discussed the alert triggers with our virtual assistant—let's get this resolved for you."
       </div>
       <div class="grid-2">
         <div><label>Client Name</label><input value="Cameron Loyal" readonly></div>
         <div><label>Tier</label><input value="Private Client" readonly style="color: var(--primary); font-weight: bold;"></div>
         <div><label>Recent Decline</label><input value="$342.15 - Chicago, IL" readonly></div>
-        <div><label>Identity Status</label><input value="System Verified" readonly style="color: var(--success);"></div>
+        <div><label>Verification Status</label><input value="Authenticated" readonly style="color: var(--success); font-weight: bold;"></div>
       </div>
     </div>
   </div>
 
   <div id="workflow" class="tab-content">
     <div class="card">
-      <h3>Resolution Workflow</h3>
-      <div class="check-item"><input type="checkbox" class="task-check"> Confirm security of current location (Chicago)</div>
-      <div class="check-item"><input type="checkbox" class="task-check"> Verify travel end date for card release</div>
-      <div class="check-item"><input type="checkbox" class="task-check"> Advise client on 1st Source Mobile Travel Notices</div>
-      
-      <div class="kb-panel" style="margin-top:20px;">
-        <span class="kb-title">Trigger #5: Post-Resolution KB</span>
-        "After restriction is removed: what to expect (Sync time: < 30s)."
-      </div>
+      <h3>Fraud Protection Workflow</h3>
+      <div class="check-item"><input type="checkbox" class="task-check"> Verify current location and travel proximity</div>
+      <div class="check-item"><input type="checkbox" class="task-check"> Confirm legitimate transaction: $342.15 at Marriott Marquis</div>
+      <div class="check-item"><input type="checkbox" class="task-check"> Review and update travel dates for card whitelist</div>
+      <div class="check-item"><input type="checkbox" class="task-check"> Facilitate mobile travel notice education</div>
 
-      <button class="btn btn-primary" onclick="showToast('Travel Override Active')">Release Debit Card Block</button>
-      <button class="btn btn-teams" onclick="showToast('Fraud Ops Notified via Teams')">Notify Fraud Ops (Teams)</button>
+      <div style="margin-top: 25px;">
+        <button class="btn btn-primary" onclick="showToast('Fraud Restriction Removed')">Release Fraud Block</button>
+        <button class="btn btn-teams" onclick="showToast('Security Desk Notified')">Escalate to Fraud Ops (Teams)</button>
+      </div>
     </div>
   </div>
 
@@ -133,25 +131,25 @@
     <div class="card">
       <h3>Interaction Timeline</h3>
       <div class="timeline">
-        <div class="event"><div class="date">Jan 13, 2026 (Now)</div><div class="type">Inbound Voice</div><div class="summary">Handoff from Virtual Agent: Intent - Card Decline.</div></div>
-        <div class="event"><div class="date">Jan 13, 2026</div><div class="type">Knowledge Trigger</div><div class="summary">Served: 'Debit card declined while traveling'.</div></div>
-        <div class="event"><div class="date">Jan 5, 2026</div><div class="type">Web Portal</div><div class="summary">Travel insurance FAQ search detected.</div></div>
-        <div class="event"><div class="date">Dec 15, 2025</div><div class="type">Outbound SMS</div><div class="summary">Fraud alert notification sent.</div></div>
+        <div class="event"><div class="date">Now</div><div class="type">Inbound Voice</div><div class="summary">Transferred to Live Agent. Intent: Fraud Protection.</div></div>
+        <div class="event"><div class="date">3 Mins Ago</div><div class="type">Virtual Agent</div><div class="summary">Customer successfully authenticated and intent captured.</div></div>
+        <div class="event"><div class="date">Jan 13, 2026</div><div class="type">System Alert</div><div class="summary">Fraud Block triggered: Out-of-state transaction.</div></div>
+        <div class="event"><div class="date">Jan 5, 2026</div><div class="type">Web Portal</div><div class="summary">Search: "Using my card in Chicago"</div></div>
       </div>
     </div>
   </div>
 
   <div id="backoffice" class="tab-content">
     <div class="card">
-      <h3>Ecosystem Data</h3>
+      <h3>Integrated Ecosystem</h3>
       <div class="grid-2">
         <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
-          <h4 style="margin:0; font-size: 0.8rem; color:var(--primary);">SALESFORCE CRM</h4>
-          <p style="font-size: 0.8rem; color: var(--text-muted);">Screen pop triggered successfully. Customer profile matched to Primary Account Holder.</p>
+          <h4 style="margin:0 0 10px 0; font-size: 0.8rem; color:var(--primary);">SALESFORCE CRM</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Interaction logged automatically. High-value client status flagged for priority routing.</p>
         </div>
         <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
-          <h4 style="margin:0; font-size: 0.8rem; color:var(--teams);">MICROSOFT TEAMS</h4>
-          <p style="font-size: 0.8rem; color: var(--text-muted);">Direct link to #Fraud-Support active. Real-time sync with 1st Source Bank Security Desk.</p>
+          <h4 style="margin:0 0 10px 0; font-size: 0.8rem; color:var(--teams);">MICROSOFT TEAMS</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Fraud Recovery channel active. Analyst presence: Available.</p>
         </div>
       </div>
     </div>
@@ -189,7 +187,7 @@
   // Checkbox interactions
   document.querySelectorAll('.task-check').forEach(box => {
     box.addEventListener('change', (e) => {
-        if(e.target.checked) showToast("Task Completed");
+        if(e.target.checked) showToast("Verified");
     });
   });
 </script>
