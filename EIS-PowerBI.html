@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Genesys Analytics → PowerBI-style Mock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f1a2d;
+      --panel2:#0c1628;
+      --card:#0f1c33;
+      --card2:#0d1930;
+      --text:#e6edf7;
+      --muted:#9fb0c7;
+      --line:rgba(255,255,255,.08);
+      --accent:#4cc9f0;
+      --accent2:#a78bfa;
+      --good:#34d399;
+      --warn:#fbbf24;
+      --bad:#fb7185;
+      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 20% 0%, rgba(76,201,240,.14), transparent 60%),
+                  radial-gradient(900px 700px at 90% 0%, rgba(167,139,250,.12), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      height:100vh;
+      overflow:hidden;
+    }
+
+    .app{
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      grid-template-rows: 64px 1fr;
+      grid-template-areas:
+        "nav top"
+        "nav main";
+      height:100vh;
+    }
+
+    /* Top bar */
+    header{
+      grid-area: top;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 12px 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+
+    .top-left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 420px;
+    }
+
+    .crumb{
+      display:flex;
+      flex-direction:column;
+      line-height:1.1;
+    }
+    .crumb .title{font-weight:700; font-size:14px;}
+    .crumb .sub{font-size:12px; color:var(--muted)}
+
+    .search{
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding: 10px 12px;
+      border:1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(0,0,0,.25);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .search input{
+      width:100%;
+      background: transparent;
+      border:none;
+      outline:none;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .top-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .btn{
+      cursor:pointer;
+      user-select:none;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(76,201,240,.18), rgba(76,201,240,.06));
+      color: var(--text);
+      font-weight: 600;
+      font-size: 12px;
+      transition: transform .12s ease, background .12s ease;
+    }
+    .btn:hover{transform: translateY(-1px); background: linear-gradient(180deg, rgba(76,201,240,.24), rgba(76,201,240,.08));}
+    .btn.secondary{
+      background: rgba(0,0,0,.22);
+    }
+
+    /* Left nav */
+    nav{
+      grid-area: nav;
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border-right: 1px solid var(--line);
+      padding: 14px 14px;
+      overflow:auto;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 10px;
+      margin-bottom: 10px;
+    }
+
+    .logo{
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 30%, rgba(76,201,240,.9), rgba(167,139,250,.7));
+      box-shadow: 0 8px 24px rgba(76,201,240,.18);
+    }
+    .brand strong{font-size: 13px;}
+    .brand span{display:block; font-size: 11px; color: var(--muted); margin-top: 2px;}
+
+    .nav-section{margin-top: 14px;}
+    .nav-h{font-size: 11px; color: var(--muted); padding: 8px 10px; text-transform: uppercase; letter-spacing: .08em;}
+
+    .nav-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      color: var(--text);
+      font-size: 13px;
+      cursor:pointer;
+    }
+    .nav-item small{color: var(--muted)}
+    .nav-item.active{
+      background: rgba(76,201,240,.10);
+      border: 1px solid rgba(76,201,240,.18);
+    }
+    .nav-item:hover{background: rgba(255,255,255,.03)}
+
+    /* Main */
+    main{
+      grid-area: main;
+      padding: 16px;
+      overflow:auto;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      align-items:start;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .card-h{
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--line);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .card-h .h-left{display:flex; flex-direction:column; gap:4px;}
+    .card-h .h-left strong{font-size: 13px;}
+    .card-h .h-left span{font-size: 12px; color: var(--muted)}
+
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 12px 14px 14px;
+    }
+
+    .kpi{
+      background: rgba(0,0,0,.25);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .kpi .label{font-size: 11px; color: var(--muted)}
+    .kpi .value{font-size: 18px; font-weight: 700; margin-top: 6px;}
+    .kpi .delta{font-size: 11px; color: var(--muted); margin-top: 6px;}
+
+    .content{
+      padding: 12px 14px 14px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .chart-wrap{
+      background: rgba(0,0,0,.24);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px;
+    }
+
+    .chart-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 6px 6px 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    canvas{width:100% !important; height:260px !important;}
+
+    .side{
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+    }
+
+    .filters{
+      padding: 12px 14px 14px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+    }
+
+    label{font-size: 12px; color: var(--muted)}
+
+    select, input[type="date"]{
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 10px;
+      outline:none;
+      font-size: 13px;
+    }
+
+    .log{
+      padding: 12px 14px 14px;
+    }
+    .logbox{
+      height: 220px;
+      overflow:auto;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.25);
+      padding: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      color: #cfe3ff;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .dot{
+      width:8px;height:8px;border-radius:999px;background: var(--good);
+      box-shadow: 0 0 0 4px rgba(52,211,153,.15);
+    }
+
+    @media (max-width: 1100px){
+      .app{grid-template-columns: 1fr; grid-template-rows: 64px auto; grid-template-areas: "top" "main";}
+      nav{display:none;}
+      .grid{grid-template-columns: 1fr;}
+      .row{grid-template-columns: 1fr;}
+      .top-left{min-width: 0;}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <nav>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <strong>Power BI-style Mock</strong>
+          <span>Genesys Analytics (simulated)</span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-h">Workspaces</div>
+        <div class="nav-item active">EIS • Commercial Exec <small>Report</small></div>
+        <div class="nav-item">Contact Center Ops <small>Report</small></div>
+        <div class="nav-item">WEM & Quality <small>Report</small></div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-h">Datasets</div>
+        <div class="nav-item">Genesys Interactions <small>API</small></div>
+        <div class="nav-item">Email SLAs <small>API</small></div>
+        <div class="nav-item">Agent Performance <small>API</small></div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-h">Notes</div>
+        <div class="nav-item">Mock only <small>No real data</small></div>
+      </div>
+    </nav>
+
+    <header>
+      <div class="top-left">
+        <div class="crumb">
+          <div class="title">EIS • Responsiveness & Revenue Leakage</div>
+          <div class="sub">Simulated data feed: Genesys → Power BI (fictitious)</div>
+        </div>
+        <div class="search" role="search">
+          <span style="opacity:.75">🔎</span>
+          <input id="search" placeholder="Search (mock)… e.g., ABB, OEM, SLA" />
+        </div>
+      </div>
+
+      <div class="top-right">
+        <span class="chip"><span class="dot"></span> Feed: <strong style="color:var(--text)">Connected</strong></span>
+        <button class="btn secondary" id="btnRandom">Generate New Data</button>
+        <button class="btn" id="btnSend">Send to “Power BI API”</button>
+      </div>
+    </header>
+
+    <main>
+      <div class="grid">
+        <section class="card">
+          <div class="card-h">
+            <div class="h-left">
+              <strong>Executive Overview</strong>
+              <span>Voice + Email responsiveness across segments</span>
+            </div>
+            <span class="pill" id="lastUpdated">Last update: —</span>
+          </div>
+
+          <div class="kpis">
+            <div class="kpi">
+              <div class="label">Missed Calls (Biz Hours)</div>
+              <div class="value" id="kpiMissed">—</div>
+              <div class="delta" id="kpiMissedDelta">—</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Avg Email Response (hrs)</div>
+              <div class="value" id="kpiEmail">—</div>
+              <div class="delta" id="kpiEmailDelta">—</div>
+            </div>
+            <div class="kpi">
+              <div class="label">SLA Breaches (24h)</div>
+              <div class="value" id="kpiSla">—</div>
+              <div class="delta" id="kpiSlaDelta">—</div>
+            </div>
+          </div>
+
+          <div class="content">
+            <div class="row">
+              <div class="chart-wrap">
+                <div class="chart-title">
+                  <span>Missed Calls by Segment (last 7 days)</span>
+                  <span style="opacity:.8">bar</span>
+                </div>
+                <canvas id="chartMissed"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div class="chart-title">
+                  <span>Email Response Time Distribution</span>
+                  <span style="opacity:.8">line</span>
+                </div>
+                <canvas id="chartEmail"></canvas>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="chart-wrap">
+                <div class="chart-title">
+                  <span>SLA Breaches Trend (24h)</span>
+                  <span style="opacity:.8">area</span>
+                </div>
+                <canvas id="chartSla"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div class="chart-title">
+                  <span>Top Accounts at Risk (mock)</span>
+                  <span style="opacity:.8">table</span>
+                </div>
+                <div id="riskTable" style="padding:6px; overflow:auto; max-height:260px;
+                  border-radius:12px; border:1px solid var(--line); background: rgba(0,0,0,.18);"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="side">
+          <section class="card">
+            <div class="card-h">
+              <div class="h-left">
+                <strong>Slicers (Mock Filters)</strong>
+                <span>Drive the visuals like Power BI</span>
+              </div>
+            </div>
+            <div class="filters">
+              <div class="field">
+                <label for="segment">Segment</label>
+                <select id="segment">
+                  <option value="ALL" selected>All</option>
+                  <option value="OEM">OEM</option>
+                  <option value="Aftermarket">Aftermarket</option>
+                  <option value="Electronics">Electronics</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="window">Time Window</label>
+                <select id="window">
+                  <option value="7" selected>Last 7 days</option>
+                  <option value="14">Last 14 days</option>
+                  <option value="30">Last 30 days</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="sla">Email SLA (hours)</label>
+                <select id="sla">
+                  <option value="8">8</option>
+                  <option value="24" selected>24</option>
+                  <option value="48">48</option>
+                </select>
+              </div>
+              <div style="display:flex; gap:10px; margin-top: 6px;">
+                <button class="btn" style="flex:1" id="btnApply">Apply</button>
+                <button class="btn secondary" style="flex:1" id="btnReset">Reset</button>
+              </div>
+              <div style="margin-top: 8px; color: var(--muted); font-size: 12px; line-height:1.35">
+                Tip: Use <strong>Send to “Power BI API”</strong> to simulate posting JSON payloads.
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-h">
+              <div class="h-left">
+                <strong>API Console (Simulated)</strong>
+                <span>Shows the JSON payload + “ingestion” events</span>
+              </div>
+            </div>
+            <div class="log">
+              <div class="logbox" id="logbox"></div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ------------------------------
+    // Mock: Genesys analytics payload
+    // ------------------------------
+    const SEGMENTS = ["OEM", "Aftermarket", "Electronics"]; 
+
+    function randInt(min, max){
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function nowIso(){
+      return new Date().toISOString();
+    }
+
+    function makeSeries(days, base, jitter){
+      const arr = [];
+      for(let i=days-1; i>=0; i--){
+        const v = Math.max(0, Math.round(base + randInt(-jitter, jitter)));
+        const d = new Date(Date.now() - i*24*60*60*1000);
+        arr.push({ date: d.toISOString().slice(0,10), value: v });
+      }
+      return arr;
+    }
+
+    function makeEmailResponseSeries(days, baseHours, jitterHours){
+      const arr = [];
+      for(let i=days-1; i>=0; i--){
+        const v = Math.max(0.2, +(baseHours + (Math.random()*2-1)*jitterHours).toFixed(1));
+        const d = new Date(Date.now() - i*24*60*60*1000);
+        arr.push({ date: d.toISOString().slice(0,10), hours: v });
+      }
+      return arr;
+    }
+
+    function makeRiskAccounts(n){
+      const names = ["ABB", "Siemens", "Schneider", "Honeywell", "Emerson", "Rockwell", "Bosch", "Eaton", "GE", "3M", "Parker", "Sonepar"]; 
+      const out = [];
+      for(let i=0;i<n;i++){
+        const name = names[randInt(0, names.length-1)] + " • " + ["OEM","Aftermarket","Electronics"][randInt(0,2)];
+        out.push({
+          account: name,
+          overdueEmails: randInt(1, 12),
+          missedCalls: randInt(0, 9),
+          risk: ["Low","Medium","High"][randInt(0,2)]
+        });
+      }
+      // sort by rough risk
+      const score = (r)=> (r.risk==="High"?100:r.risk==="Medium"?50:10) + r.overdueEmails*2 + r.missedCalls;
+      out.sort((a,b)=> score(b)-score(a));
+      return out.slice(0,8);
+    }
+
+    function makeMockGenesysPayload(days=7){
+      const bySegment = {};
+      SEGMENTS.forEach(s=>{
+        bySegment[s] = {
+          missedCalls: makeSeries(days, randInt(18, 45), randInt(6, 16)),
+          slaBreaches: makeSeries(days, randInt(6, 22), randInt(3, 10)),
+          emailRespHours: makeEmailResponseSeries(days, +(Math.random()*10+8).toFixed(1), +(Math.random()*2.5+1.2).toFixed(1))
+        };
+      });
+
+      return {
+        meta: {
+          source: "Genesys Cloud (simulated)",
+          org: "EIS",
+          generatedAt: nowIso(),
+        },
+        kpis: {
+          missedCallsBizHours: randInt(120, 320),
+          avgEmailResponseHours: +(Math.random()*14+8).toFixed(1),
+          slaBreaches24h: randInt(40, 140),
+        },
+        segments: bySegment,
+        riskAccounts: makeRiskAccounts(10)
+      };
+    }
+
+    // ------------------------------
+    // Mock: "Send to Power BI API"
+    // ------------------------------
+    async function mockPowerBIApiIngest(payload){
+      // pretend we POST to an endpoint
+      await new Promise(r=>setTimeout(r, randInt(250, 650)));
+      return {
+        status: 202,
+        message: "Accepted",
+        ingestionId: "ing_" + Math.random().toString(16).slice(2),
+        receivedAt: nowIso()
+      };
+    }
+
+    // ------------------------------
+    // UI helpers
+    // ------------------------------
+    const $ = (id)=> document.getElementById(id);
+
+    function log(line){
+      const box = $("logbox");
+      const ts = new Date().toLocaleTimeString();
+      box.textContent += `[${ts}] ${line}\n`;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function fmtDelta(current){
+      // fake deltas for UI polish
+      const sign = Math.random() > .5 ? "+" : "-";
+      const pct = (Math.random()*9+1).toFixed(1);
+      return `${sign}${pct}% vs last period`;
+    }
+
+    function renderRiskTable(rows){
+      const el = $("riskTable");
+      const head = `<div style="display:grid; grid-template-columns: 1.5fr .6fr .6fr .6fr; gap:8px; padding:8px; border-bottom:1px solid var(--line); color: var(--muted); font-size:12px;">
+        <div>Account</div><div>Overdue</div><div>Missed</div><div>Risk</div>
+      </div>`;
+      const body = rows.map(r=>{
+        const color = r.risk==="High" ? "var(--bad)" : r.risk==="Medium" ? "var(--warn)" : "var(--good)";
+        return `<div style="display:grid; grid-template-columns: 1.5fr .6fr .6fr .6fr; gap:8px; padding:8px; border-bottom:1px solid rgba(255,255,255,.06); font-size:12px;">
+          <div style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${r.account}</div>
+          <div>${r.overdueEmails}</div>
+          <div>${r.missedCalls}</div>
+          <div style="color:${color}; font-weight:700">${r.risk}</div>
+        </div>`;
+      }).join("");
+      el.innerHTML = head + body;
+    }
+
+    // ------------------------------
+    // Charts
+    // ------------------------------
+    let payload = makeMockGenesysPayload(7);
+
+    const baseChartOpts = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: "rgba(230,237,247,.85)" } },
+        tooltip: { enabled: true }
+      },
+      scales: {
+        x: { ticks: { color: "rgba(159,176,199,.9)" }, grid: { color: "rgba(255,255,255,.06)" } },
+        y: { ticks: { color: "rgba(159,176,199,.9)" }, grid: { color: "rgba(255,255,255,.06)" } }
+      }
+    };
+
+    const chartMissed = new Chart($("chartMissed"), {
+      type: 'bar',
+      data: { labels: [], datasets: [] },
+      options: baseChartOpts
+    });
+
+    const chartEmail = new Chart($("chartEmail"), {
+      type: 'line',
+      data: { labels: [], datasets: [] },
+      options: {
+        ...baseChartOpts,
+        elements: { line: { tension: 0.35 }, point: { radius: 2 } }
+      }
+    });
+
+    const chartSla = new Chart($("chartSla"), {
+      type: 'line',
+      data: { labels: [], datasets: [] },
+      options: {
+        ...baseChartOpts,
+        elements: { line: { tension: 0.35 }, point: { radius: 2 } }
+      }
+    });
+
+    function sum(series){ return series.reduce((acc,x)=>acc+x.value,0); }
+
+    function updateKpis(p){
+      $("kpiMissed").textContent = p.kpis.missedCallsBizHours.toString();
+      $("kpiEmail").textContent = p.kpis.avgEmailResponseHours.toString();
+      $("kpiSla").textContent = p.kpis.slaBreaches24h.toString();
+
+      $("kpiMissedDelta").textContent = fmtDelta(p.kpis.missedCallsBizHours);
+      $("kpiEmailDelta").textContent = fmtDelta(p.kpis.avgEmailResponseHours);
+      $("kpiSlaDelta").textContent = fmtDelta(p.kpis.slaBreaches24h);
+
+      $("lastUpdated").textContent = "Last update: " + new Date(p.meta.generatedAt).toLocaleString();
+    }
+
+    function filteredSegment(){
+      const seg = $("segment").value;
+      return seg;
+    }
+
+    function updateCharts(){
+      const days = parseInt($("window").value, 10);
+      const seg = filteredSegment();
+
+      // rebuild payload if window changed
+      payload = makeMockGenesysPayload(days);
+
+      // Missed calls by segment: bar of 7/14/30-day totals
+      const labels = seg === "ALL" ? SEGMENTS : [seg];
+      const totals = labels.map(s=> sum(payload.segments[s].missedCalls));
+      chartMissed.data.labels = labels;
+      chartMissed.data.datasets = [{
+        label: `Missed Calls (${days}d)`,
+        data: totals,
+        borderWidth: 1
+      }];
+      chartMissed.update();
+
+      // Email response distribution: line per segment, per day
+      const dateLabels = payload.segments[labels[0]].emailRespHours.map(x=>x.date);
+      chartEmail.data.labels = dateLabels;
+      chartEmail.data.datasets = (seg === "ALL" ? SEGMENTS : [seg]).map(s=>({
+        label: `${s} (hrs)`,
+        data: payload.segments[s].emailRespHours.map(x=>x.hours),
+        fill: false,
+        borderWidth: 2
+      }));
+      chartEmail.update();
+
+      // SLA breaches trend: area-ish fill
+      chartSla.data.labels = dateLabels;
+      chartSla.data.datasets = (seg === "ALL" ? SEGMENTS : [seg]).map(s=>({
+        label: `${s} breaches`,
+        data: payload.segments[s].slaBreaches.map(x=>x.value),
+        fill: true,
+        borderWidth: 2
+      }));
+      chartSla.update();
+
+      // KPIs & risk table
+      updateKpis(payload);
+      renderRiskTable(payload.riskAccounts);
+
+      log(`Generated mock dataset (${days}d) | segment=${seg}`);
+    }
+
+    // ------------------------------
+    // Wire up controls
+    // ------------------------------
+    $("btnApply").addEventListener('click', updateCharts);
+    $("btnReset").addEventListener('click', ()=>{
+      $("segment").value = "ALL";
+      $("window").value = "7";
+      $("sla").value = "24";
+      updateCharts();
+    });
+
+    $("btnRandom").addEventListener('click', updateCharts);
+
+    $("btnSend").addEventListener('click', async ()=>{
+      const sla = parseInt($("sla").value, 10);
+      const seg = filteredSegment();
+
+      // build a "payload" that mimics a push of metrics to an analytics sink
+      const apiPayload = {
+        schema: "eis.genesys.analytics.v1",
+        sentAt: nowIso(),
+        filters: { segment: seg, windowDays: parseInt($("window").value,10), emailSlaHours: sla },
+        kpis: payload.kpis,
+        riskAccounts: payload.riskAccounts,
+        notes: "Fictitious demo payload. No customer data."
+      };
+
+      log("POST /powerbi/ingest (mock)");
+      log(JSON.stringify(apiPayload, null, 2));
+
+      const res = await mockPowerBIApiIngest(apiPayload);
+      log(`→ ${res.status} ${res.message} | ingestionId=${res.ingestionId}`);
+    });
+
+    // Search just logs intent (mock)
+    $("search").addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){
+        log(`Search executed (mock): "${e.target.value}"`);
+      }
+    });
+
+    // Initial paint
+    log("UI ready. This is a mock Power BI-style report page.");
+    updateCharts();
+  </script>
+</body>
+</html>
