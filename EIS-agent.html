@@ -35,35 +35,35 @@
 
   /* --- TABS --- */
   .tabs { display: flex; gap: 4px; border-bottom: 2px solid #dfe6e9; margin-bottom: 20px; }
-  .tab { padding: 12px 20px; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; transition: 0.2s; }
+  .tab { padding: 12px 20px; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; transition: 0.2s; white-space: nowrap; }
   .tab.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
 
   /* --- CARDS --- */
-  .card { background: var(--card-bg); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; }
-  h3 { margin-top: 0; color: var(--primary); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+  .card { background: var(--card-bg); padding: 22px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; }
+  h3 { margin-top: 0; color: var(--primary); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
   
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
   .data-field { background: #f8f9fa; border: 1px solid #e9ecef; padding: 10px; border-radius: 4px; font-size: 0.95rem; margin-bottom: 15px; font-weight: 500; }
 
-  /* --- SALES TOOLS --- */
-  .check-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 0.9rem; }
-  .check-item input { width: 17px; height: 17px; }
+  /* --- ACTION ITEMS --- */
+  .check-item { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; font-size: 0.9rem; cursor: pointer; }
+  .check-item input { width: 17px; height: 17px; cursor: pointer; }
   .btn { padding: 12px; border-radius: 4px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; width: 100%; margin-top: 10px; }
   .btn-primary { background: var(--primary); color: #fff; }
   .btn-quote { background: var(--accent); color: #fff; }
 
   /* --- TOASTS --- */
   .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
-  .toast { background: #333; color: #fff; padding: 12px 20px; border-radius: 4px; margin-top: 10px; opacity: 0; transform: translateY(20px); transition: 0.3s; }
+  .toast { background: #333; color: #fff; padding: 12px 20px; border-radius: 4px; margin-top: 10px; opacity: 0; transform: translateY(20px); transition: 0.3s; font-size: 0.9rem; }
   .toast.show { opacity: 1; transform: translateY(0); }
 
   .tab-content { display: none; }
   .tab-content.active { display: block; }
   
-  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  th { text-align: left; padding: 8px; background: #f8f9fa; color: var(--text-muted); }
-  td { padding: 8px; border-bottom: 1px solid #eee; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; }
+  th { text-align: left; padding: 10px; background: #f8f9fa; color: var(--text-muted); }
+  td { padding: 10px; border-bottom: 1px solid #eee; }
 </style>
 </head>
 <body>
@@ -73,112 +73,115 @@
 <div class="container">
 
   <div class="system-alerts">
-    <div class="alert-box alert-account">ACCOUNT: TE-CONNECTIVITY</div>
-    <div class="alert-box alert-status">CREDIT STATUS: APPROVED</div>
-    <div class="alert-box alert-urgent">PENDING QUOTE: #Q-88219 (Expires Today)</div>
+    <div class="alert-box alert-account">CONTACT: CAMERON LOYAL</div>
+    <div class="alert-box alert-status">AUTHENTICATION: SUCCESS</div>
+    <div class="alert-box alert-urgent">URGENT: OPEN QUOTE #Q-100421</div>
   </div>
 
   <div class="header">
-    <div class="logo-text">EIS <span style="font-weight: 300; font-size: 1rem;">| Sales Support</span></div>
-    <div style="font-size: 0.8rem;">Logged in: SalesRep_East_04</div>
+    <div class="logo-text">EIS <span style="font-weight: 300; font-size: 1rem;">| Fabrication & Distribution</span></div>
+    <div style="font-size: 0.8rem; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 4px;">Verified Caller: (574) 555-0199</div>
   </div>
 
   <div class="tabs">
     <div class="tab active" data-tab="client">Client & Business Info</div>
     <div class="tab" data-tab="orders">Recent Orders</div>
     <div class="tab" data-tab="workflow">Sales Workflow</div>
-    <div class="tab" data-tab="tech">Technical Specs</div>
+    <div class="tab" data-tab="tech">Technical Solutions</div>
   </div>
 
   <div id="client" class="tab-content active">
     <div class="card">
-      <h3>Business Profile</h3>
+      <h3>Customer Profile</h3>
       <div class="grid-2">
         <div>
-          <label>Primary Contact</label>
-          <div class="data-field">Mark Sterling - Procurement Mgr</div>
-          <label>Industry Segment</label>
-          <div class="data-field">Renewable Energy / OEM</div>
+          <label>Full Name</label>
+          <div class="data-field">Cameron Loyal</div>
+          <label>Company / Representative</label>
+          <div class="data-field">Precision Electric OEM</div>
         </div>
         <div>
-          <label>Annual Spend</label>
-          <div class="data-field" style="color: var(--success);">$425,000.00 (Tier 1 Account)</div>
-          <label>Preferred Warehouse</label>
-          <div class="data-field">Atlanta Logistics Center</div>
+          <label>Account Tier</label>
+          <div class="data-field" style="color: var(--primary); font-weight: bold;">Platinum - Priority Handling</div>
+          <label>Associated Region</label>
+          <div class="data-field">Midwest Logistics Hub</div>
         </div>
       </div>
-      <label>Internal Account Note</label>
-      <div class="data-field" style="background: #fff9db; border-color: #f1c40f;">
-        Client is transitioning to lead-free solder wire (SN100C). High priority for cross-selling technical tapes.
+      <label>Relationship Notes</label>
+      <div class="data-field" style="background: #fff9db; border-color: #f1c40f; line-height: 1.4;">
+        Cameron is looking to replace current insulation supply with high-temp Nomex® Type 410. Interested in slitting capabilities for custom widths.
       </div>
     </div>
   </div>
 
   <div id="orders" class="tab-content">
     <div class="card">
-      <h3>Open & Recent Transactions</h3>
+      <h3>Active Order History</h3>
       <table>
         <thead>
           <tr>
             <th>Date</th>
             <th>Order #</th>
-            <th>Material / Description</th>
-            <th>Amount</th>
+            <th>Description</th>
+            <th>Qty</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Feb 1, 2026</td>
-            <td>SO-9921</td>
-            <td>3M™ Glass Cloth Tape 69</td>
-            <td>$4,120.00</td>
-            <td style="color:var(--success)">Shipped</td>
+            <td>Feb 01, 2026</td>
+            <td>SO-8821</td>
+            <td>3M™ Glass Cloth Tape 69 (1")</td>
+            <td>50 RL</td>
+            <td style="color:var(--success); font-weight:bold;">Shipped</td>
           </tr>
           <tr>
-            <td>Jan 28, 2026</td>
-            <td>SO-9844</td>
-            <td>Nomex® Type 410 (5 mil)</td>
-            <td>$12,850.00</td>
-            <td style="color:var(--warning)">In Production</td>
+            <td>Jan 24, 2026</td>
+            <td>SO-8755</td>
+            <td>Von Roll Samica® Mica Tape</td>
+            <td>12 RL</td>
+            <td style="color:var(--warning)">In Fabrication</td>
           </tr>
           <tr>
-            <td>Jan 15, 2026</td>
-            <td>SO-9711</td>
-            <td>Varnish - Dolph's BC-346A</td>
-            <td>$2,400.00</td>
-            <td>Delivered</td>
+            <td>Dec 18, 2025</td>
+            <td>SO-8102</td>
+            <td>Dolph's Varnish - 5 Gal Drum</td>
+            <td>2 EA</td>
+            <td>Completed</td>
           </tr>
         </tbody>
       </table>
-      <button class="btn btn-primary" onclick="showToast('Salesforce Order Link Opened')">View Full History</button>
+      <button class="btn btn-primary" onclick="showToast('Salesforce Order Record Popped')">View All Transaction Data</button>
     </div>
   </div>
 
   <div id="workflow" class="tab-content">
     <div class="card">
-      <h3>Inbound Sales Call Guide</h3>
-      <div class="check-item"><input type="checkbox"> Confirm current inventory levels for recurring items</div>
-      <div class="check-item"><input type="checkbox"> Check availability of pending Nomex® shipment</div>
-      <div class="check-item"><input type="checkbox"> Present custom fabrication/slitting capabilities</div>
-      <div class="check-item"><input type="checkbox"> Cross-sell: Wire Harness & Cable management</div>
+      <h3>Sales Engagement Script</h3>
+      <div class="check-item"><input type="checkbox" onchange="if(this.checked) showToast('Requirement Verified')"> Confirm inventory availability for Q-100421</div>
+      <div class="check-item"><input type="checkbox" onchange="if(this.checked) showToast('Requirement Verified')"> Discuss slitting tolerances for Nomex® order</div>
+      <div class="check-item"><input type="checkbox" onchange="if(this.checked) showToast('Requirement Verified')"> Offer bulk discount for full-case purchase</div>
+      <div class="check-item"><input type="checkbox" onchange="if(this.checked) showToast('Requirement Verified')"> Verify shipping address for Atlanta Warehouse</div>
       
       <div class="grid-2" style="margin-top:20px;">
-        <button class="btn btn-quote" onclick="showToast('Quote Generated in Salesforce')">Convert to New Quote</button>
-        <button class="btn btn-primary" onclick="showToast('Reorder Processed')">Quick Reorder (Last SO)</button>
+        <button class="btn btn-quote" onclick="showToast('New Quote Drafted in Salesforce')">Convert Quote to Order</button>
+        <button class="btn btn-primary" onclick="showToast('Reorder Initiated')">Quick Reorder (Last 30 Days)</button>
       </div>
     </div>
   </div>
 
   <div id="tech" class="tab-content">
     <div class="card">
-      <h3>Material Technical Data</h3>
-      <div class="kb-panel" style="background: #eef2f7; padding: 15px; border-left: 5px solid var(--primary); border-radius: 4px;">
-        <h4 style="margin:0 0 10px 0; font-size: 0.9rem;">Product Spotlight: Von Roll Samica®</h4>
-        <p style="font-size: 0.85rem; margin: 0;">Resin-rich mica tapes for high voltage motor and generator coils. 
-        <br><strong>Key Value:</strong> Superior dielectric strength and moisture resistance.</p>
+      <h3>Material & Fabrication Insights</h3>
+      <div style="background: #eef2f7; padding: 15px; border-left: 5px solid var(--accent); border-radius: 4px;">
+        <h4 style="margin:0 0 10px 0; font-size: 0.9rem; color: var(--accent);">EIS Fabrication Capabilities</h4>
+        <p style="font-size: 0.85rem; margin: 0; line-height: 1.4;">
+          Precision Electric (Cameron's account) frequently requires <strong>Custom Slitting</strong> and <strong>Die-Cutting</strong>. 
+          <br><br>
+          <strong>Current Recommendation:</strong> Suggest pre-cut kitting for their wire harness assembly to reduce their on-site waste.
+        </p>
       </div>
-      <button class="btn btn-primary" style="margin-top: 15px;" onclick="showToast('Data Sheet Sent to Mark Sterling')">Email TDS/SDS to Client</button>
+      <button class="btn btn-primary" style="margin-top: 15px;" onclick="showToast('Technical Data Sheet sent to cameron.loyal@example.com')">Email SDS/Data Sheets</button>
     </div>
   </div>
 
@@ -202,7 +205,7 @@
     const container = document.getElementById("toastContainer");
     const toast = document.createElement("div");
     toast.className = "toast";
-    toast.innerText = text;
+    toast.innerText = text + " ✓";
     container.appendChild(toast);
     setTimeout(() => toast.classList.add("show"), 10);
     setTimeout(() => {
