@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bold Penguin | Agent Terminal</title>
+
+<style>
+  :root {
+    --primary: #000000; /* Bold Penguin Black */
+    --accent: #FFD400;  /* Bold Penguin Yellow */
+    --bg: #F2F4F7;
+    --card-bg: #ffffff;
+    --text-main: #1A1A1A;
+    --text-muted: #667085;
+    --radius: 12px;
+    --shadow: 0 8px 24px rgba(0,0,0,0.05);
+    --success: #12B76A;
+    --blue: #0066FF;
+  }
+
+  body { margin: 0; background: var(--bg); font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text-main); padding: 20px; }
+  .container { max-width: 1100px; margin: auto; }
+
+  /* --- FAST-PATH BANNERS --- */
+  .terminal-banners { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+  .banner { padding: 15px; border-radius: var(--radius); background: var(--primary); color: white; box-shadow: var(--shadow); border-left: 5px solid var(--accent); }
+  .banner-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: 800; margin-bottom: 5px; display: block; }
+  .banner-value { font-size: 1rem; font-weight: 600; }
+
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #D0D5DD; padding-bottom: 15px; }
+  .logo-area { display: flex; align-items: center; gap: 10px; }
+  .penguin-icon { width: 32px; height: 32px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: black; }
+
+  /* --- TABS --- */
+  .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+  .tab { padding: 10px 18px; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); border-radius: 8px; transition: 0.2s; }
+  .tab:hover { background: #EAECF0; }
+  .tab.active { background: var(--primary); color: white; }
+
+  /* --- CARDS --- */
+  .card { background: var(--card-bg); padding: 24px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; }
+  h3 { margin-top: 0; font-size: 1.2rem; color: var(--primary); margin-bottom: 18px; border-bottom: 1px solid #F2F4F7; padding-bottom: 10px; }
+  
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
+  .data-field { background: #F9FAFB; border: 1px solid #EAECF0; padding: 12px; border-radius: 8px; font-size: 0.95rem; margin-bottom: 15px; }
+
+  /* --- QUOTE MATCHING WIDGET --- */
+  .quote-match { border-left: 4px solid var(--blue); background: #EFF8FF; padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 15px; }
+  .match-score { float: right; color: var(--blue); font-weight: 800; font-size: 1.1rem; }
+
+  /* --- ACTION BUTTONS --- */
+  .btn { padding: 14px; border-radius: 8px; border: none; font-size: 0.95rem; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-accent { background: var(--accent); color: black; margin-top: 10px; }
+  .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* --- TOASTS --- */
+  .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+  .toast { background: var(--primary); color: white; padding: 12px 24px; border-radius: 8px; margin-bottom: 10px; transform: translateX(150%); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+  .toast.show { transform: translateX(0); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .checklist { list-style: none; padding: 0; }
+  .check-item { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid #EAECF0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; font-size: 0.9rem; }
+  .check-item input { width: 18px; height: 18px; accent-color: var(--primary); }
+</style>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+
+  <div class="terminal-banners">
+    <div class="banner">
+      <span class="banner-label">Commercial Prospect</span>
+      <span class="banner-value">Cameron Loyal</span>
+    </div>
+    <div class="banner">
+      <span class="banner-label">Business Class</span>
+      <span class="banner-value">General Contractor (GL)</span>
+    </div>
+    <div class="banner">
+      <span class="banner-label">Market Appetite</span>
+      <span class="banner-value" style="color: var(--success);">7 Potential Carriers</span>
+    </div>
+  </div>
+
+  <div class="header">
+    <div class="logo-area">
+      <div class="penguin-icon">BP</div>
+      <span style="font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px;">BOLD PENGUIN <span style="font-weight: 300; color: var(--text-muted);">| Agent Terminal</span></span>
+    </div>
+    <div style="font-size: 0.8rem; color: var(--text-muted);">Agent ID: 88219-PRO | <span style="color: var(--success);">● Live Feed Active</span></div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="prospect">Prospect Profile</div>
+    <div class="tab" data-tab="quotes">Exchange Matches</div>
+    <div class="tab" data-tab="workflow">Underwriting Script</div>
+    <div id="whatIf" class="tab" data-tab="risk">Risk Analytics</div>
+  </div>
+
+  <div id="prospect" class="tab-content active">
+    <div class="card">
+      <h3>Business Entity Details</h3>
+      <div class="grid-2">
+        <div>
+          <label>Legal Business Name</label>
+          <div class="data-field">Loyal Construction Solutions LLC</div>
+          <label>Years in Business</label>
+          <div class="data-field">8 Years</div>
+        </div>
+        <div>
+          <label>Primary Location</label>
+          <div class="data-field">Columbus, OH (HQ)</div>
+          <label>Estimated Annual Revenue</label>
+          <div class="data-field" style="color: var(--blue); font-weight: bold;">$2.4M</div>
+        </div>
+      </div>
+      <label>Underwriter Notes</label>
+      <div class="data-field" style="background: #FFFBEB; border-color: #FEF3C7;">
+        Cameron is looking to bundle GL, Workers Comp, and Inland Marine. Prior carrier was non-renewed due to appetite shift, not loss history. High probability of bind.
+      </div>
+    </div>
+  </div>
+
+  <div id="quotes" class="tab-content">
+    <div class="card">
+      <h3>Exchange Market Match</h3>
+      <div class="quote-match">
+        <span class="match-score">98% Match</span>
+        <strong>Liberty Mutual - Commercial Protector</strong>
+        <p style="font-size: 0.8rem; margin: 5px 0;">Broad appetite for Ohio-based contractors. Integrated e-signature enabled.</p>
+      </div>
+      <div class="quote-match" style="border-left-color: var(--accent);">
+        <span class="match-score" style="color: var(--primary)">92% Match</span>
+        <strong>The Hartford - Spectrum® Business Owner's Policy</strong>
+        <p style="font-size: 0.8rem; margin: 5px 0;">Strong coverage for Inland Marine equipment. Requires additional roof age verification.</p>
+      </div>
+      <div class="quote-match" style="border-left-color: #D0D5DD; background: #F9FAFB;">
+        <span class="match-score" style="color: #667085">85% Match</span>
+        <strong>Travelers - Select Accounts</strong>
+        <p style="font-size: 0.8rem; margin: 5px 0;">Competitive pricing for GL but requires 3 years of loss runs attached.</p>
+      </div>
+      <button class="btn btn-primary" onclick="showToast('Quotes Sent to Cameron Loyal')">Email Quote Comparison to Client</button>
+    </div>
+  </div>
+
+  <div id="workflow" class="tab-content">
+    <div class="card">
+      <h3>Qualification Script</h3>
+      <div class="checklist">
+        <div class="check-item"><input type="checkbox" onchange="if(this.checked) showToast('Verification Complete')"> Confirm FEIN and Business Entity Type</div>
+        <div class="check-item"><input type="checkbox" onchange="if(this.checked) showToast('Verification Complete')"> Verify sub-contractor cost as % of total revenue</div>
+        <div class="check-item"><input type="checkbox" onchange="if(this.checked) showToast('Verification Complete')"> Document current safety program and OSHA compliance</div>
+        <div class="check-item"><input type="checkbox" onchange="if(this.checked) showToast('Verification Complete')"> Review "No-Loss" statement for current policy term</div>
+      </div>
+      
+      <div class="grid-2" style="margin-top: 20px;">
+        <button class="btn btn-accent" onclick="showToast('Binding Application Started')">Initiate Bind Process</button>
+        <button class="btn btn-primary" onclick="showToast('Carrier Referral Sent')">Refer to Specialist Underwriter</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="risk" class="tab-content">
+    <div class="card">
+      <h3>Risk Data Insights</h3>
+      <div style="text-align: center; padding: 20px; background: #F9FAFB; border-radius: 8px; border: 1px dashed #D0D5DD;">
+        <p style="font-size: 0.9rem; color: var(--text-muted);">External Data Enrichment Active (Experian / HazardHub)</p>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--success); margin: 10px 0;">A+</div>
+        <p style="font-size: 0.8rem;">Financial Stability Score</p>
+      </div>
+      <div style="margin-top: 15px;">
+        <label>Property Hazard Alert</label>
+        <div style="font-size: 0.85rem; color: var(--danger); font-weight: 600;">Moderate Wildfire Risk Zone - Verification Required.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Tab Handling
+  const tabs = document.querySelectorAll(".tab");
+  const contents = document.querySelectorAll(".tab-content");
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      contents.forEach(c => c.classList.remove("active"));
+      document.getElementById(tab.dataset.tab).classList.add("active");
+    });
+  });
+
+  // Toast System
+  function showToast(text) {
+    const container = document.getElementById("toastContainer");
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.innerText = text + " ✓";
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.add("show"), 10);
+    setTimeout(() => {
+      toast.classList.remove("show");
+      setTimeout(() => toast.remove(), 3000);
+    }, 3000);
+  }
+</script>
+
+</body>
+</html>
