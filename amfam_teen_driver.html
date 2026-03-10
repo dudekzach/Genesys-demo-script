@@ -1,0 +1,1541 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AmFam | Add Teen Driver — Agent Desktop</title>
+
+<!-- Theme source: https://www.amfam.com/ | primary: #c8102e | accent: #003087 | confidence: high -->
+
+<style>
+  /* ── CSS VARIABLES ───────────────────────────────────────── */
+  :root {
+    --primary:        #c8102e;
+    --primary-light:  #f5dde1;
+    --primary-dark:   #9b0c22;
+    --accent:         #003087;
+    --accent-light:   #dce6f5;
+    --bg:             #f0f2f5;
+    --card-bg:        #ffffff;
+    --header-bg:      #003087;
+    --rail-bg:        #1a1e2e;
+    --rail-text:      #a0aabe;
+    --rail-active:    #c8102e;
+    --text-main:      #1a1e2e;
+    --text-muted:     #6b7280;
+    --text-light:     #9ca3af;
+    --border:         #e2e6ef;
+    --radius:         8px;
+    --shadow:         0 1px 4px rgba(0,0,0,.10);
+    --shadow-md:      0 4px 12px rgba(0,0,0,.12);
+    --danger:         #c8102e;
+    --danger-light:   #f5dde1;
+    --success:        #15803d;
+    --success-light:  #dcfce7;
+    --warn:           #b45309;
+    --warn-light:     #fef3c7;
+    --info:           #003087;
+    --info-light:     #dce6f5;
+    --tab-h:          42px;
+    --rail-w:         54px;
+    --header-h:       52px;
+  }
+
+  /* ── RESET ───────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 13px;
+    background: var(--bg);
+    color: var(--text-main);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  button { cursor: pointer; font-family: inherit; font-size: 12px; border: none; border-radius: var(--radius); }
+  select, textarea, input { font-family: inherit; font-size: 12px; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── HEADER ──────────────────────────────────────────────── */
+  #app-header {
+    height: var(--header-h);
+    background: var(--header-bg);
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 12px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    z-index: 100;
+  }
+  .header-logo {
+    font-weight: 800;
+    font-size: 15px;
+    color: #fff;
+    letter-spacing: -.3px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .header-logo .logo-mark {
+    width: 26px; height: 26px;
+    background: var(--primary);
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 13px; color: #fff;
+  }
+  .header-sep { width: 1px; height: 24px; background: rgba(255,255,255,.2); margin: 0 6px; }
+  .header-badge {
+    background: var(--primary);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+  .header-meta {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255,255,255,.75);
+    font-size: 11px;
+  }
+  .header-meta .agent-name { color: #fff; font-weight: 600; }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    display: inline-block;
+    margin-right: 4px;
+  }
+  #call-timer {
+    background: rgba(255,255,255,.12);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    color: #fff;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: .5px;
+  }
+
+  /* ── BODY LAYOUT ─────────────────────────────────────────── */
+  #app-body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* ── LEFT RAIL ───────────────────────────────────────────── */
+  #rail {
+    width: var(--rail-w);
+    background: var(--rail-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    gap: 4px;
+    flex-shrink: 0;
+    overflow-y: auto;
+  }
+  .rail-btn {
+    width: 40px; height: 40px;
+    background: transparent;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    cursor: pointer;
+    border: none;
+    color: var(--rail-text);
+    transition: background .15s, color .15s;
+    position: relative;
+  }
+  .rail-btn:hover { background: rgba(255,255,255,.08); color: #fff; }
+  .rail-btn.active { background: var(--rail-active); color: #fff; }
+  .rail-btn .rail-icon { font-size: 16px; line-height: 1; }
+  .rail-btn .rail-label { font-size: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; }
+
+  /* ── MAIN CONTENT ────────────────────────────────────────── */
+  #main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  /* ── TAB BAR ─────────────────────────────────────────────── */
+  #tab-bar {
+    height: var(--tab-h);
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    padding: 0 14px;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .tab {
+    height: 36px;
+    padding: 0 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: color .15s, border-color .15s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .tab:hover { color: var(--text-main); }
+  .tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 700; }
+  .tab .tab-icon { font-size: 13px; }
+
+  /* ── TAB PANELS ──────────────────────────────────────────── */
+  #panels {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+  }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── CARDS ───────────────────────────────────────────────── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 9px 14px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .card-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-body { padding: 12px 14px; }
+
+  /* ── 2-COLUMN FIELD GRID ─────────────────────────────────── */
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+  }
+  .field { display: flex; flex-direction: column; gap: 2px; }
+  .field label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: var(--text-muted);
+  }
+  .field-val {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-main);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 5px 8px;
+    min-height: 28px;
+    line-height: 1.4;
+  }
+  .field-val.highlight {
+    background: var(--warn-light);
+    border-color: #fbbf24;
+    color: var(--warn);
+    font-weight: 700;
+  }
+  .field-val.new {
+    background: var(--success-light);
+    border-color: #86efac;
+    color: var(--success);
+    font-weight: 700;
+  }
+  .field-val.placeholder {
+    color: var(--text-light);
+    font-style: italic;
+  }
+
+  /* ── BADGES / PILLS ──────────────────────────────────────── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+  }
+  .badge-green  { background: var(--success-light); color: var(--success); }
+  .badge-red    { background: var(--danger-light);  color: var(--danger);  }
+  .badge-blue   { background: var(--info-light);    color: var(--info);    }
+  .badge-yellow { background: var(--warn-light);    color: var(--warn);    }
+  .badge-gray   { background: #f3f4f6; color: #6b7280; }
+
+  /* ── BUTTONS ─────────────────────────────────────────────── */
+  .btn {
+    padding: 7px 14px;
+    border-radius: var(--radius);
+    font-size: 12px;
+    font-weight: 600;
+    transition: background .15s, box-shadow .15s, opacity .15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .btn-primary   { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-accent    { background: var(--accent); color: #fff; }
+  .btn-accent:hover  { background: #002060; }
+  .btn-outline   { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+  .btn-outline:hover { background: var(--primary-light); }
+  .btn-ghost     { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-ghost:hover   { background: var(--border); color: var(--text-main); }
+  .btn-success   { background: #16a34a; color: #fff; }
+  .btn-success:hover { background: #15803d; }
+  .btn-warn      { background: var(--warn); color: #fff; }
+  .btn-sm { padding: 4px 10px; font-size: 11px; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn.done { background: #e5e7eb; color: #9ca3af; text-decoration: line-through; }
+
+  /* ── CHECKLIST ───────────────────────────────────────────── */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    transition: background .15s;
+  }
+  .checklist li.checked {
+    background: var(--success-light);
+    border-color: #86efac;
+  }
+  .checklist li.checked .check-text {
+    text-decoration: line-through;
+    color: var(--text-muted);
+  }
+  .checklist input[type=checkbox] {
+    width: 15px; height: 15px;
+    accent-color: var(--primary);
+    flex-shrink: 0;
+    margin-top: 1px;
+    cursor: pointer;
+  }
+  .check-text { font-size: 12px; line-height: 1.5; }
+  .check-sub  { font-size: 10px; color: var(--text-muted); display: block; margin-top: 1px; }
+
+  /* ── SCRIPT TRACK ────────────────────────────────────────── */
+  .script-phase {
+    margin-bottom: 14px;
+    border-left: 3px solid var(--border);
+    padding-left: 12px;
+  }
+  .script-phase.active-phase { border-left-color: var(--primary); }
+  .phase-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .phase-label .phase-num {
+    width: 18px; height: 18px;
+    background: var(--border);
+    border-radius: 50%;
+    font-size: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: var(--text-muted);
+  }
+  .script-phase.active-phase .phase-label .phase-num {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  p.agent, p.customer, p.system, p.other {
+    margin-bottom: 6px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  p.agent   { background: var(--primary-light); border-left: 3px solid var(--primary); }
+  p.customer{ background: var(--info-light);    border-left: 3px solid var(--accent); }
+  p.system  { background: var(--warn-light);    border-left: 3px solid #f59e0b; font-style: italic; }
+  p.other   { background: #f3f4f6;              border-left: 3px solid #9ca3af; }
+  span.label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    margin-right: 6px;
+    opacity: .75;
+  }
+
+  /* ── DETAILS / BRANCHES ──────────────────────────────────── */
+  details {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  summary {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-main);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  summary::before {
+    content: '▶';
+    font-size: 9px;
+    color: var(--text-muted);
+    transition: transform .2s;
+    flex-shrink: 0;
+  }
+  details[open] summary::before { transform: rotate(90deg); }
+  details .details-body {
+    padding: 10px 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── JOURNEY TIMELINE ────────────────────────────────────── */
+  .timeline { position: relative; padding-left: 18px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  .tl-event {
+    position: relative;
+    margin-bottom: 12px;
+    padding: 8px 10px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .tl-event::before {
+    content: '';
+    position: absolute;
+    left: -18px;
+    top: 12px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--border);
+  }
+  .tl-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+  }
+  .tl-date { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+  .tl-channel { font-size: 10px; font-weight: 700; }
+  .tl-summary { font-size: 12px; color: var(--text-main); line-height: 1.5; }
+
+  /* ── SYSTEMS TABLE ───────────────────────────────────────── */
+  .sys-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .sys-table th {
+    background: var(--bg);
+    padding: 6px 10px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .sys-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-main);
+    vertical-align: top;
+  }
+  .sys-table tr:last-child td { border-bottom: none; }
+  .sys-table tr:hover td { background: var(--bg); }
+
+  /* ── RATE PREVIEW BOX ────────────────────────────────────── */
+  .rate-box {
+    background: linear-gradient(135deg, var(--accent) 0%, #004bb5 100%);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  .rate-box .rate-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; opacity: .8; }
+  .rate-box .rate-val   { font-size: 24px; font-weight: 800; margin: 4px 0 2px; letter-spacing: -.5px; }
+  .rate-box .rate-sub   { font-size: 11px; opacity: .75; }
+  .rate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .rate-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+  .rate-item .ri-label { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+  .rate-item .ri-val   { font-size: 13px; font-weight: 700; color: var(--text-main); margin-top: 2px; }
+
+  /* ── ESCALATION PANEL ────────────────────────────────────── */
+  .escalation-box {
+    background: var(--danger-light);
+    border: 1px solid #fca5a5;
+    border-radius: var(--radius);
+    padding: 10px 12px;
+  }
+  .escalation-box .esc-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--danger);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* ── WRAP-UP FORM ────────────────────────────────────────── */
+  .form-group { margin-bottom: 10px; }
+  .form-group label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .form-group select,
+  .form-group textarea,
+  .form-group input[type=text] {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 12px;
+    color: var(--text-main);
+    background: var(--bg);
+    resize: vertical;
+    transition: border-color .15s;
+  }
+  .form-group select:focus,
+  .form-group textarea:focus { outline: none; border-color: var(--primary); }
+
+  /* ── TOAST ───────────────────────────────────────────────── */
+  #toast-container {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 9999;
+    pointer-events: none;
+  }
+  .toast {
+    background: #1a1e2e;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: toastIn .25s ease forwards;
+    pointer-events: auto;
+    max-width: 320px;
+  }
+  .toast.toast-success { border-left: 4px solid #22c55e; }
+  .toast.toast-warn    { border-left: 4px solid #f59e0b; }
+  .toast.toast-info    { border-left: 4px solid var(--accent); }
+  .toast.toast-error   { border-left: 4px solid var(--primary); }
+  .toast.fade-out { animation: toastOut .3s ease forwards; }
+  @keyframes toastIn  { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes toastOut { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(10px); } }
+
+  /* ── SECTION DIVIDER ─────────────────────────────────────── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 12px 0;
+  }
+
+  /* ── ALERT INLINES ───────────────────────────────────────── */
+  .alert {
+    border-radius: var(--radius);
+    padding: 8px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .alert-warn  { background: var(--warn-light);    border-left: 3px solid #f59e0b; color: var(--warn); }
+  .alert-info  { background: var(--info-light);    border-left: 3px solid var(--accent); color: var(--info); }
+  .alert-red   { background: var(--danger-light);  border-left: 3px solid var(--danger); color: var(--danger); }
+  .alert-green { background: var(--success-light); border-left: 3px solid #16a34a; color: var(--success); }
+
+  /* ── RESPONSIVE ──────────────────────────────────────────── */
+  @media (max-width: 640px) {
+    .field-grid { grid-template-columns: 1fr; }
+    .rate-grid  { grid-template-columns: 1fr; }
+    .btn-row { flex-direction: column; }
+    #rail { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HEADER / TOPBAR
+═══════════════════════════════════════════════════════════ -->
+<header id="app-header">
+  <div class="header-logo">
+    <div class="logo-mark">AF</div>
+    AmFam Agent Desktop
+  </div>
+  <div class="header-sep"></div>
+  <span class="header-badge">📞 Inbound — Policy Change</span>
+  <div class="header-meta">
+    <span><span class="status-dot"></span>Available</span>
+    <span class="agent-name" id="agent-name-display">Agent: {{agent_name}}</span>
+    <span id="call-timer">00:00</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════
+     BODY
+═══════════════════════════════════════════════════════════ -->
+<div id="app-body">
+
+  <!-- LEFT RAIL -->
+  <nav id="rail">
+    <button class="rail-btn active" onclick="switchRail(this,'context')" title="Context">
+      <span class="rail-icon">👤</span>
+      <span class="rail-label">Context</span>
+    </button>
+    <button class="rail-btn" onclick="switchRail(this,'workflow')" title="Workflow">
+      <span class="rail-icon">✅</span>
+      <span class="rail-label">Flow</span>
+    </button>
+    <button class="rail-btn" onclick="switchRail(this,'script')" title="Script">
+      <span class="rail-icon">💬</span>
+      <span class="rail-label">Script</span>
+    </button>
+    <button class="rail-btn" onclick="switchRail(this,'journey')" title="Journey">
+      <span class="rail-icon">🗺️</span>
+      <span class="rail-label">Journey</span>
+    </button>
+    <button class="rail-btn" onclick="switchRail(this,'systems')" title="Systems">
+      <span class="rail-icon">🖥️</span>
+      <span class="rail-label">Systems</span>
+    </button>
+    <button class="rail-btn" onclick="switchRail(this,'wrapup')" title="Wrap-up">
+      <span class="rail-icon">📋</span>
+      <span class="rail-label">Wrap-up</span>
+    </button>
+  </nav>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- TAB BAR -->
+    <div id="tab-bar">
+      <button class="tab active" id="tab-context"  onclick="switchTab('context')" >
+        <span class="tab-icon">👤</span> Context
+      </button>
+      <button class="tab" id="tab-workflow" onclick="switchTab('workflow')">
+        <span class="tab-icon">✅</span> Workflow
+      </button>
+      <button class="tab" id="tab-script"   onclick="switchTab('script')"  >
+        <span class="tab-icon">💬</span> Script
+      </button>
+      <button class="tab" id="tab-journey"  onclick="switchTab('journey')" >
+        <span class="tab-icon">🗺️</span> Journey
+      </button>
+      <button class="tab" id="tab-systems"  onclick="switchTab('systems')" >
+        <span class="tab-icon">🖥️</span> Systems
+      </button>
+      <button class="tab" id="tab-wrapup"   onclick="switchTab('wrapup')"  >
+        <span class="tab-icon">📋</span> Wrap-up
+      </button>
+    </div>
+
+    <!-- PANELS -->
+    <div id="panels">
+
+      <!-- ──────────────────────────────────────────────────── -->
+      <!-- TAB 1 — CONTEXT (Caller / Policy 360)              -->
+      <!-- ──────────────────────────────────────────────────── -->
+      <div class="panel active" id="panel-context">
+
+        <div class="alert alert-warn">
+          ⚠️ <strong>Teen Driver Addition</strong> — Customer is adding a 16-year-old new driver to an existing auto policy. Review all endorsements and verify discount eligibility before quoting premium change.
+        </div>
+
+        <!-- POLICYHOLDER INFO -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">👤 Policyholder</span>
+            <span class="badge badge-green">Active</span>
+          </div>
+          <div class="card-body">
+            <div class="field-grid">
+              <div class="field">
+                <label>Full Name</label>
+                <div class="field-val" id="f-cust-name">{{customer_name}}</div>
+              </div>
+              <div class="field">
+                <label>Policy Number</label>
+                <div class="field-val" id="f-policy-num">{{policy_number}}</div>
+              </div>
+              <div class="field">
+                <label>Phone (ANI)</label>
+                <div class="field-val" id="f-phone">{{phone_number}}</div>
+              </div>
+              <div class="field">
+                <label>Email on File</label>
+                <div class="field-val" id="f-email">{{email_address}}</div>
+              </div>
+              <div class="field">
+                <label>Policy State</label>
+                <div class="field-val" id="f-state">{{policy_state}}</div>
+              </div>
+              <div class="field">
+                <label>Policy Type</label>
+                <div class="field-val">Personal Auto</div>
+              </div>
+              <div class="field">
+                <label>Agent / Agency</label>
+                <div class="field-val" id="f-agent">{{assigned_agent_name}}</div>
+              </div>
+              <div class="field">
+                <label>Customer Since</label>
+                <div class="field-val" id="f-since">{{customer_since}}</div>
+              </div>
+              <div class="field">
+                <label>Policy Effective</label>
+                <div class="field-val" id="f-eff">{{policy_effective_date}}</div>
+              </div>
+              <div class="field">
+                <label>Renewal Date</label>
+                <div class="field-val" id="f-renew">{{renewal_date}}</div>
+              </div>
+              <div class="field">
+                <label>Payment Plan</label>
+                <div class="field-val" id="f-pay">{{payment_plan}}</div>
+              </div>
+              <div class="field">
+                <label>Paperless / ePolicy</label>
+                <div class="field-val" id="f-paper">{{epolicy_status}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TEEN DRIVER BEING ADDED -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🚗 New Driver — To Be Added</span>
+            <span class="badge badge-yellow">Pending Endorsement</span>
+          </div>
+          <div class="card-body">
+            <div class="field-grid">
+              <div class="field">
+                <label>Driver Name</label>
+                <div class="field-val new" id="f-teen-name">{{teen_driver_name}}</div>
+              </div>
+              <div class="field">
+                <label>Relationship</label>
+                <div class="field-val">Child / Dependent</div>
+              </div>
+              <div class="field">
+                <label>Date of Birth</label>
+                <div class="field-val highlight">{{teen_dob}} — Age 16</div>
+              </div>
+              <div class="field">
+                <label>License Number</label>
+                <div class="field-val placeholder" id="f-lic">{{teen_license_number}}</div>
+              </div>
+              <div class="field">
+                <label>License State</label>
+                <div class="field-val" id="f-lic-state">{{policy_state}}</div>
+              </div>
+              <div class="field">
+                <label>License Date Issued</label>
+                <div class="field-val placeholder">{{license_issue_date}}</div>
+              </div>
+              <div class="field">
+                <label>Primary Vehicle</label>
+                <div class="field-val placeholder" id="f-veh">{{primary_vehicle}}</div>
+              </div>
+              <div class="field">
+                <label>Good Student Discount</label>
+                <div class="field-val highlight" id="f-gsd">Verify — GPA ≥ 3.0 required</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXISTING VEHICLES -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🚙 Vehicles on Policy</span>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table class="sys-table">
+              <thead>
+                <tr><th>#</th><th>Year / Make / Model</th><th>VIN</th><th>Current Coverage</th><th>Assigned Driver</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td id="v1-desc">{{vehicle_1_desc}}</td>
+                  <td>{{vin_1}}</td>
+                  <td>Full Coverage</td>
+                  <td id="v1-driver">{{policyholder_name}}</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td id="v2-desc">{{vehicle_2_desc}}</td>
+                  <td>{{vin_2}}</td>
+                  <td>Full Coverage</td>
+                  <td id="v2-driver">{{spouse_name}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- NOTES AREA -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">📝 Quick Notes (This Interaction)</span></div>
+          <div class="card-body">
+            <textarea placeholder="Type real-time notes here — these do NOT auto-save to policy. Copy to Wrap-up when complete." style="width:100%;height:80px;border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;background:var(--bg);resize:vertical;"></textarea>
+          </div>
+        </div>
+
+      </div><!-- /panel-context -->
+
+
+      <!-- ──────────────────────────────────────────────────── -->
+      <!-- TAB 2 — WORKFLOW                                    -->
+      <!-- ──────────────────────────────────────────────────── -->
+      <div class="panel" id="panel-workflow">
+
+        <div class="card">
+          <div class="card-header"><span class="card-title">📋 Add Teen Driver — Step Checklist</span></div>
+          <div class="card-body">
+            <ul class="checklist" id="wf-checklist">
+              <li id="wf1">
+                <input type="checkbox" onchange="checkItem(this,'wf1')">
+                <span class="check-text">Greet caller & confirm intent to add new driver
+                  <span class="check-sub">Verify this is a voluntary add, not a state-required notice.</span>
+                </span>
+              </li>
+              <li id="wf2">
+                <input type="checkbox" onchange="checkItem(this,'wf2')">
+                <span class="check-text">Authenticate policyholder identity (full name + policy # OR full name + DOB + address)
+                  <span class="check-sub">Follow two-factor verification protocol.</span>
+                </span>
+              </li>
+              <li id="wf3">
+                <input type="checkbox" onchange="checkItem(this,'wf3')">
+                <span class="check-text">Collect teen driver details: full name, DOB, license number, license state, issue date
+                  <span class="check-sub">License must be a valid, non-learner's-permit license in most states.</span>
+                </span>
+              </li>
+              <li id="wf4">
+                <input type="checkbox" onchange="checkItem(this,'wf4')">
+                <span class="check-text">Identify primary vehicle assignment for teen driver
+                  <span class="check-sub">Teen is typically rated on the highest-risk or lowest-premium vehicle — confirm with rating system.</span>
+                </span>
+              </li>
+              <li id="wf5">
+                <input type="checkbox" onchange="checkItem(this,'wf5')">
+                <span class="check-text">Check and offer Good Student Discount
+                  <span class="check-sub">GPA ≥ 3.0 or top 20% of class. Proof required (transcript or report card).</span>
+                </span>
+              </li>
+              <li id="wf6">
+                <input type="checkbox" onchange="checkItem(this,'wf6')">
+                <span class="check-text">Check and offer Teen Safe Driver (Telematics/KnowYourDrive) enrollment
+                  <span class="check-sub">Offer potential premium discount for monitored driving behavior.</span>
+                </span>
+              </li>
+              <li id="wf7">
+                <input type="checkbox" onchange="checkItem(this,'wf7')">
+                <span class="check-text">Provide updated premium estimate and obtain verbal confirmation to proceed
+                  <span class="check-sub">Recite new monthly and/or 6-month premium. Document verbal consent.</span>
+                </span>
+              </li>
+              <li id="wf8">
+                <input type="checkbox" onchange="checkItem(this,'wf8')">
+                <span class="check-text">Process endorsement in policy management system
+                  <span class="check-sub">Confirm effective date — typically same-day or next day for new drivers.</span>
+                </span>
+              </li>
+              <li id="wf9">
+                <input type="checkbox" onchange="checkItem(this,'wf9')">
+                <span class="check-text">Confirm updated declarations page and ID cards will be sent
+                  <span class="check-sub">Digital delivery if ePolicy enrolled; paper otherwise.</span>
+                </span>
+              </li>
+              <li id="wf10">
+                <input type="checkbox" onchange="checkItem(this,'wf10')">
+                <span class="check-text">Wrap-up: summarize changes, thank customer, complete after-call work
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">⚡ Quick Actions</span></div>
+          <div class="card-body">
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="toast('Rating engine opened — entering teen driver details.','success')">🧮 Open Rating Engine</button>
+              <button class="btn btn-accent" onclick="toast('Policy management system: Add Driver form launched.','info')">➕ Add Driver Form</button>
+              <button class="btn btn-outline" onclick="toast('Good Student Discount verification workflow initiated.','info')">🎓 GSD Verification</button>
+              <button class="btn btn-ghost" onclick="toast('KnowYourDrive enrollment link sent to customer email.','success')">📲 Send KnowYourDrive Invite</button>
+              <button class="btn btn-ghost" onclick="toast('Updated declarations page queued for delivery.','success')">📄 Queue Dec Page</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ESCALATION -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">🚨 Supervisor / Escalation</span></div>
+          <div class="card-body">
+            <div class="escalation-box">
+              <div class="esc-title">⬆️ Escalate or Conference In</div>
+              <p style="font-size:12px;color:var(--text-main);margin-bottom:8px;">Use escalation paths below if:</p>
+              <ul style="font-size:12px;padding-left:16px;color:var(--text-main);margin-bottom:10px;line-height:1.8;">
+                <li>Customer disputes rate increase and requests managerial review</li>
+                <li>License validation fails or youth driver has prior violations</li>
+                <li>Policy near cancellation / payment issue surfaces during call</li>
+                <li>Customer requests exclusion of teen driver (state rules vary)</li>
+              </ul>
+              <div class="btn-row">
+                <button class="btn btn-warn btn-sm" onclick="toast('Supervisor warm transfer initiated — hold time: ~2 min.','warn')">📞 Warm Transfer to Supervisor</button>
+                <button class="btn btn-ghost btn-sm" onclick="toast('Underwriting queue note flagged for review.','info')">📋 Flag for Underwriting Review</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /panel-workflow -->
+
+
+      <!-- ──────────────────────────────────────────────────── -->
+      <!-- TAB 3 — SCRIPT                                      -->
+      <!-- ──────────────────────────────────────────────────── -->
+      <div class="panel" id="panel-script">
+
+        <!-- PHASE 1 — GREETING -->
+        <div class="script-phase active-phase">
+          <div class="phase-label"><span class="phase-num">1</span> Greeting & Opening</div>
+          <p class="agent"><span class="label">Agent</span>Thank you for calling American Family Insurance, my name is <strong>{{agent_name}}</strong>, and I'm happy to help you today. May I have your name and policy number, or the phone number on your account?</p>
+          <p class="customer"><span class="label">Customer</span>Hi, yes — my name is <strong>{{customer_name}}</strong>, and my policy number is <strong>{{policy_number}}</strong>. I need to add my teenager to my car insurance.</p>
+          <p class="system"><span class="label">System</span>Pull up policy in system. Confirm caller matches policyholder name on record before proceeding.</p>
+        </div>
+
+        <!-- PHASE 2 — VERIFICATION -->
+        <div class="script-phase">
+          <div class="phase-label"><span class="phase-num">2</span> Identity Verification</div>
+          <p class="agent"><span class="label">Agent</span>I can definitely help you with that! For security purposes, can you please verify your date of birth and the ZIP code associated with your policy?</p>
+          <p class="customer"><span class="label">Customer</span>Sure, my date of birth is <strong>{{policyholder_dob}}</strong> and my ZIP is <strong>{{policy_zip}}</strong>.</p>
+          <p class="system"><span class="label">System</span>Verify two factors match. If mismatch, use secondary verification path. Do <strong>not</strong> read back full DOB to customer.</p>
+          <p class="agent"><span class="label">Agent</span>Thank you, I've verified your account. I see you have <strong>two vehicles</strong> on your policy. I'd love to help you add your new driver today — let me gather some information about them.</p>
+        </div>
+
+        <!-- PHASE 3 — DIAGNOSE / COLLECT INFO -->
+        <div class="script-phase">
+          <div class="phase-label"><span class="phase-num">3</span> Collect Driver Information</div>
+          <p class="agent"><span class="label">Agent</span>Can I get your teen's full legal name, date of birth, and driver's license number and state?</p>
+          <p class="customer"><span class="label">Customer</span>Yes — it's <strong>{{teen_driver_name}}</strong>, born <strong>{{teen_dob}}</strong>, and their license number is <strong>{{teen_license_number}}</strong> — it's a <strong>{{policy_state}}</strong> license.</p>
+          <p class="agent"><span class="label">Agent</span>And when was the license issued — is this a full license or still a graduated/intermediate license?</p>
+          <p class="system"><span class="label">System</span>Log license type. Some states require notation of graduated license stage. Verify with state DMV integration if available.</p>
+          <p class="agent"><span class="label">Agent</span>Great, thank you. And which vehicle do you anticipate your teen will drive most often?</p>
+          <p class="customer"><span class="label">Customer</span>Probably the <strong>{{primary_vehicle}}</strong>.</p>
+
+          <!-- BRANCH: License not yet issued -->
+          <details>
+            <summary>⚠️ Exception: License not yet issued / only has learner's permit</summary>
+            <div class="details-body">
+              <p class="agent"><span class="label">Agent</span>I understand — if your teen currently only has a learner's permit, we can note them on the policy now, but a full driver's license number will be required to complete the endorsement. Would you like me to set a reminder callback once the license is issued, or would you prefer to call back at that time?</p>
+              <p class="system"><span class="label">System</span>Create a follow-up task in the policy notes with expected license date. Do <strong>not</strong> rate the driver until a valid license number is confirmed.</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- PHASE 4 — RESOLVE / DISCOUNTS -->
+        <div class="script-phase">
+          <div class="phase-label"><span class="phase-num">4</span> Discounts & Coverage Options</div>
+          <p class="agent"><span class="label">Agent</span>Before I pull the updated rate, I want to make sure we explore every discount available. First — does your teen maintain a <strong>B average or better</strong>, or are they in the top 20% of their class?</p>
+          <p class="customer"><span class="label">Customer</span>Yes, they have a 3.5 GPA.</p>
+          <p class="agent"><span class="label">Agent</span>Excellent! That qualifies them for our <strong>Good Student Discount</strong>. I'll apply that now — you'll just need to provide a copy of their most recent report card or transcript for our records. I can send you a link to upload it securely, or your local agent can accept it as well.</p>
+          <p class="agent"><span class="label">Agent</span>I also want to mention our <strong>KnowYourDrive</strong> program — it's a telematics-based option where safe driving habits can earn additional discounts over time. Would you like me to send an enrollment link to your email on file?</p>
+
+          <!-- BRANCH: Customer objects to rate increase -->
+          <details>
+            <summary>💬 Variation: Customer upset about premium increase</summary>
+            <div class="details-body">
+              <p class="customer"><span class="label">Customer</span>Wow, that's a really big jump in my premium. I wasn't expecting it to go up that much.</p>
+              <p class="agent"><span class="label">Agent</span>I completely understand — adding a young driver does impact the premium because statistically, teen drivers have a higher risk of accidents. The good news is we've already applied the Good Student Discount, and if you enroll in <strong>KnowYourDrive</strong>, you can potentially earn back additional savings based on your teen's actual driving behavior. I also want to make sure we review your full policy to see if there are any other discounts you may qualify for. Would it be helpful for me to connect you with your local agent, <strong>{{assigned_agent_name}}</strong>, for a full policy review?</p>
+              <p class="system"><span class="label">System</span>Do NOT promise a specific discount amount that cannot be confirmed in system. Offer to escalate to agent or supervisor if customer requests rate dispute.</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- PHASE 5 — CONFIRM -->
+        <div class="script-phase">
+          <div class="phase-label"><span class="phase-num">5</span> Confirm & Authorize</div>
+          <p class="agent"><span class="label">Agent</span>Let me give you a summary of the changes before I process them. We're adding <strong>{{teen_driver_name}}</strong>, date of birth <strong>{{teen_dob}}</strong>, license <strong>{{teen_license_number}}</strong>, as a driver on your policy, primarily assigned to the <strong>{{primary_vehicle}}</strong>. With the Good Student Discount applied, your updated 6-month premium will be approximately <strong>{{new_6mo_premium}}</strong>. Does that sound correct and do you authorize me to make this change?</p>
+          <p class="customer"><span class="label">Customer</span>Yes, that sounds right. Please go ahead.</p>
+          <p class="system"><span class="label">System</span>Document verbal authorization in the interaction notes. Process endorsement. Confirm effective date. Generate updated declarations page.</p>
+          <p class="agent"><span class="label">Agent</span>{{call_recording_disclosure}} — I'm processing the endorsement now. This will be effective <strong>{{endorsement_effective_date}}</strong>.</p>
+        </div>
+
+        <!-- PHASE 6 — WRAP-UP -->
+        <div class="script-phase">
+          <div class="phase-label"><span class="phase-num">6</span> Closing</div>
+          <p class="agent"><span class="label">Agent</span>All done! I've added <strong>{{teen_driver_name}}</strong> to your policy effective today. Your updated declarations page and insurance ID cards will be sent to <strong>{{email_address}}</strong>. Remember, if you have any questions about the Good Student Discount documentation or KnowYourDrive, your agent <strong>{{assigned_agent_name}}</strong> is also a great resource. Is there anything else I can help you with today?</p>
+          <p class="customer"><span class="label">Customer</span>No, that's everything. Thank you!</p>
+          <p class="agent"><span class="label">Agent</span>You're welcome! We're glad to be here for your family. Drive safe — and congratulations to your teen driver! Have a great day.</p>
+        </div>
+
+      </div><!-- /panel-script -->
+
+
+      <!-- ──────────────────────────────────────────────────── -->
+      <!-- TAB 4 — JOURNEY                                     -->
+      <!-- ──────────────────────────────────────────────────── -->
+      <div class="panel" id="panel-journey">
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🗺️ Customer Interaction History</span>
+            <span class="badge badge-blue">Last 12 Months</span>
+          </div>
+          <div class="card-body">
+            <div class="timeline">
+
+              <div class="tl-event">
+                <div class="tl-meta">
+                  <span class="tl-date">TODAY — {{current_date}}</span>
+                  <span class="badge badge-red tl-channel">📞 Inbound Call</span>
+                </div>
+                <div class="tl-summary"><strong>Current Interaction</strong> — Customer calling to add 16-year-old teen driver to personal auto policy. KnowYourDrive and Good Student Discount to be discussed.</div>
+              </div>
+
+              <div class="tl-event">
+                <div class="tl-meta">
+                  <span class="tl-date">{{date_minus_45d}}</span>
+                  <span class="badge badge-blue tl-channel">🌐 Web / App</span>
+                </div>
+                <div class="tl-summary">Customer logged into MyAmFam app. Reviewed current policy declarations page. No changes made.</div>
+              </div>
+
+              <div class="tl-event">
+                <div class="tl-meta">
+                  <span class="tl-date">{{date_minus_90d}}</span>
+                  <span class="badge badge-gray tl-channel">📧 Email</span>
+                </div>
+                <div class="tl-summary">Policy renewal notice sent via email. Customer acknowledged receipt. Renewal processed without changes.</div>
+              </div>
+
+              <div class="tl-event">
+                <div class="tl-meta">
+                  <span class="tl-date">{{date_minus_180d}}</span>
+                  <span class="badge badge-yellow tl-channel">📞 Inbound Call</span>
+                </div>
+                <div class="tl-summary">Customer called to update lienholder information on Vehicle 1. Change processed same day. Call duration: ~8 min. CSAT: 5/5.</div>
+              </div>
+
+              <div class="tl-event">
+                <div class="tl-meta">
+                  <span class="tl-date">{{date_minus_270d}}</span>
+                  <span class="badge badge-blue tl-channel">🌐 Web / App</span>
+                </div>
+                <div class="tl-summary">Customer initiated and completed address update through MyAmFam self-service portal. No agent contact required.</div>
+              </div>
+
+              <div class="tl-event">
+                <div class="tl-meta">
+                  <span class="tl-date">{{date_minus_365d}}</span>
+                  <span class="badge badge-green tl-channel">📞 Outbound Call</span>
+                </div>
+                <div class="tl-summary">Annual policy review call initiated by assigned agent {{assigned_agent_name}}. Customer added roadside assistance endorsement. Bundle discount confirmed (auto + home).</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- OPEN ITEMS -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">📌 Open Items / Follow-ups</span></div>
+          <div class="card-body">
+            <div class="alert alert-info">📎 No open claims or pending tasks prior to this interaction. Post-call: upload Good Student Discount documentation reminder to be set.</div>
+          </div>
+        </div>
+
+      </div><!-- /panel-journey -->
+
+
+      <!-- ──────────────────────────────────────────────────── -->
+      <!-- TAB 5 — SYSTEMS                                     -->
+      <!-- ──────────────────────────────────────────────────── -->
+      <div class="panel" id="panel-systems">
+
+        <!-- RATE PREVIEW -->
+        <div class="rate-box">
+          <div class="rate-label">Updated 6-Month Premium Estimate</div>
+          <div class="rate-val" id="sys-premium">{{new_6mo_premium}}</div>
+          <div class="rate-sub">Includes Good Student Discount. Subject to final rating system confirmation.</div>
+        </div>
+        <div class="rate-grid">
+          <div class="rate-item">
+            <div class="ri-label">Current Premium (6-mo)</div>
+            <div class="ri-val" id="sys-curr-prem">{{current_6mo_premium}}</div>
+          </div>
+          <div class="rate-item">
+            <div class="ri-label">Estimated Increase</div>
+            <div class="ri-val" style="color:var(--danger)" id="sys-increase">{{premium_increase_amt}}</div>
+          </div>
+          <div class="rate-item">
+            <div class="ri-label">Good Student Discount</div>
+            <div class="ri-val" style="color:var(--success)">Applied ✓</div>
+          </div>
+          <div class="rate-item">
+            <div class="ri-label">KnowYourDrive Potential</div>
+            <div class="ri-val">Up to {{kyd_discount_pct}} savings</div>
+          </div>
+        </div>
+
+        <hr class="divider"/>
+
+        <!-- POLICY COVERAGES -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🛡️ Current Policy Coverages</span>
+            <button class="btn btn-ghost btn-sm" onclick="toast('Coverage details refreshed from policy system.','info')">↻ Refresh</button>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table class="sys-table">
+              <thead>
+                <tr><th>Coverage</th><th>Limit / Deductible</th><th>Vehicle</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Bodily Injury Liability</td><td>{{bi_limit}}</td><td>All Vehicles</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Property Damage Liability</td><td>{{pd_limit}}</td><td>All Vehicles</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Uninsured Motorist</td><td>{{um_limit}}</td><td>All Vehicles</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Comprehensive</td><td>{{comp_ded}} deductible</td><td>{{vehicle_1_desc}}</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Collision</td><td>{{coll_ded}} deductible</td><td>{{vehicle_1_desc}}</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Comprehensive</td><td>{{comp_ded}} deductible</td><td>{{vehicle_2_desc}}</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Collision</td><td>{{coll_ded}} deductible</td><td>{{vehicle_2_desc}}</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Roadside Assistance</td><td>Included</td><td>All Vehicles</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Rental Reimbursement</td><td>{{rental_limit}}/day</td><td>All Vehicles</td><td><span class="badge badge-green">Active</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- DISCOUNTS ON POLICY -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">🏷️ Discounts Applied</span></div>
+          <div class="card-body" style="padding:0">
+            <table class="sys-table">
+              <thead>
+                <tr><th>Discount</th><th>Driver / Vehicle</th><th>Status</th><th>Notes</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Multi-Policy (Auto + Home)</td><td>Account</td><td><span class="badge badge-green">Active</span></td><td>Bundle verified</td></tr>
+                <tr><td>Paperless / ePolicy</td><td>Account</td><td><span class="badge badge-green">Active</span></td><td>Email delivery confirmed</td></tr>
+                <tr><td>Paid-in-Full</td><td>Account</td><td><span class="badge badge-gray">Not Applied</span></td><td>Monthly plan</td></tr>
+                <tr><td>Good Student Discount</td><td>{{teen_driver_name}}</td><td><span class="badge badge-yellow">Pending Docs</span></td><td>Transcript/report card needed</td></tr>
+                <tr><td>KnowYourDrive</td><td>{{teen_driver_name}}</td><td><span class="badge badge-gray">Not Enrolled</span></td><td>Offer enrollment today</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- DRIVER RECORD LOOKUP -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🔎 MVR / Driver Record</span>
+            <button class="btn btn-ghost btn-sm" onclick="toast('MVR lookup initiated for {{teen_driver_name}}. Results in ~30 seconds.','info')">Run MVR Check</button>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-warn">⚠️ MVR check for new driver has not been run yet. Run prior to finalizing endorsement to identify any prior violations or license restrictions.</div>
+            <table class="sys-table" style="margin-top:8px">
+              <thead><tr><th>Driver</th><th>License #</th><th>State</th><th>MVR Status</th><th>Violations (3yr)</th></tr></thead>
+              <tbody>
+                <tr><td>{{policyholder_name}}</td><td>{{ph_license_num}}</td><td>{{policy_state}}</td><td><span class="badge badge-green">Clear</span></td><td>0</td></tr>
+                <tr><td>{{spouse_name}}</td><td>{{spouse_license_num}}</td><td>{{policy_state}}</td><td><span class="badge badge-green">Clear</span></td><td>0</td></tr>
+                <tr><td>{{teen_driver_name}}</td><td>{{teen_license_number}}</td><td>{{policy_state}}</td><td><span class="badge badge-yellow">Pending</span></td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /panel-systems -->
+
+
+      <!-- ──────────────────────────────────────────────────── -->
+      <!-- TAB 6 — WRAP-UP                                     -->
+      <!-- ──────────────────────────────────────────────────── -->
+      <div class="panel" id="panel-wrapup">
+
+        <div class="alert alert-info">ℹ️ Complete all wrap-up items before ending after-call work. Target ACW time: under 3 minutes.</div>
+
+        <!-- ACW CHECKLIST -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">✅ After-Call Work Checklist</span></div>
+          <div class="card-body">
+            <ul class="checklist">
+              <li id="acw1"><input type="checkbox" onchange="checkItem(this,'acw1')"><span class="check-text">Endorsement confirmed active in policy system<span class="check-sub">Verify effective date and driver details match what was stated to customer.</span></span></li>
+              <li id="acw2"><input type="checkbox" onchange="checkItem(this,'acw2')"><span class="check-text">Updated declarations page queued for delivery<span class="check-sub">Email if ePolicy; mail if paper. Confirm delivery method.</span></span></li>
+              <li id="acw3"><input type="checkbox" onchange="checkItem(this,'acw3')"><span class="check-text">Good Student Discount documentation request logged<span class="check-sub">Note follow-up task — transcript/report card to be submitted within 30 days.</span></span></li>
+              <li id="acw4"><input type="checkbox" onchange="checkItem(this,'acw4')"><span class="check-text">KnowYourDrive enrollment invite sent (if customer agreed)<span class="check-sub">Confirm email sent to {{email_address}}.</span></span></li>
+              <li id="acw5"><input type="checkbox" onchange="checkItem(this,'acw5')"><span class="check-text">Verbal authorization documented in interaction notes</span></li>
+              <li id="acw6"><input type="checkbox" onchange="checkItem(this,'acw6')"><span class="check-text">MVR check initiated or flagged for underwriting follow-up</span></li>
+              <li id="acw7"><input type="checkbox" onchange="checkItem(this,'acw7')"><span class="check-text">Interaction summary written and copied to policy notes</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DISPOSITION + CATEGORY -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">📂 Disposition & Categorization</span></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Interaction Disposition</label>
+              <select>
+                <option value="">— Select —</option>
+                <option value="change-complete" selected>Policy Change — Completed</option>
+                <option value="change-pending">Policy Change — Pending (follow-up required)</option>
+                <option value="info-only">Information Only — No Change</option>
+                <option value="escalated">Escalated to Supervisor</option>
+                <option value="escalated-uw">Escalated to Underwriting</option>
+                <option value="callback-scheduled">Callback Scheduled</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Change Type</label>
+              <select>
+                <option value="add-driver" selected>Add Driver — Teen / New Driver</option>
+                <option value="remove-driver">Remove Driver</option>
+                <option value="coverage-change">Coverage Change</option>
+                <option value="vehicle-change">Vehicle Change</option>
+                <option value="discount-add">Discount Added</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Callback Required?</label>
+              <select>
+                <option value="no" selected>No</option>
+                <option value="yes-gsd">Yes — GSD documentation follow-up</option>
+                <option value="yes-license">Yes — License not yet issued</option>
+                <option value="yes-uw">Yes — Underwriting review pending</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTES -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">📝 Interaction Notes (Policy-Level)</span></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Notes</label>
+              <textarea rows="4" placeholder="Example: Customer called to add teen driver {{teen_driver_name}}, DOB {{teen_dob}}, license {{teen_license_number}}. Good Student Discount applied pending transcript submission. KnowYourDrive invite sent. Endorsement effective {{endorsement_effective_date}}. Verbal authorization obtained."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- INTERACTION SUMMARY (manual copy) -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">📄 Interaction Summary (Copy to Policy Notes)</span></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Summary — Edit as needed, then copy/paste into policy system</label>
+              <textarea rows="7" id="summary-box">Date: {{current_date}} | Agent: {{agent_name}} | Channel: Inbound Phone
+Action: Added teen driver {{teen_driver_name}} (DOB: {{teen_dob}}, License: {{teen_license_number}}, State: {{policy_state}}) to personal auto policy {{policy_number}}.
+Primary vehicle assigned: {{primary_vehicle}}.
+Good Student Discount: Applied — documentation (transcript/report card) requested within 30 days.
+KnowYourDrive: Enrollment invite sent to {{email_address}}.
+Updated premium: {{new_6mo_premium}} / 6 months (effective {{endorsement_effective_date}}).
+Verbal authorization obtained. Updated dec page and ID cards queued for delivery.</textarea>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-accent" onclick="copySummary()">📋 Copy Summary</button>
+              <button class="btn btn-ghost" onclick="toast('Wrap-up submitted. After-call work closed.','success')">✅ Submit & Close ACW</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TO VERIFY NOTE -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">🔍 To Verify / Assumptions</span></div>
+          <div class="card-body">
+            <ul style="font-size:12px;line-height:1.9;padding-left:16px;color:var(--text-main);">
+              <li><strong>Theme:</strong> AmFam brand colors derived from amfam.com (primary: #c8102e, accent: #003087) — confirm against current brand guide.</li>
+              <li><strong>State rules:</strong> Teen driver exclusion options, graduated license requirements, and mandatory endorsement timing vary by state — verify for <strong>{{policy_state}}</strong>.</li>
+              <li><strong>Good Student Discount:</strong> GPA threshold (≥ 3.0) and documentation requirements — confirm current underwriting guidelines.</li>
+              <li><strong>KnowYourDrive:</strong> Availability, discount caps, and minimum enrollment periods — verify current program terms.</li>
+              <li><strong>MVR:</strong> Confirm MVR pull timing requirement (pre- vs post-endorsement) per underwriting guidelines.</li>
+              <li><strong>Premium placeholders:</strong> All premium figures use <code>{{placeholders}}</code> — populate from live rating engine during demo.</li>
+              <li><strong>{{call_recording_disclosure}}</strong> — Replace with state-appropriate call recording disclosure language.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div><!-- /panel-wrapup -->
+
+    </div><!-- /panels -->
+  </div><!-- /main -->
+</div><!-- /app-body -->
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+  /* ── TAB & RAIL SWITCHING ────────────────────────────────── */
+  function switchTab(id) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.rail-btn').forEach(r => r.classList.remove('active'));
+
+    document.getElementById('tab-' + id).classList.add('active');
+    document.getElementById('panel-' + id).classList.add('active');
+    document.querySelectorAll('.rail-btn').forEach(r => {
+      if (r.getAttribute('onclick') && r.getAttribute('onclick').includes("'" + id + "'")) {
+        r.classList.add('active');
+      }
+    });
+  }
+
+  function switchRail(btn, id) {
+    switchTab(id);
+  }
+
+  /* ── CHECKLIST ITEMS ─────────────────────────────────────── */
+  function checkItem(cb, liId) {
+    const li = document.getElementById(liId);
+    if (cb.checked) {
+      li.classList.add('checked');
+    } else {
+      li.classList.remove('checked');
+    }
+  }
+
+  /* ── TOAST ───────────────────────────────────────────────── */
+  function toast(msg, type='info') {
+    const container = document.getElementById('toast-container');
+    const el = document.createElement('div');
+    el.className = 'toast toast-' + type;
+    const icons = { success:'✅', warn:'⚠️', info:'ℹ️', error:'❌' };
+    el.innerHTML = '<span>' + (icons[type]||'ℹ️') + '</span><span>' + msg + '</span>';
+    container.appendChild(el);
+    setTimeout(() => {
+      el.classList.add('fade-out');
+      setTimeout(() => el.remove(), 320);
+    }, 3500);
+  }
+
+  /* ── COPY SUMMARY ────────────────────────────────────────── */
+  function copySummary() {
+    const box = document.getElementById('summary-box');
+    box.select();
+    try {
+      document.execCommand('copy');
+      toast('Interaction summary copied to clipboard.', 'success');
+    } catch(e) {
+      toast('Copy failed — please select and copy manually.', 'warn');
+    }
+  }
+
+  /* ── CALL TIMER ──────────────────────────────────────────── */
+  let seconds = 0;
+  setInterval(() => {
+    seconds++;
+    const m = String(Math.floor(seconds / 60)).padStart(2,'0');
+    const s = String(seconds % 60).padStart(2,'0');
+    const el = document.getElementById('call-timer');
+    if (el) el.textContent = m + ':' + s;
+  }, 1000);
+
+  /* ── QUERY PARAM POPULATION ──────────────────────────────── */
+  (function populateFromParams() {
+    const p = new URLSearchParams(window.location.search);
+
+    const map = {
+      // Policyholder
+      'customerName':            ['f-cust-name', 'agent-name-display'],
+      'customer_name':           ['f-cust-name'],
+      'policyNumber':            ['f-policy-num'],
+      'policy_number':           ['f-policy-num'],
+      'phone':                   ['f-phone'],
+      'phone_number':            ['f-phone'],
+      'email':                   ['f-email'],
+      'email_address':           ['f-email'],
+      'state':                   ['f-state', 'f-lic-state'],
+      'policy_state':            ['f-state', 'f-lic-state'],
+      'agentName':               ['f-agent'],
+      'assigned_agent_name':     ['f-agent'],
+      'customerSince':           ['f-since'],
+      'customer_since':          ['f-since'],
+      'effectiveDate':           ['f-eff'],
+      'policy_effective_date':   ['f-eff'],
+      'renewalDate':             ['f-renew'],
+      'renewal_date':            ['f-renew'],
+      'paymentPlan':             ['f-pay'],
+      'payment_plan':            ['f-pay'],
+      'ePolicy':                 ['f-paper'],
+      'epolicy_status':          ['f-paper'],
+      // Teen
+      'teenName':                ['f-teen-name'],
+      'teen_driver_name':        ['f-teen-name'],
+      'teenLicense':             ['f-lic'],
+      'teen_license_number':     ['f-lic'],
+      'primaryVehicle':          ['f-veh'],
+      'primary_vehicle':         ['f-veh'],
+      // Vehicles
+      'vehicle1':                ['v1-desc'],
+      'vehicle_1_desc':          ['v1-desc'],
+      'vehicle2':                ['v2-desc'],
+      'vehicle_2_desc':          ['v2-desc'],
+      // Premium
+      'newPremium':              ['sys-premium'],
+      'new_6mo_premium':         ['sys-premium'],
+      'currentPremium':          ['sys-curr-prem'],
+      'current_6mo_premium':     ['sys-curr-prem'],
+      'increase':                ['sys-increase'],
+      'premium_increase_amt':    ['sys-increase'],
+      // Agent
+      'agentDisplay':            ['agent-name-display'],
+      'agent_name':              ['agent-name-display'],
+    };
+
+    for (const [param, ids] of Object.entries(map)) {
+      const val = p.get(param);
+      if (val) {
+        ids.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = decodeURIComponent(val);
+        });
+      }
+    }
+
+    // Theme overrides
+    const root = document.documentElement.style;
+    const primary     = p.get('primary')     || p.get('primaryColor');
+    const accent      = p.get('accent')      || p.get('accentColor');
+    const headerColor = p.get('headerColor');
+    const bgColor     = p.get('bgColor');
+    if (primary)     { root.setProperty('--primary', primary); root.setProperty('--primary-dark', primary); }
+    if (accent)      { root.setProperty('--accent', accent); }
+    if (headerColor) { root.setProperty('--header-bg', headerColor); }
+    if (bgColor)     { root.setProperty('--bg', bgColor); }
+  })();
+
+  /* ── DEFAULT FICTIONAL DATA (fallback when no params) ────── */
+  (function setDefaults() {
+    const defaults = {
+      'f-cust-name':      'Sandra Kowalski',
+      'f-policy-num':     'PAF-7842-WI-2019',
+      'f-phone':          '(608) 555-{{xxxx}}',
+      'f-email':          'skowalski@{{domain}}.com',
+      'f-state':          'Wisconsin',
+      'f-lic-state':      'Wisconsin',
+      'f-agent':          'Marcus T. Leblanc — Madison Central Agency',
+      'f-since':          '2011',
+      'f-eff':            '03/15/2025',
+      'f-renew':          '09/15/2025',
+      'f-pay':            'Monthly EFT',
+      'f-paper':          'ePolicy — Email Delivery',
+      'f-teen-name':      'Tyler Kowalski',
+      'f-lic':            'WI-K{{XXXXXXX}}',
+      'f-veh':            '2022 Honda Accord',
+      'v1-desc':          '2022 Honda Accord LX',
+      'v2-desc':          '2019 Chevy Tahoe LT',
+      'v1-driver':        'Sandra Kowalski',
+      'v2-driver':        'David Kowalski',
+      'sys-premium':      '$1,847',
+      'sys-curr-prem':    '$1,234',
+      'sys-increase':     '+$613',
+      'agent-name-display': 'Agent: Jordan Reyes',
+    };
+    for (const [id, val] of Object.entries(defaults)) {
+      const el = document.getElementById(id);
+      if (el && (el.textContent.startsWith('{{') || el.textContent === '')) {
+        el.textContent = val;
+      }
+    }
+  })();
+</script>
+
+</body>
+</html>
