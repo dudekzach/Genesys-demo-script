@@ -320,7 +320,6 @@ a { text-decoration: none; color: inherit; }
   padding: 28px 32px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
 }
 
 /* Page header */
@@ -990,6 +989,356 @@ a { text-decoration: none; color: inherit; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--ink-4); }
+
+/* ══════════════════════════════════════════════════════════════
+   PAGE VIEWS (dashboard vs billing)
+══════════════════════════════════════════════════════════════ */
+.page-view { display: none; flex-direction: column; gap: 24px; }
+.page-view.active { display: flex; }
+
+/* ══════════════════════════════════════════════════════════════
+   COBROWSE MASKING INDICATORS
+══════════════════════════════════════════════════════════════ */
+/* Fields tagged data-cobrowse-masked get a subtle shield overlay label */
+.masked-field-wrap {
+  position: relative;
+}
+.cobrowse-mask-badge {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: #1a1e2e;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 20px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  pointer-events: none;
+  opacity: .65;
+  white-space: nowrap;
+}
+.cobrowse-mask-badge.active-mask {
+  background: var(--blue);
+  opacity: 1;
+}
+
+/* The CoBrowse masking highlight — fires when field has a value */
+input[data-cobrowse-masked]:not(:placeholder-shown) {
+  background: repeating-linear-gradient(
+    90deg,
+    #c8d8f0 0px,
+    #c8d8f0 8px,
+    #dce8f8 8px,
+    #dce8f8 16px
+  ) !important;
+  color: transparent !important;
+  caret-color: var(--ink);
+  border-color: var(--blue-mid) !important;
+  letter-spacing: 2px;
+}
+input[data-cobrowse-masked]:focus:not(:placeholder-shown) {
+  background: var(--bg) !important;
+  color: var(--ink) !important;
+  letter-spacing: normal;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FORM ELEMENTS
+══════════════════════════════════════════════════════════════ */
+.form-section {
+  margin-bottom: 28px;
+}
+.form-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.form-grid {
+  display: grid;
+  gap: 14px;
+}
+.form-grid-2 { grid-template-columns: 1fr 1fr; }
+.form-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.form-group.span-2 { grid-column: span 2; }
+.form-group.span-3 { grid-column: span 3; }
+.form-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.form-label .pii-tag {
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 20px;
+  font-weight: 700;
+  letter-spacing: .3px;
+}
+.form-label .pii-tag.red {
+  background: var(--red-soft);
+  color: var(--red);
+}
+.form-input {
+  height: 40px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  transition: border-color .15s, background .15s;
+  width: 100%;
+}
+.form-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(0,48,135,.08);
+}
+.form-input::placeholder { color: var(--ink-4); }
+.form-input.masked-input {
+  padding-right: 80px; /* room for badge */
+}
+select.form-input { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23717899' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+.form-hint {
+  font-size: 11px;
+  color: var(--ink-4);
+  line-height: 1.5;
+}
+.form-hint.red { color: var(--red); }
+
+/* ══════════════════════════════════════════════════════════════
+   STEPPER
+══════════════════════════════════════════════════════════════ */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 32px;
+  animation: fadeUp .4s ease both;
+}
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+}
+.step-item:last-child { flex: 0; }
+.step-circle {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-3);
+  background: var(--surface);
+  flex-shrink: 0;
+  transition: all .2s;
+  position: relative;
+  z-index: 1;
+}
+.step-circle.done { background: var(--green); border-color: var(--green); color: #fff; }
+.step-circle.active { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 0 4px rgba(0,48,135,.12); }
+.step-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-3);
+  white-space: nowrap;
+  margin-left: 8px;
+  transition: color .2s;
+}
+.step-label.active { color: var(--blue); font-weight: 700; }
+.step-label.done   { color: var(--green); }
+.step-connector {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  margin: 0 8px;
+  transition: background .3s;
+}
+.step-connector.done { background: var(--green); }
+
+/* ══════════════════════════════════════════════════════════════
+   PAYMENT CARD PREVIEW
+══════════════════════════════════════════════════════════════ */
+.card-preview {
+  background: linear-gradient(135deg, #1a1e2e 0%, #2d3561 100%);
+  border-radius: 14px;
+  padding: 22px 24px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-lg);
+}
+.card-preview::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 140px; height: 140px;
+  background: rgba(255,255,255,.05);
+  border-radius: 50%;
+}
+.card-preview::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 30px;
+  width: 120px; height: 120px;
+  background: rgba(255,255,255,.04);
+  border-radius: 50%;
+}
+.card-preview-chip {
+  width: 32px; height: 24px;
+  background: linear-gradient(135deg, #d4a017, #f0c040);
+  border-radius: 5px;
+  margin-bottom: 18px;
+}
+.card-preview-number {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+  font-family: 'DM Mono', 'Courier New', monospace;
+  opacity: .9;
+}
+.card-preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.card-preview-label { font-size: 9px; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 2px; }
+.card-preview-val   { font-size: 13px; font-weight: 600; color: rgba(255,255,255,.9); }
+.card-network {
+  font-size: 20px;
+  position: absolute;
+  bottom: 20px; right: 22px;
+  opacity: .8;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   COBROWSE LEGEND / CALLOUT
+══════════════════════════════════════════════════════════════ */
+.cobrowse-callout {
+  background: var(--blue-soft);
+  border: 1px solid rgba(0,48,135,.18);
+  border-left: 4px solid var(--blue);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+  animation: fadeUp .4s .05s ease both;
+}
+.cobrowse-callout-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+.cobrowse-callout-text {}
+.cobrowse-callout-title { font-size: 13px; font-weight: 700; color: var(--blue); margin-bottom: 3px; }
+.cobrowse-callout-body  { font-size: 12px; color: var(--ink-2); line-height: 1.6; }
+.cobrowse-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.cobrowse-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--ink-2);
+  font-weight: 600;
+}
+.legend-swatch {
+  width: 28px; height: 10px;
+  border-radius: 3px;
+}
+.legend-swatch.masked { background: repeating-linear-gradient(90deg, #c8d8f0 0px, #c8d8f0 5px, #dce8f8 5px, #dce8f8 10px); }
+.legend-swatch.normal { background: var(--surface); border: 1px solid var(--border); }
+
+/* ══════════════════════════════════════════════════════════════
+   SUCCESS STATE
+══════════════════════════════════════════════════════════════ */
+.success-screen {
+  text-align: center;
+  padding: 48px 32px;
+  animation: fadeUp .4s ease both;
+}
+.success-icon {
+  width: 72px; height: 72px;
+  background: var(--green-soft);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 20px;
+}
+.success-title {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.success-body {
+  font-size: 14px;
+  color: var(--ink-3);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.success-details {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  text-align: left;
+  margin-bottom: 24px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.success-detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.success-detail-row:last-child { border-bottom: none; }
+.sd-label { color: var(--ink-3); }
+.sd-val   { font-weight: 700; color: var(--ink); }
 </style>
 </head>
 <body>
@@ -1070,8 +1419,10 @@ a { text-decoration: none; color: inherit; }
     <!-- Billing -->
     <div class="sidebar-section">
       <div class="sidebar-label">Billing</div>
-      <div class="sidebar-item" onclick="toast('Loading Payment History...')"><span class="si-icon">💳</span> Payments</div>
-      <div class="sidebar-item" onclick="toast('Loading Billing Settings...')"><span class="si-icon">⚙️</span> Billing Settings</div>
+      <div class="sidebar-item" id="snav-payments" onclick="showBillingPage()"><span class="si-icon">💳</span> Payments
+        <span class="sidebar-badge gold-badge">Due</span>
+      </div>
+      <div class="sidebar-item" onclick="showBillingPage()"><span class="si-icon">⚙️</span> Billing Settings</div>
       <div class="sidebar-item" onclick="toast('Generating ID Cards...')"><span class="si-icon">🪪</span> ID Cards</div>
       <div class="sidebar-item" onclick="toast('Loading Documents...')"><span class="si-icon">📄</span> Documents</div>
     </div>
@@ -1089,6 +1440,8 @@ a { text-decoration: none; color: inherit; }
   <!-- ── MAIN ───────────────────────────────────────────────── -->
   <main class="main-content">
 
+  <!-- ═══ PAGE: DASHBOARD ═══ -->
+  <div class="page-view active" id="page-dashboard">
     <!-- PAGE HEADER -->
     <div class="page-header">
       <div class="page-header-left">
@@ -1370,8 +1723,480 @@ a { text-decoration: none; color: inherit; }
           </div>
         </div>
 
+
       </div>
     </div>
+
+  </div><!-- /page-dashboard -->
+
+  <!-- ═══ PAGE: BILLING & PAYMENT ═══ -->
+  <div class="page-view" id="page-billing">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header" style="animation: fadeUp .4s ease both;">
+      <div class="page-header-left">
+        <div class="page-title">Billing &amp; Payment</div>
+        <div class="page-subtitle">Policy PAF-4417-WI-2016 · Next payment due April 1, 2025</div>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn btn-secondary" onclick="showDashboard()">← Back to Dashboard</button>
+      </div>
+    </div>
+
+    <!-- COBROWSE CALLOUT -->
+    <div class="cobrowse-callout">
+      <div class="cobrowse-callout-icon">🛡️</div>
+      <div class="cobrowse-callout-text">
+        <div class="cobrowse-callout-title">CoBrowse Active — Sensitive Fields Are Masked</div>
+        <div class="cobrowse-callout-body">
+          Fields marked <strong>PII</strong> or <strong>SENSITIVE</strong> are automatically masked for your agent during any co-browsing session. Your agent can see your screen — but these fields appear as a blocked pattern and are never transmitted.
+        </div>
+        <div class="cobrowse-legend">
+          <div class="cobrowse-legend-item"><span class="legend-swatch masked"></span> Masked to agent</div>
+          <div class="cobrowse-legend-item"><span class="legend-swatch normal"></span> Visible to agent</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP WIZARD -->
+    <div class="stepper" id="stepper">
+      <div class="step-item">
+        <div class="step-circle active" id="sc-1">1</div>
+        <span class="step-label active" id="sl-1">Verify Identity</span>
+        <div class="step-connector" id="conn-1"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle" id="sc-2">2</div>
+        <span class="step-label" id="sl-2">Payment Method</span>
+        <div class="step-connector" id="conn-2"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle" id="sc-3">3</div>
+        <span class="step-label" id="sl-3">Review &amp; Pay</span>
+        <div class="step-connector" id="conn-3" style="display:none;"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle" id="sc-4">4</div>
+        <span class="step-label" id="sl-4">Confirmation</span>
+      </div>
+    </div>
+
+    <!-- ── STEP 1: IDENTITY VERIFICATION ── -->
+    <div id="step-1">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; animation: fadeUp .4s .1s ease both;">
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🪪 Identity Verification</span>
+            <span style="font-size:11px; color:var(--ink-3);">Required for payment changes</span>
+          </div>
+          <div class="card-body">
+            <div class="form-section">
+              <div class="form-section-title">Personal Information</div>
+              <div class="form-grid form-grid-2" style="margin-bottom:14px;">
+                <div class="form-group">
+                  <label class="form-label">First Name</label>
+                  <input class="form-input" type="text" value="Cameron" placeholder="First name"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Last Name</label>
+                  <input class="form-input" type="text" value="Loyal" placeholder="Last name"/>
+                </div>
+              </div>
+              <div class="form-grid form-grid-2" style="margin-bottom:14px;">
+                <div class="form-group">
+                  <label class="form-label">Date of Birth <span class="pii-tag">PII</span></label>
+                  <div class="masked-field-wrap">
+                    <input class="form-input masked-input" type="text" data-cobrowse-masked placeholder="MM/DD/YYYY" value="07/14/1982" autocomplete="off"/>
+                    <span class="cobrowse-mask-badge active-mask">🔒 Masked</span>
+                  </div>
+                  <span class="form-hint">Your date of birth as on file with AmFam</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Policy ZIP Code</label>
+                  <input class="form-input" type="text" placeholder="ZIP Code" value="53703"/>
+                </div>
+              </div>
+              <div class="form-grid" style="margin-bottom:0;">
+                <div class="form-group">
+                  <label class="form-label">Social Security Number (Last 4) <span class="pii-tag red">SENSITIVE</span></label>
+                  <div class="masked-field-wrap">
+                    <input class="form-input masked-input" type="text" data-cobrowse-masked placeholder="Last 4 digits of SSN" maxlength="4" value="7741" autocomplete="off"/>
+                    <span class="cobrowse-mask-badge active-mask">🔒 Masked</span>
+                  </div>
+                  <span class="form-hint red">🔒 Never transmitted — masked in all agent sessions</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section" style="margin-bottom:0;">
+              <div class="form-section-title">Contact Verification</div>
+              <div class="form-grid form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Email on File</label>
+                  <input class="form-input" type="email" value="cameron.loyal@{{domain}}.com" placeholder="Email"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Phone on File <span class="pii-tag">PII</span></label>
+                  <div class="masked-field-wrap">
+                    <input class="form-input masked-input" type="tel" data-cobrowse-masked placeholder="(xxx) xxx-xxxx" value="(608) 555-0192" autocomplete="off"/>
+                    <span class="cobrowse-mask-badge active-mask">🔒 Masked</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: ACCOUNT SUMMARY -->
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">📋 Payment Summary</span>
+            </div>
+            <div class="card-body">
+              <div class="success-detail-row" style="padding:8px 0;">
+                <span class="sd-label">Policy Number</span>
+                <span class="sd-val">PAF-4417-WI-2016</span>
+              </div>
+              <div class="success-detail-row" style="padding:8px 0;">
+                <span class="sd-label">Payment Due</span>
+                <span class="sd-val" style="color:var(--red);">April 1, 2025</span>
+              </div>
+              <div class="success-detail-row" style="padding:8px 0;">
+                <span class="sd-label">Amount Due</span>
+                <span class="sd-val">$205.67</span>
+              </div>
+              <div class="success-detail-row" style="padding:8px 0;">
+                <span class="sd-label">Current Plan</span>
+                <span class="sd-val">Monthly EFT</span>
+              </div>
+              <div class="success-detail-row" style="padding:8px 0; border-bottom:none;">
+                <span class="sd-label">Auto-Pay Status</span>
+                <span class="sd-val" style="color:var(--green);">Enabled ✓</span>
+              </div>
+              <div style="margin-top:16px; padding:12px; background:var(--gold-soft); border:1px solid rgba(232,160,32,.3); border-radius:var(--radius-sm); font-size:12px; color:#7a4a00; line-height:1.5;">
+                ⚠️ <strong>Payment method expiring soon.</strong> Your card on file ends in ••4782 and expires 04/25. Please update your payment method to avoid a lapse.
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><span class="card-title">🔒 Security Note</span></div>
+            <div class="card-body">
+              <p style="font-size:12px; color:var(--ink-2); line-height:1.7;">Fields marked <strong>PII</strong> or <strong>SENSITIVE</strong> are automatically masked during any co-browsing or screen-sharing session. Your agent sees a striped placeholder — never your actual data. This applies to SSN, card numbers, CVV, bank account numbers, and date of birth.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; animation: fadeUp .4s .15s ease both;">
+        <button class="btn btn-secondary" onclick="showDashboard()">Cancel</button>
+        <button class="btn btn-primary" onclick="goToStep(2)">Verify &amp; Continue →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 2: PAYMENT METHOD ── -->
+    <div id="step-2" style="display:none;">
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; animation: fadeUp .4s ease both;">
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">💳 Payment Method</span>
+            <span style="font-size:11px; color:var(--ink-3);">Credit, Debit, or Bank Account</span>
+          </div>
+          <div class="card-body">
+
+            <!-- Payment type toggle -->
+            <div style="display:flex; gap:8px; margin-bottom:24px;">
+              <button id="ptab-card" class="btn btn-primary btn-sm" onclick="switchPayTab('card')" style="flex:1;">💳 Credit / Debit Card</button>
+              <button id="ptab-ach" class="btn btn-secondary btn-sm" onclick="switchPayTab('ach')" style="flex:1;">🏦 Bank Account (ACH)</button>
+            </div>
+
+            <!-- CARD FORM -->
+            <div id="pay-card-form">
+              <div class="form-section">
+                <div class="form-section-title">Card Details</div>
+                <div class="form-grid" style="margin-bottom:14px;">
+                  <div class="form-group">
+                    <label class="form-label">Cardholder Name</label>
+                    <input class="form-input" type="text" placeholder="Name as it appears on card" value="Cameron Loyal"/>
+                  </div>
+                </div>
+                <div class="form-grid" style="margin-bottom:14px;">
+                  <div class="form-group">
+                    <label class="form-label">Card Number <span class="pii-tag red">SENSITIVE</span></label>
+                    <div class="masked-field-wrap">
+                      <input class="form-input masked-input" type="text" data-cobrowse-masked placeholder="•••• •••• •••• ••••" maxlength="19" value="4532 1148 0343 6467" autocomplete="off" oninput="formatCard(this); updateCardPreview();"/>
+                      <span class="cobrowse-mask-badge active-mask">🔒 Masked</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-grid form-grid-3" style="margin-bottom:14px;">
+                  <div class="form-group">
+                    <label class="form-label">Expiration <span class="pii-tag">PII</span></label>
+                    <div class="masked-field-wrap">
+                      <input class="form-input masked-input" type="text" data-cobrowse-masked placeholder="MM/YY" maxlength="5" value="09/28" autocomplete="off" oninput="updateCardPreview()"/>
+                      <span class="cobrowse-mask-badge active-mask">🔒 Masked</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">CVV <span class="pii-tag red">SENSITIVE</span></label>
+                    <div class="masked-field-wrap">
+                      <input class="form-input masked-input" type="text" data-cobrowse-masked placeholder="•••" maxlength="4" value="847" autocomplete="off"/>
+                      <span class="cobrowse-mask-badge active-mask">🔒 Masked</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Billing ZIP</label>
+                    <input class="form-input" type="text" placeholder="ZIP" value="53703"/>
+                  </div>
+                </div>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">Billing Address</label>
+                    <input class="form-input" type="text" placeholder="Street address" value="412 Monroe Street"/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section" style="margin-bottom:0;">
+                <div class="form-section-title">Payment Options</div>
+                <div class="form-grid form-grid-2">
+                  <div class="form-group">
+                    <label class="form-label">Payment Amount</label>
+                    <select class="form-input">
+                      <option>Monthly — $205.67</option>
+                      <option>6-Month Full — $1,234.00</option>
+                      <option>Custom Amount</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Save Card for Auto-Pay?</label>
+                    <select class="form-input">
+                      <option>Yes — enable auto-pay</option>
+                      <option>One-time payment only</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ACH FORM -->
+            <div id="pay-ach-form" style="display:none;">
+              <div class="form-section">
+                <div class="form-section-title">Bank Account Details</div>
+                <div class="form-grid form-grid-2" style="margin-bottom:14px;">
+                  <div class="form-group">
+                    <label class="form-label">Account Holder Name</label>
+                    <input class="form-input" type="text" value="Cameron Loyal"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Account Type</label>
+                    <select class="form-input">
+                      <option>Checking</option>
+                      <option>Savings</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-grid" style="margin-bottom:14px;">
+                  <div class="form-group">
+                    <label class="form-label">Bank Routing Number <span class="pii-tag red">SENSITIVE</span></label>
+                    <div class="masked-field-wrap">
+                      <input class="form-input masked-input" type="text" data-cobrowse-masked placeholder="9-digit routing number" maxlength="9" value="071000013" autocomplete="off"/>
+                      <span class="cobrowse-mask-badge active-mask">🔒 Masked</span>
+                    </div>
+                    <span class="form-hint">Found at the bottom-left of your check</span>
+                  </div>
+                </div>
+                <div class="form-grid form-grid-2" style="margin-bottom:14px;">
+                  <div class="form-group">
+                    <label class="form-label">Account Number <span class="pii-tag red">SENSITIVE</span></label>
+                    <div class="masked-field-wrap">
+                      <input class="form-input masked-input" type="text" data-cobrowse-masked placeholder="Account number" value="483920174650" autocomplete="off"/>
+                      <span class="cobrowse-mask-badge active-mask">🔒 Masked</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Confirm Account Number <span class="pii-tag red">SENSITIVE</span></label>
+                    <div class="masked-field-wrap">
+                      <input class="form-input masked-input" type="text" data-cobrowse-masked placeholder="Re-enter account number" value="483920174650" autocomplete="off"/>
+                      <span class="cobrowse-mask-badge active-mask">🔒 Masked</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">Bank Name</label>
+                    <input class="form-input" type="text" value="Associated Bank"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT: CARD PREVIEW -->
+        <div>
+          <div class="card-preview" id="card-preview-box">
+            <div class="card-preview-chip"></div>
+            <div class="card-preview-number" id="prev-number">4532 1148 0343 6467</div>
+            <div class="card-preview-row">
+              <div>
+                <div class="card-preview-label">Card Holder</div>
+                <div class="card-preview-val">CAMERON LOYAL</div>
+              </div>
+              <div>
+                <div class="card-preview-label">Expires</div>
+                <div class="card-preview-val" id="prev-exp">09/28</div>
+              </div>
+            </div>
+            <div class="card-network">💳</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><span class="card-title">🛡️ CoBrowse Masking in Action</span></div>
+            <div class="card-body">
+              <p style="font-size:12px; color:var(--ink-2); line-height:1.7; margin-bottom:12px;">
+                When your agent uses CoBrowse to assist you on this page, the following fields appear as <strong>masked stripes</strong> on their screen — they never see the actual values:
+              </p>
+              <ul style="font-size:12px; color:var(--ink-2); line-height:2; padding-left:16px;">
+                <li>💳 Full card number</li>
+                <li>📅 Expiration date</li>
+                <li>🔐 CVV / security code</li>
+                <li>🏦 Bank routing &amp; account numbers</li>
+                <li>🪪 Date of birth</li>
+                <li>🔢 Social Security Number (last 4)</li>
+                <li>📞 Phone number</li>
+              </ul>
+              <div style="margin-top:12px; padding:10px 12px; background:var(--green-soft); border:1px solid rgba(26,127,75,.2); border-radius:var(--radius-sm); font-size:12px; color:var(--green); font-weight:600;">
+                ✓ Your sensitive data is always protected during assisted sessions.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="display:flex; justify-content:space-between; gap:10px; margin-top:20px; animation: fadeUp .4s .15s ease both;">
+        <button class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
+        <button class="btn btn-primary" onclick="goToStep(3)">Review Payment →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 3: REVIEW & PAY ── -->
+    <div id="step-3" style="display:none;">
+      <div style="display:grid; grid-template-columns:1.2fr .8fr; gap:24px; animation: fadeUp .4s ease both;">
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🔍 Review Payment Details</span>
+          </div>
+          <div class="card-body">
+            <div class="form-section">
+              <div class="form-section-title">Payment Summary</div>
+              <div class="success-detail-row" style="padding:10px 0; font-size:14px;">
+                <span class="sd-label">Policy</span>
+                <span class="sd-val">PAF-4417-WI-2016 — Personal Auto</span>
+              </div>
+              <div class="success-detail-row" style="padding:10px 0; font-size:14px;">
+                <span class="sd-label">Amount</span>
+                <span class="sd-val" style="font-size:18px; color:var(--blue);">$205.67</span>
+              </div>
+              <div class="success-detail-row" style="padding:10px 0; font-size:14px;">
+                <span class="sd-label">Payment Method</span>
+                <span class="sd-val">Visa ending in ••6467</span>
+              </div>
+              <div class="success-detail-row" style="padding:10px 0; font-size:14px;">
+                <span class="sd-label">Payment Date</span>
+                <span class="sd-val">Today, March 10, 2025</span>
+              </div>
+              <div class="success-detail-row" style="padding:10px 0; font-size:14px; border-bottom:none;">
+                <span class="sd-label">Confirmation to</span>
+                <span class="sd-val">cameron.loyal@{{domain}}.com</span>
+              </div>
+            </div>
+
+            <div class="form-section" style="margin-bottom:0;">
+              <div class="form-section-title">Authorization</div>
+              <div style="display:flex; gap:10px; align-items:flex-start; padding:14px; background:var(--bg); border-radius:var(--radius-sm); border:1px solid var(--border);">
+                <input type="checkbox" id="auth-check" style="width:16px;height:16px;margin-top:2px;accent-color:var(--blue);flex-shrink:0;cursor:pointer;" checked/>
+                <label for="auth-check" style="font-size:12px; color:var(--ink-2); line-height:1.6; cursor:pointer;">
+                  I authorize American Family Insurance to charge <strong>$205.67</strong> to my Visa ending in ••6467 for policy PAF-4417-WI-2016. I understand this payment will be processed immediately.
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div class="card">
+            <div class="card-header"><span class="card-title">🔒 Verified Identity</span></div>
+            <div class="card-body">
+              <div class="success-detail-row" style="padding:7px 0;">
+                <span class="sd-label">Name</span>
+                <span class="sd-val">Cameron Loyal</span>
+              </div>
+              <div class="success-detail-row" style="padding:7px 0;">
+                <span class="sd-label">DOB</span>
+                <span class="sd-val" style="background:repeating-linear-gradient(90deg,#c8d8f0 0,#c8d8f0 6px,#dce8f8 6px,#dce8f8 12px);color:transparent;border-radius:3px;padding:0 8px;">07/14/1982</span>
+              </div>
+              <div class="success-detail-row" style="padding:7px 0; border-bottom:none;">
+                <span class="sd-label">SSN (last 4)</span>
+                <span class="sd-val" style="background:repeating-linear-gradient(90deg,#c8d8f0 0,#c8d8f0 6px,#dce8f8 6px,#dce8f8 12px);color:transparent;border-radius:3px;padding:0 8px;">••••</span>
+              </div>
+              <div style="margin-top:10px; font-size:11px; color:var(--ink-3); display:flex; align-items:center; gap:5px;">
+                🔒 Sensitive fields masked per CoBrowse policy
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><span class="card-title">📅 Upcoming Payments</span></div>
+            <div class="card-body">
+              <div class="success-detail-row" style="padding:7px 0;"><span class="sd-label">Apr 1, 2025</span><span class="sd-val">$205.67</span></div>
+              <div class="success-detail-row" style="padding:7px 0;"><span class="sd-label">May 1, 2025</span><span class="sd-val">$205.67</span></div>
+              <div class="success-detail-row" style="padding:7px 0; border-bottom:none;"><span class="sd-label">Jun 1, 2025</span><span class="sd-val">$205.67</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="display:flex; justify-content:space-between; gap:10px; margin-top:20px; animation: fadeUp .4s .1s ease both;">
+        <button class="btn btn-secondary" onclick="goToStep(2)">← Edit Payment</button>
+        <button class="btn btn-success" style="background:var(--green);color:#fff;font-size:14px;padding:11px 28px;" onclick="goToStep(4)">🔒 Submit Payment — $205.67</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 4: CONFIRMATION ── -->
+    <div id="step-4" style="display:none;">
+      <div class="card" style="animation: fadeUp .4s ease both;">
+        <div class="card-body">
+          <div class="success-screen">
+            <div class="success-icon">✅</div>
+            <div class="success-title">Payment Successful!</div>
+            <div class="success-body">Your payment of <strong>$205.67</strong> has been processed. A confirmation has been sent to your email on file. Your policy PAF-4417-WI-2016 remains active.</div>
+            <div class="success-details">
+              <div class="success-detail-row"><span class="sd-label">Confirmation #</span><span class="sd-val">AMF-2025-8847291</span></div>
+              <div class="success-detail-row"><span class="sd-label">Amount Paid</span><span class="sd-val" style="color:var(--green);">$205.67</span></div>
+              <div class="success-detail-row"><span class="sd-label">Payment Method</span><span class="sd-val">Visa ••6467</span></div>
+              <div class="success-detail-row"><span class="sd-label">Date</span><span class="sd-val">March 10, 2025</span></div>
+              <div class="success-detail-row"><span class="sd-label">Next Payment</span><span class="sd-val">May 1, 2025 — $205.67</span></div>
+            </div>
+            <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+              <button class="btn btn-secondary" onclick="toast('Downloading receipt...')">📄 Download Receipt</button>
+              <button class="btn btn-primary" onclick="showDashboard()">← Return to Dashboard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-billing -->
 
   </main><!-- /main-content -->
 
@@ -1454,6 +2279,115 @@ a { text-decoration: none; color: inherit; }
      APP JAVASCRIPT
 ══════════════════════════════════════════════════════════════ -->
 <script>
+  /* ── PAGE NAVIGATION ───────────────────────────────────────── */
+  function showDashboard() {
+    document.getElementById('page-dashboard').classList.add('active');
+    document.getElementById('page-billing').classList.remove('active');
+    // Sidebar active states
+    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+    document.querySelector('.sidebar-item.active') || document.querySelectorAll('.sidebar-item')[0].classList.add('active');
+    document.querySelectorAll('.sidebar-item')[0].classList.add('active');
+    // Reset stepper
+    goToStep(1, true);
+  }
+
+  function showBillingPage() {
+    document.getElementById('page-dashboard').classList.remove('active');
+    document.getElementById('page-billing').classList.add('active');
+    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('snav-payments').classList.add('active');
+    // Scroll to top of main
+    document.querySelector('.main-content').scrollTop = 0;
+  }
+
+  /* ── STEP WIZARD ────────────────────────────────────────────── */
+  function goToStep(n, silent) {
+    // Hide all steps
+    [1,2,3,4].forEach(i => {
+      const el = document.getElementById('step-' + i);
+      if (el) el.style.display = 'none';
+    });
+    // Show target step
+    const target = document.getElementById('step-' + n);
+    if (target) target.style.display = 'block';
+
+    // Update stepper UI
+    [1,2,3,4].forEach(i => {
+      const sc = document.getElementById('sc-' + i);
+      const sl = document.getElementById('sl-' + i);
+      const conn = document.getElementById('conn-' + i);
+      if (!sc) return;
+      sc.classList.remove('active','done');
+      sl.classList.remove('active','done');
+      if (conn) conn.classList.remove('done');
+
+      if (i < n) {
+        sc.classList.add('done');
+        sc.textContent = '✓';
+        sl.classList.add('done');
+        if (conn) conn.classList.add('done');
+      } else if (i === n) {
+        sc.classList.add('active');
+        sc.textContent = i;
+        sl.classList.add('active');
+      } else {
+        sc.textContent = i;
+      }
+    });
+
+    if (!silent && n > 1) {
+      const labels = ['', 'Identity Verified ✓', 'Payment Details Saved ✓', 'Processing Payment...', ''];
+      if (labels[n-1]) toast(labels[n-1]);
+    }
+  }
+
+  /* ── PAYMENT TAB SWITCHER ───────────────────────────────────── */
+  function switchPayTab(tab) {
+    const cardForm = document.getElementById('pay-card-form');
+    const achForm  = document.getElementById('pay-ach-form');
+    const cardBtn  = document.getElementById('ptab-card');
+    const achBtn   = document.getElementById('ptab-ach');
+    const preview  = document.getElementById('card-preview-box');
+
+    if (tab === 'card') {
+      cardForm.style.display = 'block';
+      achForm.style.display  = 'none';
+      cardBtn.className = 'btn btn-primary btn-sm';
+      achBtn.className  = 'btn btn-secondary btn-sm';
+      if (preview) preview.style.display = 'block';
+    } else {
+      cardForm.style.display = 'none';
+      achForm.style.display  = 'block';
+      cardBtn.className = 'btn btn-secondary btn-sm';
+      achBtn.className  = 'btn btn-primary btn-sm';
+      if (preview) preview.style.display = 'none';
+    }
+    // re-assign flex:1 inline style
+    cardBtn.style.flex = '1';
+    achBtn.style.flex  = '1';
+  }
+
+  /* ── CARD NUMBER FORMATTER ──────────────────────────────────── */
+  function formatCard(input) {
+    let v = input.value.replace(/\D/g,'').substring(0,16);
+    input.value = v.replace(/(.{4})/g,'$1 ').trim();
+  }
+
+  function updateCardPreview() {
+    const numEl  = document.querySelector('#pay-card-form input[data-cobrowse-masked]');
+    const expEl  = document.querySelectorAll('#pay-card-form input[data-cobrowse-masked]')[1];
+    const prevN  = document.getElementById('prev-number');
+    const prevE  = document.getElementById('prev-exp');
+    if (numEl && prevN) {
+      const raw = numEl.value.replace(/\s/g,'').padEnd(16,'•');
+      const fmt = raw.replace(/(.{4})/g,'$1 ').trim();
+      prevN.textContent = fmt;
+    }
+    if (expEl && prevE) {
+      prevE.textContent = expEl.value || '••/••';
+    }
+  }
+
   /* ── MODAL ─────────────────────────────────────────────────── */
   function openAddDriverModal() {
     document.getElementById('add-driver-modal').classList.add('open');
@@ -1491,7 +2425,7 @@ a { text-decoration: none; color: inherit; }
                   document.querySelector('#genesys-mxg-frame') ||
                   document.querySelector('[aria-label*="chat"]');
       if (btn) btn.click();
-      else toast('Opening live chat...', 'info');
+      else toast('Opening live chat...');
     }
   }
 
@@ -1542,15 +2476,15 @@ a { text-decoration: none; color: inherit; }
         });
       } catch(e) { /* not yet available */ }
     }, 2500);
-  });
 
-  /* ── RENEWAL BAR ANIMATION ─────────────────────────────────── */
-  window.addEventListener('load', () => {
-    // 188 of 183 days elapsed out of 184 total (~52%)
+    // Renewal bar animation
     setTimeout(() => {
       const fill = document.getElementById('renewal-fill');
       if (fill) fill.style.width = '52%';
     }, 600);
+
+    // Init stepper
+    goToStep(1, true);
   });
 </script>
 
