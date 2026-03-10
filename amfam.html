@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AmFam | Add Teen Driver — Agent Desktop</title>
+<title>AmFam | Add Teen Driver — Agent Desktop | Cameron Loyal</title>
 
 <!-- Theme source: https://www.amfam.com/ | primary: #c8102e | accent: #003087 | confidence: high -->
 
@@ -674,10 +674,6 @@
       <span class="rail-icon">✅</span>
       <span class="rail-label">Flow</span>
     </button>
-    <button class="rail-btn" onclick="switchRail(this,'script')" title="Script">
-      <span class="rail-icon">💬</span>
-      <span class="rail-label">Script</span>
-    </button>
     <button class="rail-btn" onclick="switchRail(this,'journey')" title="Journey">
       <span class="rail-icon">🗺️</span>
       <span class="rail-label">Journey</span>
@@ -685,10 +681,6 @@
     <button class="rail-btn" onclick="switchRail(this,'systems')" title="Systems">
       <span class="rail-icon">🖥️</span>
       <span class="rail-label">Systems</span>
-    </button>
-    <button class="rail-btn" onclick="switchRail(this,'wrapup')" title="Wrap-up">
-      <span class="rail-icon">📋</span>
-      <span class="rail-label">Wrap-up</span>
     </button>
   </nav>
 
@@ -703,17 +695,11 @@
       <button class="tab" id="tab-workflow" onclick="switchTab('workflow')">
         <span class="tab-icon">✅</span> Workflow
       </button>
-      <button class="tab" id="tab-script"   onclick="switchTab('script')"  >
-        <span class="tab-icon">💬</span> Script
-      </button>
       <button class="tab" id="tab-journey"  onclick="switchTab('journey')" >
         <span class="tab-icon">🗺️</span> Journey
       </button>
       <button class="tab" id="tab-systems"  onclick="switchTab('systems')" >
         <span class="tab-icon">🖥️</span> Systems
-      </button>
-      <button class="tab" id="tab-wrapup"   onclick="switchTab('wrapup')"  >
-        <span class="tab-icon">📋</span> Wrap-up
       </button>
     </div>
 
@@ -984,86 +970,6 @@
       </div><!-- /panel-workflow -->
 
 
-      <!-- ──────────────────────────────────────────────────── -->
-      <!-- TAB 3 — SCRIPT                                      -->
-      <!-- ──────────────────────────────────────────────────── -->
-      <div class="panel" id="panel-script">
-
-        <!-- PHASE 1 — GREETING -->
-        <div class="script-phase active-phase">
-          <div class="phase-label"><span class="phase-num">1</span> Greeting & Opening</div>
-          <p class="agent"><span class="label">Agent</span>Thank you for calling American Family Insurance, my name is <strong>{{agent_name}}</strong>, and I'm happy to help you today. May I have your name and policy number, or the phone number on your account?</p>
-          <p class="customer"><span class="label">Customer</span>Hi, yes — my name is <strong>{{customer_name}}</strong>, and my policy number is <strong>{{policy_number}}</strong>. I need to add my teenager to my car insurance.</p>
-          <p class="system"><span class="label">System</span>Pull up policy in system. Confirm caller matches policyholder name on record before proceeding.</p>
-        </div>
-
-        <!-- PHASE 2 — VERIFICATION -->
-        <div class="script-phase">
-          <div class="phase-label"><span class="phase-num">2</span> Identity Verification</div>
-          <p class="agent"><span class="label">Agent</span>I can definitely help you with that! For security purposes, can you please verify your date of birth and the ZIP code associated with your policy?</p>
-          <p class="customer"><span class="label">Customer</span>Sure, my date of birth is <strong>{{policyholder_dob}}</strong> and my ZIP is <strong>{{policy_zip}}</strong>.</p>
-          <p class="system"><span class="label">System</span>Verify two factors match. If mismatch, use secondary verification path. Do <strong>not</strong> read back full DOB to customer.</p>
-          <p class="agent"><span class="label">Agent</span>Thank you, I've verified your account. I see you have <strong>two vehicles</strong> on your policy. I'd love to help you add your new driver today — let me gather some information about them.</p>
-        </div>
-
-        <!-- PHASE 3 — DIAGNOSE / COLLECT INFO -->
-        <div class="script-phase">
-          <div class="phase-label"><span class="phase-num">3</span> Collect Driver Information</div>
-          <p class="agent"><span class="label">Agent</span>Can I get your teen's full legal name, date of birth, and driver's license number and state?</p>
-          <p class="customer"><span class="label">Customer</span>Yes — it's <strong>{{teen_driver_name}}</strong>, born <strong>{{teen_dob}}</strong>, and their license number is <strong>{{teen_license_number}}</strong> — it's a <strong>{{policy_state}}</strong> license.</p>
-          <p class="agent"><span class="label">Agent</span>And when was the license issued — is this a full license or still a graduated/intermediate license?</p>
-          <p class="system"><span class="label">System</span>Log license type. Some states require notation of graduated license stage. Verify with state DMV integration if available.</p>
-          <p class="agent"><span class="label">Agent</span>Great, thank you. And which vehicle do you anticipate your teen will drive most often?</p>
-          <p class="customer"><span class="label">Customer</span>Probably the <strong>{{primary_vehicle}}</strong>.</p>
-
-          <!-- BRANCH: License not yet issued -->
-          <details>
-            <summary>⚠️ Exception: License not yet issued / only has learner's permit</summary>
-            <div class="details-body">
-              <p class="agent"><span class="label">Agent</span>I understand — if your teen currently only has a learner's permit, we can note them on the policy now, but a full driver's license number will be required to complete the endorsement. Would you like me to set a reminder callback once the license is issued, or would you prefer to call back at that time?</p>
-              <p class="system"><span class="label">System</span>Create a follow-up task in the policy notes with expected license date. Do <strong>not</strong> rate the driver until a valid license number is confirmed.</p>
-            </div>
-          </details>
-        </div>
-
-        <!-- PHASE 4 — RESOLVE / DISCOUNTS -->
-        <div class="script-phase">
-          <div class="phase-label"><span class="phase-num">4</span> Discounts & Coverage Options</div>
-          <p class="agent"><span class="label">Agent</span>Before I pull the updated rate, I want to make sure we explore every discount available. First — does your teen maintain a <strong>B average or better</strong>, or are they in the top 20% of their class?</p>
-          <p class="customer"><span class="label">Customer</span>Yes, they have a 3.5 GPA.</p>
-          <p class="agent"><span class="label">Agent</span>Excellent! That qualifies them for our <strong>Good Student Discount</strong>. I'll apply that now — you'll just need to provide a copy of their most recent report card or transcript for our records. I can send you a link to upload it securely, or your local agent can accept it as well.</p>
-          <p class="agent"><span class="label">Agent</span>I also want to mention our <strong>KnowYourDrive</strong> program — it's a telematics-based option where safe driving habits can earn additional discounts over time. Would you like me to send an enrollment link to your email on file?</p>
-
-          <!-- BRANCH: Customer objects to rate increase -->
-          <details>
-            <summary>💬 Variation: Customer upset about premium increase</summary>
-            <div class="details-body">
-              <p class="customer"><span class="label">Customer</span>Wow, that's a really big jump in my premium. I wasn't expecting it to go up that much.</p>
-              <p class="agent"><span class="label">Agent</span>I completely understand — adding a young driver does impact the premium because statistically, teen drivers have a higher risk of accidents. The good news is we've already applied the Good Student Discount, and if you enroll in <strong>KnowYourDrive</strong>, you can potentially earn back additional savings based on your teen's actual driving behavior. I also want to make sure we review your full policy to see if there are any other discounts you may qualify for. Would it be helpful for me to connect you with your local agent, <strong>{{assigned_agent_name}}</strong>, for a full policy review?</p>
-              <p class="system"><span class="label">System</span>Do NOT promise a specific discount amount that cannot be confirmed in system. Offer to escalate to agent or supervisor if customer requests rate dispute.</p>
-            </div>
-          </details>
-        </div>
-
-        <!-- PHASE 5 — CONFIRM -->
-        <div class="script-phase">
-          <div class="phase-label"><span class="phase-num">5</span> Confirm & Authorize</div>
-          <p class="agent"><span class="label">Agent</span>Let me give you a summary of the changes before I process them. We're adding <strong>{{teen_driver_name}}</strong>, date of birth <strong>{{teen_dob}}</strong>, license <strong>{{teen_license_number}}</strong>, as a driver on your policy, primarily assigned to the <strong>{{primary_vehicle}}</strong>. With the Good Student Discount applied, your updated 6-month premium will be approximately <strong>{{new_6mo_premium}}</strong>. Does that sound correct and do you authorize me to make this change?</p>
-          <p class="customer"><span class="label">Customer</span>Yes, that sounds right. Please go ahead.</p>
-          <p class="system"><span class="label">System</span>Document verbal authorization in the interaction notes. Process endorsement. Confirm effective date. Generate updated declarations page.</p>
-          <p class="agent"><span class="label">Agent</span>{{call_recording_disclosure}} — I'm processing the endorsement now. This will be effective <strong>{{endorsement_effective_date}}</strong>.</p>
-        </div>
-
-        <!-- PHASE 6 — WRAP-UP -->
-        <div class="script-phase">
-          <div class="phase-label"><span class="phase-num">6</span> Closing</div>
-          <p class="agent"><span class="label">Agent</span>All done! I've added <strong>{{teen_driver_name}}</strong> to your policy effective today. Your updated declarations page and insurance ID cards will be sent to <strong>{{email_address}}</strong>. Remember, if you have any questions about the Good Student Discount documentation or KnowYourDrive, your agent <strong>{{assigned_agent_name}}</strong> is also a great resource. Is there anything else I can help you with today?</p>
-          <p class="customer"><span class="label">Customer</span>No, that's everything. Thank you!</p>
-          <p class="agent"><span class="label">Agent</span>You're welcome! We're glad to be here for your family. Drive safe — and congratulations to your teen driver! Have a great day.</p>
-        </div>
-
-      </div><!-- /panel-script -->
-
 
       <!-- ──────────────────────────────────────────────────── -->
       <!-- TAB 4 — JOURNEY                                     -->
@@ -1240,117 +1146,6 @@
       </div><!-- /panel-systems -->
 
 
-      <!-- ──────────────────────────────────────────────────── -->
-      <!-- TAB 6 — WRAP-UP                                     -->
-      <!-- ──────────────────────────────────────────────────── -->
-      <div class="panel" id="panel-wrapup">
-
-        <div class="alert alert-info">ℹ️ Complete all wrap-up items before ending after-call work. Target ACW time: under 3 minutes.</div>
-
-        <!-- ACW CHECKLIST -->
-        <div class="card">
-          <div class="card-header"><span class="card-title">✅ After-Call Work Checklist</span></div>
-          <div class="card-body">
-            <ul class="checklist">
-              <li id="acw1"><input type="checkbox" onchange="checkItem(this,'acw1')"><span class="check-text">Endorsement confirmed active in policy system<span class="check-sub">Verify effective date and driver details match what was stated to customer.</span></span></li>
-              <li id="acw2"><input type="checkbox" onchange="checkItem(this,'acw2')"><span class="check-text">Updated declarations page queued for delivery<span class="check-sub">Email if ePolicy; mail if paper. Confirm delivery method.</span></span></li>
-              <li id="acw3"><input type="checkbox" onchange="checkItem(this,'acw3')"><span class="check-text">Good Student Discount documentation request logged<span class="check-sub">Note follow-up task — transcript/report card to be submitted within 30 days.</span></span></li>
-              <li id="acw4"><input type="checkbox" onchange="checkItem(this,'acw4')"><span class="check-text">KnowYourDrive enrollment invite sent (if customer agreed)<span class="check-sub">Confirm email sent to {{email_address}}.</span></span></li>
-              <li id="acw5"><input type="checkbox" onchange="checkItem(this,'acw5')"><span class="check-text">Verbal authorization documented in interaction notes</span></li>
-              <li id="acw6"><input type="checkbox" onchange="checkItem(this,'acw6')"><span class="check-text">MVR check initiated or flagged for underwriting follow-up</span></li>
-              <li id="acw7"><input type="checkbox" onchange="checkItem(this,'acw7')"><span class="check-text">Interaction summary written and copied to policy notes</span></li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- DISPOSITION + CATEGORY -->
-        <div class="card">
-          <div class="card-header"><span class="card-title">📂 Disposition & Categorization</span></div>
-          <div class="card-body">
-            <div class="form-group">
-              <label>Interaction Disposition</label>
-              <select>
-                <option value="">— Select —</option>
-                <option value="change-complete" selected>Policy Change — Completed</option>
-                <option value="change-pending">Policy Change — Pending (follow-up required)</option>
-                <option value="info-only">Information Only — No Change</option>
-                <option value="escalated">Escalated to Supervisor</option>
-                <option value="escalated-uw">Escalated to Underwriting</option>
-                <option value="callback-scheduled">Callback Scheduled</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Change Type</label>
-              <select>
-                <option value="add-driver" selected>Add Driver — Teen / New Driver</option>
-                <option value="remove-driver">Remove Driver</option>
-                <option value="coverage-change">Coverage Change</option>
-                <option value="vehicle-change">Vehicle Change</option>
-                <option value="discount-add">Discount Added</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Callback Required?</label>
-              <select>
-                <option value="no" selected>No</option>
-                <option value="yes-gsd">Yes — GSD documentation follow-up</option>
-                <option value="yes-license">Yes — License not yet issued</option>
-                <option value="yes-uw">Yes — Underwriting review pending</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- NOTES -->
-        <div class="card">
-          <div class="card-header"><span class="card-title">📝 Interaction Notes (Policy-Level)</span></div>
-          <div class="card-body">
-            <div class="form-group">
-              <label>Notes</label>
-              <textarea rows="4" placeholder="Example: Customer called to add teen driver {{teen_driver_name}}, DOB {{teen_dob}}, license {{teen_license_number}}. Good Student Discount applied pending transcript submission. KnowYourDrive invite sent. Endorsement effective {{endorsement_effective_date}}. Verbal authorization obtained."></textarea>
-            </div>
-          </div>
-        </div>
-
-        <!-- INTERACTION SUMMARY (manual copy) -->
-        <div class="card">
-          <div class="card-header"><span class="card-title">📄 Interaction Summary (Copy to Policy Notes)</span></div>
-          <div class="card-body">
-            <div class="form-group">
-              <label>Summary — Edit as needed, then copy/paste into policy system</label>
-              <textarea rows="7" id="summary-box">Date: {{current_date}} | Agent: {{agent_name}} | Channel: Inbound Phone
-Action: Added teen driver {{teen_driver_name}} (DOB: {{teen_dob}}, License: {{teen_license_number}}, State: {{policy_state}}) to personal auto policy {{policy_number}}.
-Primary vehicle assigned: {{primary_vehicle}}.
-Good Student Discount: Applied — documentation (transcript/report card) requested within 30 days.
-KnowYourDrive: Enrollment invite sent to {{email_address}}.
-Updated premium: {{new_6mo_premium}} / 6 months (effective {{endorsement_effective_date}}).
-Verbal authorization obtained. Updated dec page and ID cards queued for delivery.</textarea>
-            </div>
-            <div class="btn-row">
-              <button class="btn btn-accent" onclick="copySummary()">📋 Copy Summary</button>
-              <button class="btn btn-ghost" onclick="toast('Wrap-up submitted. After-call work closed.','success')">✅ Submit & Close ACW</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- TO VERIFY NOTE -->
-        <div class="card">
-          <div class="card-header"><span class="card-title">🔍 To Verify / Assumptions</span></div>
-          <div class="card-body">
-            <ul style="font-size:12px;line-height:1.9;padding-left:16px;color:var(--text-main);">
-              <li><strong>Theme:</strong> AmFam brand colors derived from amfam.com (primary: #c8102e, accent: #003087) — confirm against current brand guide.</li>
-              <li><strong>State rules:</strong> Teen driver exclusion options, graduated license requirements, and mandatory endorsement timing vary by state — verify for <strong>{{policy_state}}</strong>.</li>
-              <li><strong>Good Student Discount:</strong> GPA threshold (≥ 3.0) and documentation requirements — confirm current underwriting guidelines.</li>
-              <li><strong>KnowYourDrive:</strong> Availability, discount caps, and minimum enrollment periods — verify current program terms.</li>
-              <li><strong>MVR:</strong> Confirm MVR pull timing requirement (pre- vs post-endorsement) per underwriting guidelines.</li>
-              <li><strong>Premium placeholders:</strong> All premium figures use <code>{{placeholders}}</code> — populate from live rating engine during demo.</li>
-              <li><strong>{{call_recording_disclosure}}</strong> — Replace with state-appropriate call recording disclosure language.</li>
-            </ul>
-          </div>
-        </div>
-
-      </div><!-- /panel-wrapup -->
-
     </div><!-- /panels -->
   </div><!-- /main -->
 </div><!-- /app-body -->
@@ -1504,25 +1299,25 @@ Verbal authorization obtained. Updated dec page and ID cards queued for delivery
   /* ── DEFAULT FICTIONAL DATA (fallback when no params) ────── */
   (function setDefaults() {
     const defaults = {
-      'f-cust-name':      'Sandra Kowalski',
-      'f-policy-num':     'PAF-7842-WI-2019',
+      'f-cust-name':      'Cameron Loyal',
+      'f-policy-num':     'PAF-4417-WI-2016',
       'f-phone':          '(608) 555-{{xxxx}}',
-      'f-email':          'skowalski@{{domain}}.com',
+      'f-email':          'cameron.loyal@{{domain}}.com',
       'f-state':          'Wisconsin',
       'f-lic-state':      'Wisconsin',
       'f-agent':          'Marcus T. Leblanc — Madison Central Agency',
-      'f-since':          '2011',
+      'f-since':          '2016',
       'f-eff':            '03/15/2025',
       'f-renew':          '09/15/2025',
       'f-pay':            'Monthly EFT',
       'f-paper':          'ePolicy — Email Delivery',
-      'f-teen-name':      'Tyler Kowalski',
-      'f-lic':            'WI-K{{XXXXXXX}}',
-      'f-veh':            '2022 Honda Accord',
-      'v1-desc':          '2022 Honda Accord LX',
-      'v2-desc':          '2019 Chevy Tahoe LT',
-      'v1-driver':        'Sandra Kowalski',
-      'v2-driver':        'David Kowalski',
+      'f-teen-name':      'Jordan Loyal',
+      'f-lic':            'WI-L{{XXXXXXX}}',
+      'f-veh':            '2021 Toyota Camry',
+      'v1-desc':          '2021 Toyota Camry SE',
+      'v2-desc':          '2020 Ford Explorer XLT',
+      'v1-driver':        'Cameron Loyal',
+      'v2-driver':        'Alex Loyal',
       'sys-premium':      '$1,847',
       'sys-curr-prem':    '$1,234',
       'sys-increase':     '+$613',
