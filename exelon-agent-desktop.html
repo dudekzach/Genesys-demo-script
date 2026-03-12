@@ -1,0 +1,1550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agent Desktop – Customer Service Workspace</title>
+<!-- Theme source: https://www.exeloncorp.com | primary: #003057 | accent: #0078C8 | confidence: high -->
+<style>
+  /* ── RESET & BASE ──────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:       #003057;
+    --navy-dark:  #00203a;
+    --navy-mid:   #004070;
+    --blue:       #0078C8;
+    --blue-light: #1a8de0;
+    --blue-pale:  #e6f2fb;
+    --teal:       #00a8a0;
+    --amber:      #f5a623;
+    --red:        #d0021b;
+    --green:      #2d8a4e;
+    --green-pale: #e8f5ed;
+    --red-pale:   #fdecea;
+    --amber-pale: #fff8ec;
+    --grey-100:   #f4f6f8;
+    --grey-200:   #e8ecf0;
+    --grey-300:   #d1d8e0;
+    --grey-500:   #7a8a99;
+    --grey-700:   #3a4a58;
+    --white:      #ffffff;
+    --text:       #1a2b3c;
+    --text-soft:  #4a5d6e;
+    --font-ui:    'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --radius-sm:  4px;
+    --radius:     6px;
+    --radius-lg:  10px;
+    --shadow-sm:  0 1px 3px rgba(0,0,0,.10);
+    --shadow:     0 2px 8px rgba(0,0,0,.13);
+    --shadow-lg:  0 4px 18px rgba(0,0,0,.17);
+    --transition: .18s ease;
+  }
+  html, body { height: 100%; font-family: var(--font-ui); font-size: 13px; color: var(--text); background: var(--grey-100); overflow: hidden; }
+
+  /* ── TOP NAV BAR ───────────────────────────────────────────────── */
+  #topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--navy-dark); color: var(--white);
+    height: 44px; padding: 0 16px; flex-shrink: 0;
+    border-bottom: 2px solid var(--blue);
+  }
+  #topbar .tb-left  { display: flex; align-items: center; gap: 14px; }
+  #topbar .tb-right { display: flex; align-items: center; gap: 14px; }
+  .tb-logo {
+    font-size: 15px; font-weight: 700; letter-spacing: .04em;
+    color: var(--white); display: flex; align-items: center; gap: 6px;
+  }
+  .tb-logo span.logo-e {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--blue); font-size: 13px; font-weight: 900;
+  }
+  .tb-queue-badge {
+    background: var(--red); color: var(--white);
+    font-size: 11px; font-weight: 700; padding: 2px 8px;
+    border-radius: 10px; letter-spacing: .03em;
+  }
+  .tb-status {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--grey-300);
+  }
+  .status-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 5px var(--green); }
+  .status-dot.busy { background: var(--amber); box-shadow: 0 0 5px var(--amber); }
+  #handle-timer {
+    font-family: 'Courier New', monospace; font-size: 13px;
+    color: var(--blue-light); letter-spacing: .06em;
+  }
+  .tb-agent-name { font-size: 12px; color: var(--grey-300); }
+  .tb-btn {
+    background: transparent; border: 1px solid rgba(255,255,255,.25);
+    color: var(--white); border-radius: var(--radius-sm); padding: 3px 9px;
+    font-size: 11px; cursor: pointer; transition: background var(--transition);
+  }
+  .tb-btn:hover { background: rgba(255,255,255,.12); }
+  .tb-btn.danger { border-color: var(--red); color: #ff8a8a; }
+  .tb-btn.danger:hover { background: rgba(208,2,27,.2); }
+
+  /* ── SCENARIO SELECTOR STRIP ───────────────────────────────────── */
+  #scenario-strip {
+    display: flex; align-items: center; gap: 0;
+    background: var(--navy); height: 36px; padding: 0 16px;
+    border-bottom: 1px solid var(--navy-mid); flex-shrink: 0;
+  }
+  .scenario-btn {
+    display: flex; align-items: center; gap: 7px;
+    padding: 0 18px; height: 36px; cursor: pointer;
+    font-size: 12px; font-weight: 600; letter-spacing: .03em;
+    color: rgba(255,255,255,.6); border: none; background: transparent;
+    border-bottom: 3px solid transparent;
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .scenario-btn.active {
+    color: var(--white); border-bottom-color: var(--blue);
+  }
+  .scenario-btn:hover:not(.active) { color: rgba(255,255,255,.85); }
+  .scenario-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    font-size: 11px; font-weight: 700;
+  }
+  .icon-voice { background: rgba(0,120,200,.4); }
+  .icon-sms   { background: rgba(0,168,160,.4); }
+  .scenario-divider { width: 1px; height: 18px; background: rgba(255,255,255,.15); margin: 0 4px; }
+
+  /* ── MAIN LAYOUT ───────────────────────────────────────────────── */
+  #workspace {
+    display: flex; height: calc(100vh - 80px); overflow: hidden;
+  }
+
+  /* ── LEFT SIDEBAR: Customer Card ───────────────────────────────── */
+  #sidebar {
+    width: 232px; min-width: 200px; flex-shrink: 0;
+    background: var(--white); border-right: 1px solid var(--grey-200);
+    display: flex; flex-direction: column; overflow-y: auto;
+  }
+  .sidebar-section {
+    padding: 12px 14px; border-bottom: 1px solid var(--grey-200);
+  }
+  .sidebar-section:last-child { border-bottom: none; }
+  .sidebar-label {
+    font-size: 10px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--grey-500); margin-bottom: 8px;
+  }
+  .cust-name {
+    font-size: 15px; font-weight: 700; color: var(--navy);
+    margin-bottom: 2px; line-height: 1.2;
+  }
+  .cust-acct {
+    font-size: 11px; color: var(--grey-500); margin-bottom: 10px;
+  }
+  .cust-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .badge-voice { background: rgba(0,120,200,.12); color: var(--blue); }
+  .badge-sms   { background: rgba(0,168,160,.12); color: var(--teal); }
+  .badge-delinquent { background: var(--red-pale); color: var(--red); }
+  .badge-outage { background: var(--amber-pale); color: #c47d00; }
+  .cust-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 4px 0; font-size: 12px; border-bottom: 1px solid var(--grey-100);
+  }
+  .cust-row:last-child { border-bottom: none; }
+  .cust-row .label { color: var(--grey-500); }
+  .cust-row .value { font-weight: 600; color: var(--text); text-align: right; max-width: 130px; }
+  .cust-row .value.red { color: var(--red); }
+  .cust-row .value.amber { color: #c47d00; }
+  .alert-pill {
+    display: flex; align-items: flex-start; gap: 7px;
+    background: var(--amber-pale); border-left: 3px solid var(--amber);
+    border-radius: var(--radius-sm); padding: 8px 10px;
+    margin-top: 4px; font-size: 11px; color: var(--grey-700); line-height: 1.4;
+  }
+  .alert-pill.red-alert {
+    background: var(--red-pale); border-left-color: var(--red); color: var(--grey-700);
+  }
+  .alert-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+  .info-pill {
+    display: flex; align-items: flex-start; gap: 7px;
+    background: var(--blue-pale); border-left: 3px solid var(--blue);
+    border-radius: var(--radius-sm); padding: 8px 10px;
+    margin-top: 4px; font-size: 11px; color: var(--grey-700); line-height: 1.4;
+  }
+  .green-pill {
+    display: flex; align-items: flex-start; gap: 7px;
+    background: var(--green-pale); border-left: 3px solid var(--green);
+    border-radius: var(--radius-sm); padding: 8px 10px;
+    margin-top: 4px; font-size: 11px; color: var(--grey-700); line-height: 1.4;
+  }
+
+  /* ── CENTER PANEL ───────────────────────────────────────────────── */
+  #center {
+    flex: 1 1 0; display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  /* Tab bar */
+  #tab-bar {
+    display: flex; align-items: flex-end;
+    background: var(--grey-100); border-bottom: 2px solid var(--grey-200);
+    padding: 0 16px; flex-shrink: 0; gap: 2px;
+  }
+  .tab-btn {
+    padding: 9px 16px; font-size: 12px; font-weight: 600;
+    border: 1px solid transparent; border-bottom: none; border-radius: 5px 5px 0 0;
+    background: transparent; color: var(--grey-500); cursor: pointer;
+    transition: all var(--transition); white-space: nowrap;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab-btn.active {
+    background: var(--white); border-color: var(--grey-200);
+    color: var(--navy); border-bottom-color: var(--white);
+    margin-bottom: -2px; border-bottom: 2px solid var(--white);
+  }
+  .tab-btn:hover:not(.active) { color: var(--navy); background: var(--grey-200); }
+  .tab-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--blue); color: var(--white); font-size: 10px; font-weight: 700;
+  }
+  .tab-badge.amber-b { background: var(--amber); }
+
+  /* Tab content */
+  #tab-content {
+    flex: 1 1 0; overflow-y: auto; background: var(--white); padding: 0;
+  }
+  .tab-panel { display: none; padding: 18px 20px; }
+  .tab-panel.active { display: block; }
+
+  /* Step blocks */
+  .step-block {
+    border: 1px solid var(--grey-200); border-radius: var(--radius);
+    margin-bottom: 14px; overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition);
+  }
+  .step-block:hover { box-shadow: var(--shadow); }
+  .step-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; background: var(--grey-100);
+    border-bottom: 1px solid var(--grey-200);
+    cursor: pointer; user-select: none;
+  }
+  .step-header-left { display: flex; align-items: center; gap: 10px; }
+  .step-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--navy); color: var(--white);
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .step-num.complete { background: var(--green); }
+  .step-num.active-step { background: var(--blue); box-shadow: 0 0 0 3px rgba(0,120,200,.2); }
+  .step-title { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .step-subtitle { font-size: 11px; color: var(--grey-500); margin-top: 1px; }
+  .step-chevron { font-size: 11px; color: var(--grey-500); transition: transform var(--transition); }
+  .step-block.open .step-chevron { transform: rotate(90deg); }
+  .step-body { padding: 14px; display: none; }
+  .step-block.open .step-body { display: block; }
+
+  /* Script text area */
+  .script-box {
+    background: var(--blue-pale); border: 1px solid #b3d7f0;
+    border-left: 4px solid var(--blue); border-radius: var(--radius-sm);
+    padding: 11px 14px; font-size: 13px; line-height: 1.6; color: var(--text);
+    margin-bottom: 10px;
+  }
+  .script-box .speaker { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); margin-bottom: 4px; }
+  .script-box p { margin-bottom: 6px; }
+  .script-box p:last-child { margin-bottom: 0; }
+  .placeholder { background: #fff3cd; border-radius: 3px; padding: 0 3px; font-family: monospace; font-size: 12px; color: #7a5200; }
+
+  /* Action items */
+  .action-list { list-style: none; margin-top: 8px; }
+  .action-list li {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 6px 0; border-bottom: 1px solid var(--grey-100); font-size: 12px;
+    line-height: 1.5;
+  }
+  .action-list li:last-child { border-bottom: none; }
+  .action-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Decision branches */
+  .branch-wrap { margin-top: 10px; }
+  details.branch {
+    border: 1px solid var(--grey-200); border-radius: var(--radius-sm);
+    margin-bottom: 8px; overflow: hidden;
+  }
+  details.branch summary {
+    padding: 8px 12px; cursor: pointer; font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+    background: var(--grey-100); list-style: none; user-select: none;
+  }
+  details.branch summary::-webkit-details-marker { display: none; }
+  details.branch[open] summary { border-bottom: 1px solid var(--grey-200); background: var(--grey-200); }
+  details.branch .branch-body { padding: 12px; font-size: 12px; line-height: 1.6; }
+  .branch-tag {
+    display: inline-block; padding: 1px 8px; border-radius: 10px;
+    font-size: 11px; font-weight: 700;
+  }
+  .tag-yes   { background: var(--green-pale); color: var(--green); }
+  .tag-no    { background: var(--red-pale); color: var(--red); }
+  .tag-maybe { background: var(--amber-pale); color: #c47d00; }
+  .tag-voice { background: rgba(0,120,200,.1); color: var(--blue); }
+  .tag-sms   { background: rgba(0,168,160,.1); color: var(--teal); }
+
+  /* Form fields */
+  .field-group { margin-bottom: 12px; }
+  .field-group label { display: block; font-size: 11px; font-weight: 600; color: var(--grey-700); margin-bottom: 4px; letter-spacing: .03em; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .faux-input {
+    border: 1px solid var(--grey-300); border-radius: var(--radius-sm);
+    padding: 6px 10px; font-size: 12px; background: var(--white);
+    color: var(--text); font-family: var(--font-ui); width: 100%;
+    transition: border-color var(--transition);
+  }
+  .faux-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,120,200,.1); }
+  select.faux-input { cursor: pointer; }
+  .faux-input.read-only { background: var(--grey-100); color: var(--grey-700); }
+
+  /* SMS thread */
+  .sms-thread { display: flex; flex-direction: column; gap: 10px; padding: 4px 0; }
+  .sms-msg { max-width: 80%; border-radius: 14px; padding: 9px 13px; font-size: 12px; line-height: 1.5; }
+  .sms-msg.inbound  { background: var(--grey-200); color: var(--text); align-self: flex-start; border-bottom-left-radius: 3px; }
+  .sms-msg.outbound { background: var(--blue); color: var(--white); align-self: flex-end; border-bottom-right-radius: 3px; }
+  .sms-msg.system   { background: var(--amber-pale); border: 1px solid #f5d88a; color: var(--grey-700); align-self: center; text-align: center; font-size: 11px; border-radius: 8px; }
+  .sms-label { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--grey-500); margin-bottom: 3px; }
+  .sms-time  { font-size: 10px; color: var(--grey-500); margin-top: 3px; }
+  .sms-compose {
+    display: flex; gap: 8px; align-items: flex-end;
+    border-top: 1px solid var(--grey-200); padding-top: 12px; margin-top: 12px;
+  }
+  .sms-compose textarea {
+    flex: 1; border: 1px solid var(--grey-300); border-radius: var(--radius);
+    padding: 8px 12px; font-size: 12px; font-family: var(--font-ui);
+    resize: none; min-height: 58px; transition: border-color var(--transition);
+  }
+  .sms-compose textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,120,200,.1); }
+  .send-btn {
+    background: var(--blue); color: var(--white); border: none;
+    border-radius: var(--radius); padding: 10px 16px; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: background var(--transition); white-space: nowrap;
+  }
+  .send-btn:hover { background: var(--blue-light); }
+
+  /* Outage map placeholder */
+  .outage-map-mock {
+    background: linear-gradient(135deg, #001f3a 0%, #003057 60%, #004070 100%);
+    border-radius: var(--radius); padding: 20px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 140px; position: relative; overflow: hidden; margin-bottom: 12px;
+    border: 1px solid var(--navy-mid);
+  }
+  .outage-map-mock .map-label { color: rgba(255,255,255,.5); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 10px; }
+  .outage-cluster {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+  }
+  .outage-dot {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .outage-dot .dot {
+    width: 14px; height: 14px; border-radius: 50%; background: var(--red);
+    box-shadow: 0 0 8px var(--red), 0 0 18px rgba(208,2,27,.4);
+    animation: pulse-dot 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: .7; }
+  }
+  .outage-dot .dot-label { font-size: 10px; color: rgba(255,255,255,.7); }
+  .map-stat { color: var(--white); font-size: 22px; font-weight: 700; margin-top: 10px; }
+  .map-stat-label { font-size: 11px; color: rgba(255,255,255,.6); margin-top: 2px; }
+
+  /* Payment plan table */
+  .pay-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .pay-table th { background: var(--navy); color: var(--white); padding: 7px 10px; text-align: left; font-weight: 600; font-size: 11px; letter-spacing: .04em; }
+  .pay-table td { padding: 7px 10px; border-bottom: 1px solid var(--grey-200); vertical-align: top; }
+  .pay-table tr:hover td { background: var(--grey-100); }
+  .pay-table .total-row td { font-weight: 700; background: var(--grey-100); border-top: 2px solid var(--grey-300); }
+
+  /* Wrap-up grid */
+  .wrapup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .wrapup-card { border: 1px solid var(--grey-200); border-radius: var(--radius); padding: 12px; }
+  .wrapup-card .wc-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--grey-500); margin-bottom: 8px; }
+  .wc-field-val { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+  .disposition-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+  .disp-chip {
+    padding: 4px 11px; border-radius: 12px; font-size: 11px; font-weight: 600;
+    cursor: pointer; border: 1.5px solid var(--grey-300); color: var(--grey-700);
+    transition: all var(--transition);
+  }
+  .disp-chip.selected { background: var(--navy); border-color: var(--navy); color: var(--white); }
+  .disp-chip:hover:not(.selected) { border-color: var(--blue); color: var(--blue); }
+
+  /* ── RIGHT PANEL: Knowledge / Tools ────────────────────────────── */
+  #right-panel {
+    width: 240px; min-width: 210px; flex-shrink: 0;
+    background: var(--white); border-left: 1px solid var(--grey-200);
+    display: flex; flex-direction: column; overflow-y: auto;
+  }
+  .rp-section { border-bottom: 1px solid var(--grey-200); }
+  .rp-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; background: var(--grey-100);
+    font-size: 11px; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--grey-700);
+    cursor: pointer; user-select: none;
+  }
+  .rp-header .rp-toggle { font-size: 11px; color: var(--grey-500); }
+  .rp-body { padding: 10px 14px; }
+  .rp-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 7px 0; border-bottom: 1px solid var(--grey-100); font-size: 12px;
+    line-height: 1.45; color: var(--text-soft);
+  }
+  .rp-item:last-child { border-bottom: none; }
+  .rp-item-icon { font-size: 14px; flex-shrink: 0; margin-top: 0; }
+  .rp-item-title { font-weight: 600; color: var(--text); font-size: 12px; }
+  .rp-item-sub { font-size: 11px; color: var(--grey-500); margin-top: 2px; }
+  .rp-link { color: var(--blue); text-decoration: none; font-size: 11px; }
+  .rp-link:hover { text-decoration: underline; }
+  .kb-tag {
+    display: inline-block; padding: 1px 7px; border-radius: 10px;
+    font-size: 10px; font-weight: 600; margin-top: 3px;
+    background: var(--blue-pale); color: var(--blue);
+  }
+  .kb-tag.storm  { background: var(--amber-pale); color: #c47d00; }
+  .kb-tag.billing{ background: var(--green-pale); color: var(--green); }
+
+  /* Progress rail */
+  .progress-rail {
+    display: flex; align-items: center; gap: 0; padding: 10px 14px;
+    background: var(--grey-100); border-bottom: 1px solid var(--grey-200);
+  }
+  .rail-step {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px; flex: 1; position: relative; cursor: default;
+  }
+  .rail-step::after {
+    content: ''; position: absolute; top: 11px; left: 50%; width: 100%;
+    height: 2px; background: var(--grey-300); z-index: 0;
+  }
+  .rail-step:last-child::after { display: none; }
+  .rail-dot {
+    width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--grey-300);
+    background: var(--white); display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: var(--grey-500);
+    position: relative; z-index: 1; transition: all var(--transition);
+  }
+  .rail-dot.done  { background: var(--green); border-color: var(--green); color: var(--white); }
+  .rail-dot.curr  { background: var(--blue); border-color: var(--blue); color: var(--white); box-shadow: 0 0 0 3px rgba(0,120,200,.2); }
+  .rail-label { font-size: 10px; color: var(--grey-500); text-align: center; line-height: 1.2; }
+  .rail-label.curr { color: var(--blue); font-weight: 600; }
+
+  /* Utility */
+  .section-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+  .section-title .title-icon { font-size: 16px; }
+  .divider { border: none; border-top: 1px solid var(--grey-200); margin: 12px 0; }
+  .inline-tip {
+    background: var(--grey-100); border-radius: var(--radius-sm); padding: 6px 10px;
+    font-size: 11px; color: var(--grey-700); line-height: 1.5; margin-top: 8px;
+    border-left: 3px solid var(--grey-300);
+  }
+  .inline-tip.blue-tip { border-left-color: var(--blue); background: var(--blue-pale); }
+  .btn-primary {
+    background: var(--blue); color: var(--white); border: none;
+    border-radius: var(--radius-sm); padding: 7px 16px; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: background var(--transition);
+  }
+  .btn-primary:hover { background: var(--blue-light); }
+  .btn-secondary {
+    background: transparent; color: var(--navy); border: 1.5px solid var(--navy);
+    border-radius: var(--radius-sm); padding: 6px 14px; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all var(--transition);
+  }
+  .btn-secondary:hover { background: var(--grey-100); }
+  .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+  .toast-container { position: fixed; bottom: 16px; right: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 9999; }
+  .toast {
+    background: var(--navy); color: var(--white); padding: 10px 16px;
+    border-radius: var(--radius); font-size: 12px; box-shadow: var(--shadow-lg);
+    border-left: 4px solid var(--blue); animation: toast-in .25s ease;
+    max-width: 300px;
+  }
+  .toast.success { border-left-color: var(--green); }
+  .toast.warn    { border-left-color: var(--amber); }
+  @keyframes toast-in { from { opacity:0; transform: translateX(30px); } to { opacity:1; transform: none; } }
+
+  /* Scenario-specific visibility */
+  .voice-only, .sms-only { display: none; }
+  body.scenario-voice .voice-only { display: block; }
+  body.scenario-voice .sms-only   { display: none; }
+  body.scenario-sms .sms-only   { display: block; }
+  body.scenario-sms .voice-only { display: none; }
+
+  /* Scrollbar polish */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--grey-300); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--grey-500); }
+</style>
+</head>
+<body class="scenario-voice">
+
+<!-- ══════════════════════════════════════════════
+     TOP BAR
+══════════════════════════════════════════════════ -->
+<div id="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">
+      <span class="logo-e">E</span>
+      Customer Service Workspace
+    </div>
+    <span class="tb-queue-badge" id="queue-label">⚡ STORM EVENT ACTIVE</span>
+  </div>
+  <div class="tb-right">
+    <div class="tb-status">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-label">On Interaction</span>
+    </div>
+    <span id="handle-timer">00:00</span>
+    <span class="tb-agent-name">Agent: <strong>J. Martinez</strong> | Team: Residential Care</span>
+    <button class="tb-btn">⏸ Hold</button>
+    <button class="tb-btn danger" id="end-btn">✕ End</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCENARIO SELECTOR
+══════════════════════════════════════════════════ -->
+<div id="scenario-strip">
+  <button class="scenario-btn active" id="btn-voice" onclick="switchScenario('voice')">
+    <span class="scenario-icon icon-voice">📞</span>
+    Scenario 1 – Storm Outage (Voice)
+  </button>
+  <div class="scenario-divider"></div>
+  <button class="scenario-btn" id="btn-sms" onclick="switchScenario('sms')">
+    <span class="scenario-icon icon-sms">💬</span>
+    Scenario 2 – Delinquent Account / Payment Plan (SMS)
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MAIN WORKSPACE
+══════════════════════════════════════════════════ -->
+<div id="workspace">
+
+  <!-- ── LEFT SIDEBAR ─────────────────────────────── -->
+  <div id="sidebar">
+
+    <!-- VOICE scenario: customer card -->
+    <div class="voice-only sidebar-section">
+      <div class="sidebar-label">Customer Profile</div>
+      <div class="cust-name">Margaret Sullivan</div>
+      <div class="cust-acct">Acct# <span class="placeholder">{{ACCT-8847}}</span> · Residential</div>
+      <span class="cust-badge badge-voice">📞 Inbound Voice</span>
+      <span class="cust-badge badge-outage" style="margin-left:4px">⚡ Outage Affected</span>
+      <hr class="divider" style="margin:8px 0" />
+      <div class="cust-row"><span class="label">Service Address</span><span class="value"><span class="placeholder">{{123 Elm St, Naperville, IL}}</span></span></div>
+      <div class="cust-row"><span class="label">Utility</span><span class="value">ComEd</span></div>
+      <div class="cust-row"><span class="label">Rate Class</span><span class="value">BES Residential</span></div>
+      <div class="cust-row"><span class="label">Medical Baseline</span><span class="value amber">⚠ Yes (on file)</span></div>
+      <div class="cust-row"><span class="label">Life Support</span><span class="value red">🔴 Registered</span></div>
+      <div class="cust-row"><span class="label">Account Standing</span><span class="value" style="color:var(--green)">Current</span></div>
+      <div class="cust-row"><span class="label">Outage Ticket</span><span class="value"><span class="placeholder">{{OT-20940}}</span></span></div>
+    </div>
+    <div class="voice-only sidebar-section">
+      <div class="alert-pill">
+        <span class="alert-icon">⚠️</span>
+        <span><strong>Life Support on file.</strong> Treat as Priority Tier 1. Do not defer estimated restoration time without supervisor approval.</span>
+      </div>
+      <div class="info-pill" style="margin-top:8px">
+        <span class="alert-icon">ℹ️</span>
+        <span>Storm Event <strong>SE-{{DATE}}</strong> active. Estimated restoration window: <strong>{{EST_RESTORE}}</strong>. Crew dispatch confirmed.</span>
+      </div>
+    </div>
+    <div class="voice-only sidebar-section">
+      <div class="sidebar-label">Interaction History</div>
+      <div class="cust-row"><span class="label">Last Contact</span><span class="value">{{14 days ago}}</span></div>
+      <div class="cust-row"><span class="label">Prior Outage Calls</span><span class="value">0 this event</span></div>
+      <div class="cust-row"><span class="label">Self-Service Used</span><span class="value">Outage map (web)</span></div>
+    </div>
+
+    <!-- SMS scenario: customer card -->
+    <div class="sms-only sidebar-section">
+      <div class="sidebar-label">Customer Profile</div>
+      <div class="cust-name">Derek Williams</div>
+      <div class="cust-acct">Acct# <span class="placeholder">{{ACCT-3392}}</span> · Residential</div>
+      <span class="cust-badge badge-sms">💬 Inbound SMS</span>
+      <span class="cust-badge badge-delinquent" style="margin-left:4px">⛔ Delinquent</span>
+      <hr class="divider" style="margin:8px 0" />
+      <div class="cust-row"><span class="label">Service Address</span><span class="value"><span class="placeholder">{{456 Oak Ave, Baltimore, MD}}</span></span></div>
+      <div class="cust-row"><span class="label">Utility</span><span class="value">BGE</span></div>
+      <div class="cust-row"><span class="label">Past Due Balance</span><span class="value red">${{348.22}}</span></div>
+      <div class="cust-row"><span class="label">Days Past Due</span><span class="value red">47 days</span></div>
+      <div class="cust-row"><span class="label">Shutoff Notice Sent</span><span class="value amber">⚠ Yes – {{NOTICE_DATE}}</span></div>
+      <div class="cust-row"><span class="label">Life Support</span><span class="value" style="color:var(--green)">Not registered</span></div>
+      <div class="cust-row"><span class="label">Prior Pay Plans</span><span class="value">1 (completed)</span></div>
+    </div>
+    <div class="sms-only sidebar-section">
+      <div class="alert-pill red-alert">
+        <span class="alert-icon">⛔</span>
+        <span><strong>Shutoff eligible.</strong> Do not threaten disconnection in messaging. Follow delinquency scripting guidelines.</span>
+      </div>
+      <div class="green-pill" style="margin-top:8px">
+        <span class="alert-icon">✅</span>
+        <span>Customer is SMS-opted-in. <span class="placeholder">{{sms_disclosure}}</span> on file.</span>
+      </div>
+    </div>
+    <div class="sms-only sidebar-section">
+      <div class="sidebar-label">Interaction History</div>
+      <div class="cust-row"><span class="label">Last Contact</span><span class="value">{{22 days ago}}</span></div>
+      <div class="cust-row"><span class="label">Channel</span><span class="value">IVR (no agent)</span></div>
+      <div class="cust-row"><span class="label">Payment Arrangement</span><span class="value">None active</span></div>
+    </div>
+
+  </div>
+  <!-- end sidebar -->
+
+  <!-- ── CENTER PANEL ──────────────────────────────── -->
+  <div id="center">
+
+    <!-- Progress Rail -->
+    <div class="progress-rail" id="progress-rail">
+      <!-- populated by JS -->
+    </div>
+
+    <!-- Tab Bar -->
+    <div id="tab-bar">
+      <button class="tab-btn active" onclick="showTab('workflow')" id="tab-workflow">
+        ▶ Guided Workflow
+      </button>
+      <button class="tab-btn" onclick="showTab('interaction')" id="tab-interaction">
+        <span id="tab-interaction-label">📞 Voice Interaction</span>
+      </button>
+      <button class="tab-btn" onclick="showTab('account')" id="tab-account">
+        📋 Account Details
+      </button>
+      <button class="tab-btn" onclick="showTab('wrapup')" id="tab-wrapup">
+        ✔ Wrap-Up &amp; Disposition
+        <span class="tab-badge amber-b" id="wrapup-badge">!</span>
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div id="tab-content">
+
+      <!-- ════════════════════════════════
+           TAB: GUIDED WORKFLOW
+      ═════════════════════════════════════ -->
+      <div class="tab-panel active" id="panel-workflow">
+
+        <!-- ── VOICE: Storm Outage Workflow ── -->
+        <div class="voice-only">
+          <div class="section-title"><span class="title-icon">⚡</span> Storm Outage – Inbound Voice Workflow</div>
+
+          <!-- Step 1 -->
+          <div class="step-block open" id="step-v1">
+            <div class="step-header" onclick="toggleStep('step-v1')">
+              <div class="step-header-left">
+                <div class="step-num active-step">1</div>
+                <div>
+                  <div class="step-title">Greeting &amp; Verification</div>
+                  <div class="step-subtitle">Authenticate caller, confirm affected address</div>
+                </div>
+              </div>
+              <span class="step-chevron">▶</span>
+            </div>
+            <div class="step-body">
+              <div class="script-box">
+                <div class="speaker">Agent Script</div>
+                <p>"Thank you for calling. My name is <span class="placeholder">{{AGENT_NAME}}</span> with customer service. I can see we're currently experiencing a large-scale outage event in your area. To make sure I'm looking at the right account, can you please confirm your service address or account number?"</p>
+              </div>
+              <ul class="action-list">
+                <li><span class="action-icon">✅</span> Verify identity: confirm address or last 4 of SSN — <span class="placeholder">{{per auth policy}}</span></li>
+                <li><span class="action-icon">⚡</span> Confirm account flagged under Storm Event <strong>SE-<span class="placeholder">{{DATE}}</span></strong></li>
+                <li><span class="action-icon">🔴</span> <strong>Life Support flag active</strong> — note in interaction; escalate if customer reports medical urgency</li>
+              </ul>
+              <div class="inline-tip blue-tip">💡 The customer may be anxious or distressed. Keep a calm, reassuring tone. Acknowledge the impact immediately.</div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-block" id="step-v2">
+            <div class="step-header" onclick="toggleStep('step-v2')">
+              <div class="step-header-left">
+                <div class="step-num">2</div>
+                <div>
+                  <div class="step-title">Outage Acknowledgment &amp; ERT</div>
+                  <div class="step-subtitle">Communicate storm scope, provide restoration estimate</div>
+                </div>
+              </div>
+              <span class="step-chevron">▶</span>
+            </div>
+            <div class="step-body">
+              <div class="outage-map-mock">
+                <div class="map-label">Outage Management System — Live View</div>
+                <div class="outage-cluster">
+                  <div class="outage-dot"><div class="dot"></div><div class="dot-label">Zone A</div></div>
+                  <div class="outage-dot"><div class="dot"></div><div class="dot-label">Zone B</div></div>
+                  <div class="outage-dot"><div class="dot" style="animation-delay:.5s"></div><div class="dot-label">Zone C</div></div>
+                  <div class="outage-dot"><div class="dot" style="animation-delay:1s"></div><div class="dot-label">Zone D</div></div>
+                </div>
+                <div class="map-stat"><span class="placeholder">{{CUST_AFFECTED}}</span> customers</div>
+                <div class="map-stat-label">affected across <span class="placeholder">{{N}}</span> circuits</div>
+              </div>
+              <div class="script-box">
+                <div class="speaker">Agent Script</div>
+                <p>"We're aware of the widespread outage affecting your neighborhood. This is related to <span class="placeholder">{{STORM_NAME_OR_EVENT}}</span> and our crews are actively working in the field. As of right now, the estimated restoration time for your area is <strong><span class="placeholder">{{EST_RESTORE}}</span></strong>."</p>
+                <p>"I've confirmed your account and it has been logged under this event. You will receive an automated status update when restoration has been completed."</p>
+              </div>
+              <ul class="action-list">
+                <li><span class="action-icon">📋</span> Pull Outage Ticket <span class="placeholder">{{OT-20940}}</span> — confirm crew assigned</li>
+                <li><span class="action-icon">📲</span> Offer opt-in for outage text/IVR updates if not already enrolled</li>
+                <li><span class="action-icon">⚠️</span> Do <strong>not</strong> guarantee a specific time if ERT is not confirmed in OMS</li>
+              </ul>
+              <div class="branch-wrap">
+                <details class="branch">
+                  <summary><span class="branch-tag tag-yes">IF</span> Customer reports medical equipment in use (respirator, oxygen, etc.)</summary>
+                  <div class="branch-body">
+                    <p><strong>Action:</strong> Escalate immediately to <strong>Life Support Priority Queue</strong>. Do not place customer on hold without supervisor approval. Document life support equipment type: <span class="placeholder">{{EQUIP_TYPE}}</span>.</p>
+                    <p style="margin-top:8px"><strong>Script:</strong> "Because your account is registered for life support, I am flagging this as a Priority restoration and will have a supervisor reach out to you directly. Is the equipment currently in use?"</p>
+                    <p style="margin-top:8px"><strong>Provide:</strong> Backup power resource hotline — <span class="placeholder">{{MEDICAL_BASELINE_HOTLINE}}</span></p>
+                  </div>
+                </details>
+                <details class="branch">
+                  <summary><span class="branch-tag tag-no">IF</span> Customer is irate / escalating / demands immediate restoration</summary>
+                  <div class="branch-body">
+                    <p><strong>Script:</strong> "I completely understand your frustration — losing power during a storm is stressful, especially with <span class="placeholder">{{household circumstances, e.g., young children, elderly}}</span>. Our field teams are working as quickly and safely as possible. Let me make sure your address is prioritized in the system."</p>
+                    <p style="margin-top:8px"><strong>Action:</strong> Log an <em>escalation flag</em> on ticket <span class="placeholder">{{OT-20940}}</span>. If warranted, initiate Supervisor Assist via internal queue <span class="placeholder">{{SUPV_QUEUE}}</span>.</p>
+                  </div>
+                </details>
+                <details class="branch">
+                  <summary><span class="branch-tag tag-maybe">IF</span> No ERT available in OMS (widespread storm, crews deploying)</summary>
+                  <div class="branch-body">
+                    <p><strong>Script:</strong> "I want to be transparent — because of the widespread nature of this storm event, we do not yet have a confirmed estimated restoration time for all affected areas. Our crews are being deployed as conditions allow. I can enroll you for automated updates as soon as we have more information."</p>
+                    <p style="margin-top:8px"><strong>Action:</strong> Enroll in Outage Notification Program: <span class="placeholder">{{call_recording_disclosure}}</span></p>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-block" id="step-v3">
+            <div class="step-header" onclick="toggleStep('step-v3')">
+              <div class="step-header-left">
+                <div class="step-num">3</div>
+                <div>
+                  <div class="step-title">Safety Guidance &amp; Customer Resources</div>
+                  <div class="step-subtitle">Downed lines, generator safety, food spoilage</div>
+                </div>
+              </div>
+              <span class="step-chevron">▶</span>
+            </div>
+            <div class="step-body">
+              <div class="script-box">
+                <div class="speaker">Agent Script</div>
+                <p>"While you're waiting for power to be restored, I'd like to share a few important safety reminders."</p>
+              </div>
+              <ul class="action-list">
+                <li><span class="action-icon">⚡</span> <strong>Downed lines:</strong> Stay at least 30 feet away; call 911 then our emergency line <span class="placeholder">{{EMERGENCY_LINE}}</span></li>
+                <li><span class="action-icon">🔌</span> <strong>Generator safety:</strong> Never operate indoors or in garages — CO hazard</li>
+                <li><span class="action-icon">🧊</span> <strong>Food spoilage:</strong> Refrigerator safe ~4 hrs; freezer ~48 hrs unopened. Bill credit request process: <span class="placeholder">{{FOOD_SPOILAGE_PROCESS}}</span></li>
+                <li><span class="action-icon">🌐</span> Direct to outage map for live status: <a href="https://www.comed.com/outageview" target="_blank" rel="noopener" class="rp-link">comed.com/outageview</a></li>
+              </ul>
+              <div class="inline-tip">💡 Safety guidance is mandatory to deliver on every storm outage call per event-day protocol.</div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="step-block" id="step-v4">
+            <div class="step-header" onclick="toggleStep('step-v4')">
+              <div class="step-header-left">
+                <div class="step-num">4</div>
+                <div>
+                  <div class="step-title">Outage Notification Enrollment &amp; Close</div>
+                  <div class="step-subtitle">Enroll for updates, confirm case, close call professionally</div>
+                </div>
+              </div>
+              <span class="step-chevron">▶</span>
+            </div>
+            <div class="step-body">
+              <div class="script-box">
+                <div class="speaker">Agent Script</div>
+                <p>"Would you like to receive automated text or phone updates as our crews make progress and when your power is restored? We can send those to <span class="placeholder">{{PHONE_ON_FILE}}</span> or another number you prefer."</p>
+                <p>"Is there anything else I can help you with today? I want to make sure you have everything you need before we hang up."</p>
+              </div>
+              <div class="field-row">
+                <div class="field-group">
+                  <label>Notification Method</label>
+                  <select class="faux-input">
+                    <option>SMS Text (preferred)</option>
+                    <option>Automated Voice Call</option>
+                    <option>Email</option>
+                    <option>No update needed</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label>Update Phone / Email</label>
+                  <input class="faux-input" type="text" placeholder="{{PHONE_OR_EMAIL}}" />
+                </div>
+              </div>
+              <ul class="action-list">
+                <li><span class="action-icon">📋</span> Confirm Outage Ticket <span class="placeholder">{{OT-20940}}</span> is saved and life support flag documented</li>
+                <li><span class="action-icon">💾</span> Save notification preference to account</li>
+                <li><span class="action-icon">✅</span> Thank customer; proceed to Wrap-Up</li>
+              </ul>
+              <div class="btn-row">
+                <button class="btn-primary" onclick="markComplete('step-v4'); showToast('Outage case saved. Notification preference recorded.','success'); showTab('wrapup')">Complete &amp; Go to Wrap-Up →</button>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end voice-only workflow -->
+
+        <!-- ── SMS: Delinquent / Payment Arrangement Workflow ── -->
+        <div class="sms-only">
+          <div class="section-title"><span class="title-icon">💬</span> Delinquent Account – SMS Payment Arrangement Workflow</div>
+
+          <!-- Step 1 -->
+          <div class="step-block open" id="step-s1">
+            <div class="step-header" onclick="toggleStep('step-s1')">
+              <div class="step-header-left">
+                <div class="step-num active-step">1</div>
+                <div>
+                  <div class="step-title">Identity Verification (Digital)</div>
+                  <div class="step-subtitle">Confirm customer identity via SMS auth challenge</div>
+                </div>
+              </div>
+              <span class="step-chevron">▶</span>
+            </div>
+            <div class="step-body">
+              <div class="script-box">
+                <div class="speaker">Outbound System Message (Auto-sent)</div>
+                <p>"Hi, this is customer service reaching you about your account ending in <span class="placeholder">{{ACCT-LAST4}}</span>. To confirm your identity, please reply with the last 4 digits of the primary account holder's SSN or your account PIN. Reply STOP to opt out. <span class="placeholder">{{sms_disclosure}}</span>"</p>
+              </div>
+              <ul class="action-list">
+                <li><span class="action-icon">✅</span> Verification confirmed: customer replied <span class="placeholder">{{AUTH_CODE}}</span> — identity validated</li>
+                <li><span class="action-icon">📋</span> Account loaded: Past due balance <strong style="color:var(--red)">$<span class="placeholder">{{348.22}}</span></strong>, 47 days past due</li>
+                <li><span class="action-icon">⛔</span> Do <strong>NOT</strong> reference disconnection date in messaging — follow delinquency script only</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-block" id="step-s2">
+            <div class="step-header" onclick="toggleStep('step-s2')">
+              <div class="step-header-left">
+                <div class="step-num">2</div>
+                <div>
+                  <div class="step-title">Balance Presentation &amp; Empathy</div>
+                  <div class="step-subtitle">Present past-due amount, acknowledge hardship</div>
+                </div>
+              </div>
+              <span class="step-chevron">▶</span>
+            </div>
+            <div class="step-body">
+              <div class="script-box">
+                <div class="speaker">Agent — Outbound SMS</div>
+                <p>"Hi <span class="placeholder">{{FIRST_NAME}}</span>, thank you for verifying. I can see your account has a past-due balance of $<span class="placeholder">{{348.22}}</span>. I'd like to help you get this resolved. Are you interested in setting up a payment arrangement to bring your account current?"</p>
+              </div>
+              <div class="branch-wrap">
+                <details class="branch">
+                  <summary><span class="branch-tag tag-yes">YES</span> Customer agrees to explore payment arrangement</summary>
+                  <div class="branch-body">
+                    <p>Proceed to Step 3 — Payment Plan Configuration.</p>
+                  </div>
+                </details>
+                <details class="branch">
+                  <summary><span class="branch-tag tag-no">NO / NO RESPONSE</span> Customer declines or does not reply</summary>
+                  <div class="branch-body">
+                    <p><strong>SMS:</strong> "No problem. Your account will remain active. If you'd like to discuss payment options at any time, reply HELP or call us at <span class="placeholder">{{BILLING_PHONE}}</span>. Have a good day."</p>
+                    <p style="margin-top:8px"><strong>Action:</strong> Log contact attempt. Set follow-up callback task per delinquency workflow SLA: <span class="placeholder">{{DELINQUENCY_SLA_DAYS}}</span> days.</p>
+                  </div>
+                </details>
+                <details class="branch">
+                  <summary><span class="branch-tag tag-maybe">HARDSHIP</span> Customer indicates financial hardship / loss of income</summary>
+                  <div class="branch-body">
+                    <p><strong>SMS:</strong> "I understand. We have assistance programs that may be able to help, including our low-income and budget billing options. I'll share some information — would that be okay?"</p>
+                    <p style="margin-top:8px"><strong>Action:</strong> Send LIHEAP / assistance program link: <span class="placeholder">{{ASSISTANCE_PROGRAM_URL}}</span>. Document hardship flag on account.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-block" id="step-s3">
+            <div class="step-header" onclick="toggleStep('step-s3')">
+              <div class="step-header-left">
+                <div class="step-num">3</div>
+                <div>
+                  <div class="step-title">Payment Arrangement Configuration</div>
+                  <div class="step-subtitle">Build installment plan within policy parameters</div>
+                </div>
+              </div>
+              <span class="step-chevron">▶</span>
+            </div>
+            <div class="step-body">
+              <div class="field-row">
+                <div class="field-group">
+                  <label>Past-Due Balance</label>
+                  <input class="faux-input read-only" type="text" value="${{348.22}}" readonly />
+                </div>
+                <div class="field-group">
+                  <label>Down Payment Required (min. %)</label>
+                  <input class="faux-input" type="text" placeholder="${{DOWN_PMT}} ({{MIN_PCT}}%)" />
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-group">
+                  <label>Number of Installments</label>
+                  <select class="faux-input">
+                    <option>3 installments</option>
+                    <option>6 installments</option>
+                    <option selected>{{PER POLICY}}</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label>First Payment Due Date</label>
+                  <input class="faux-input" type="text" placeholder="{{FIRST_DUE_DATE}}" />
+                </div>
+              </div>
+              <table class="pay-table">
+                <thead>
+                  <tr><th>#</th><th>Due Date</th><th>Amount</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Down Pmt</td><td><span class="placeholder">{{DATE_1}}</span></td><td><strong>$<span class="placeholder">{{DOWN_AMT}}</span></strong></td><td><span class="branch-tag tag-maybe">Pending</span></td></tr>
+                  <tr><td>1 of 3</td><td><span class="placeholder">{{DATE_2}}</span></td><td>$<span class="placeholder">{{INST_AMT}}</span></td><td><span class="branch-tag tag-maybe">Pending</span></td></tr>
+                  <tr><td>2 of 3</td><td><span class="placeholder">{{DATE_3}}</span></td><td>$<span class="placeholder">{{INST_AMT}}</span></td><td><span class="branch-tag tag-maybe">Pending</span></td></tr>
+                  <tr><td>3 of 3</td><td><span class="placeholder">{{DATE_4}}</span></td><td>$<span class="placeholder">{{INST_AMT}}</span></td><td><span class="branch-tag tag-maybe">Pending</span></td></tr>
+                  <tr class="total-row"><td colspan="2">Total</td><td>$<span class="placeholder">{{TOTAL_PAST_DUE}}</span></td><td></td></tr>
+                </tbody>
+              </table>
+              <div class="inline-tip blue-tip" style="margin-top:10px">💡 Verify plan is within policy maximums before saving. Plans exceeding <span class="placeholder">{{MAX_PLAN_DAYS}}</span> days require supervisor override: <span class="placeholder">{{SUPV_OVERRIDE_CODE}}</span>.</div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="step-block" id="step-s4">
+            <div class="step-header" onclick="toggleStep('step-s4')">
+              <div class="step-header-left">
+                <div class="step-num">4</div>
+                <div>
+                  <div class="step-title">Plan Confirmation &amp; SMS Delivery</div>
+                  <div class="step-subtitle">Confirm terms, send written summary via SMS</div>
+                </div>
+              </div>
+              <span class="step-chevron">▶</span>
+            </div>
+            <div class="step-body">
+              <div class="script-box">
+                <div class="speaker">Agent — Outbound SMS (Confirmation)</div>
+                <p>"Great news, <span class="placeholder">{{FIRST_NAME}}</span>! Your payment arrangement has been set up. Here's your summary:</p>
+                <p>• Down payment: $<span class="placeholder">{{DOWN_AMT}}</span> due by <span class="placeholder">{{DATE_1}}</span><br />
+                • 3 installments of $<span class="placeholder">{{INST_AMT}}</span> on <span class="placeholder">{{DATE_2}}</span>, <span class="placeholder">{{DATE_3}}</span>, <span class="placeholder">{{DATE_4}}</span><br />
+                • Pay online: <span class="placeholder">{{PAYMENT_URL}}</span> or call <span class="placeholder">{{BILLING_PHONE}}</span><br />
+                • Missing a payment may void this arrangement. Reply HELP for assistance."</p>
+              </div>
+              <ul class="action-list">
+                <li><span class="action-icon">💾</span> Save payment arrangement to account — Plan ID: <span class="placeholder">{{PLAN_ID}}</span></li>
+                <li><span class="action-icon">📲</span> Confirmation SMS queued and sent</li>
+                <li><span class="action-icon">📋</span> Add task: review account on <span class="placeholder">{{DATE_1}}</span> for down payment receipt</li>
+                <li><span class="action-icon">✅</span> Proceed to Wrap-Up &amp; Disposition</li>
+              </ul>
+              <div class="btn-row">
+                <button class="btn-primary" onclick="markComplete('step-s4'); showToast('Payment arrangement saved. Confirmation SMS sent.','success'); showTab('wrapup')">Save Plan &amp; Go to Wrap-Up →</button>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end sms-only workflow -->
+
+      </div><!-- end panel-workflow -->
+
+      <!-- ════════════════════════════════
+           TAB: INTERACTION (Voice / SMS)
+      ═════════════════════════════════════ -->
+      <div class="tab-panel" id="panel-interaction">
+
+        <!-- VOICE Interaction Panel -->
+        <div class="voice-only">
+          <div class="section-title"><span class="title-icon">📞</span> Active Voice Interaction</div>
+          <div class="field-row">
+            <div class="field-group">
+              <label>Interaction ID</label>
+              <input class="faux-input read-only" type="text" value="{{INT-0048229}}" readonly />
+            </div>
+            <div class="field-group">
+              <label>Queue Routed From</label>
+              <input class="faux-input read-only" type="text" value="Storm IVR → Residential Care" readonly />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label>ANI (Caller Number)</label>
+              <input class="faux-input read-only" type="text" value="{{REDACTED — masked per policy}}" readonly />
+            </div>
+            <div class="field-group">
+              <label>IVR Self-ID</label>
+              <input class="faux-input read-only" type="text" value="Outage – confirmed via IVR" readonly />
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Real-Time Transcription (illustrative)</label>
+            <div class="faux-input read-only" style="min-height:90px; line-height:1.7; white-space:pre-wrap">Customer: "I just wanted to know when my power is coming back on, I have a medical device that needs electricity..."
+Agent: "I completely understand, and I see your life support registration on your account — let me pull up the details for your area right now..."</div>
+          </div>
+          <div class="field-group">
+            <label>Agent Notes (this interaction)</label>
+            <textarea class="faux-input" rows="4" placeholder="Document key points, customer concerns, commitments made..."></textarea>
+          </div>
+          <div class="info-pill" style="margin-top:8px">
+            <span class="alert-icon">ℹ️</span>
+            <span><span class="placeholder">{{call_recording_disclosure}}</span> — call is being recorded per standard policy.</span>
+          </div>
+        </div>
+
+        <!-- SMS Interaction Panel -->
+        <div class="sms-only">
+          <div class="section-title"><span class="title-icon">💬</span> SMS Conversation Thread</div>
+          <div class="sms-thread">
+            <div>
+              <div class="sms-label">System – Automated Outreach</div>
+              <div class="sms-msg system">Outbound SMS sent · <span class="placeholder">{{TIMESTAMP}}</span> — Balance notification + identity challenge</div>
+            </div>
+            <div>
+              <div class="sms-label">Customer — Derek Williams</div>
+              <div class="sms-msg inbound">Hi, yes I got your message. My code is {{AUTH_CODE}}. I know I'm behind — what are my options?</div>
+              <div class="sms-time"><span class="placeholder">{{TIMESTAMP}}</span></div>
+            </div>
+            <div>
+              <div class="sms-label">Agent — J. Martinez</div>
+              <div class="sms-msg outbound">Hi Derek, thanks for confirming. I can see your account has a past-due balance of ${{348.22}}. I'd like to help you get this resolved — are you interested in a payment arrangement to bring your account current?</div>
+              <div class="sms-time"><span class="placeholder">{{TIMESTAMP}}</span></div>
+            </div>
+            <div>
+              <div class="sms-label">Customer</div>
+              <div class="sms-msg inbound">Yes please, I can pay something now but not all of it at once.</div>
+              <div class="sms-time"><span class="placeholder">{{TIMESTAMP}}</span></div>
+            </div>
+            <div>
+              <div class="sms-label">Agent — J. Martinez</div>
+              <div class="sms-msg outbound">Understood — let me put together a plan for you. I'll need a small down payment today and we can spread the rest over a few months. Give me just a moment to configure the options.</div>
+              <div class="sms-time"><span class="placeholder">{{TIMESTAMP}}</span></div>
+            </div>
+          </div>
+          <div class="sms-compose">
+            <textarea placeholder="Type your message... (use Suggested Replies from workflow, or compose)"></textarea>
+            <button class="send-btn" onclick="showToast('Message sent.','success')">Send ➤</button>
+          </div>
+          <div class="inline-tip" style="margin-top:10px">💡 <span class="placeholder">{{sms_disclosure}}</span> — keep all messaging within policy character limits and approved language.</div>
+        </div>
+
+      </div><!-- end panel-interaction -->
+
+      <!-- ════════════════════════════════
+           TAB: ACCOUNT DETAILS
+      ═════════════════════════════════════ -->
+      <div class="tab-panel" id="panel-account">
+        <div class="section-title"><span class="title-icon">📋</span> Account Details</div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label>Account Number</label>
+            <input class="faux-input read-only" type="text" id="acct-num-field" value="{{ACCT-8847}}" readonly />
+          </div>
+          <div class="field-group">
+            <label>Account Holder</label>
+            <input class="faux-input read-only" type="text" id="acct-holder-field" value="Margaret Sullivan" readonly />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Service Address</label>
+            <input class="faux-input read-only" type="text" value="{{123 Elm St, Naperville, IL}}" readonly />
+          </div>
+          <div class="field-group">
+            <label>Utility</label>
+            <input class="faux-input read-only" type="text" id="acct-utility-field" value="ComEd" readonly />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Rate Class</label>
+            <input class="faux-input read-only" type="text" value="BES Residential" readonly />
+          </div>
+          <div class="field-group">
+            <label>Account Status</label>
+            <input class="faux-input read-only" type="text" id="acct-status-field" value="Current" readonly />
+          </div>
+        </div>
+
+        <hr class="divider" />
+        <div class="section-title" style="font-size:12px; margin-bottom:8px">⚡ Outage / Service Details <span class="voice-only">(Storm Event)</span><span class="sms-only" style="display:none"></span></div>
+        <div class="field-row voice-only">
+          <div class="field-group">
+            <label>Active Outage Ticket</label>
+            <input class="faux-input read-only" type="text" value="{{OT-20940}}" readonly />
+          </div>
+          <div class="field-group">
+            <label>Storm Event ID</label>
+            <input class="faux-input read-only" type="text" value="SE-{{DATE}}" readonly />
+          </div>
+        </div>
+        <div class="field-row voice-only">
+          <div class="field-group">
+            <label>Est. Restoration Time</label>
+            <input class="faux-input" type="text" placeholder="{{EST_RESTORE}}" />
+          </div>
+          <div class="field-group">
+            <label>Crew Status</label>
+            <input class="faux-input read-only" type="text" value="Dispatched – En Route" readonly />
+          </div>
+        </div>
+        <div class="field-row sms-only">
+          <div class="field-group">
+            <label>Past-Due Balance</label>
+            <input class="faux-input read-only" style="color:var(--red); font-weight:700" type="text" value="${{348.22}}" readonly />
+          </div>
+          <div class="field-group">
+            <label>Days Past Due</label>
+            <input class="faux-input read-only" style="color:var(--red)" type="text" value="47" readonly />
+          </div>
+        </div>
+        <div class="field-row sms-only">
+          <div class="field-group">
+            <label>Shutoff Notice Issued</label>
+            <input class="faux-input read-only" style="color:#c47d00" type="text" value="Yes – {{NOTICE_DATE}}" readonly />
+          </div>
+          <div class="field-group">
+            <label>Prior Payment Plans</label>
+            <input class="faux-input read-only" type="text" value="1 (completed)" readonly />
+          </div>
+        </div>
+
+        <hr class="divider" />
+        <div class="section-title" style="font-size:12px; margin-bottom:8px">🔒 Flags &amp; Registrations</div>
+        <div class="field-row voice-only">
+          <div class="field-group">
+            <label>Life Support Registered</label>
+            <input class="faux-input read-only" style="color:var(--red); font-weight:700" type="text" value="YES — Priority Tier 1" readonly />
+          </div>
+          <div class="field-group">
+            <label>Medical Baseline</label>
+            <input class="faux-input read-only" style="color:#c47d00" type="text" value="On File" readonly />
+          </div>
+        </div>
+        <div class="field-row sms-only">
+          <div class="field-group">
+            <label>Life Support Registered</label>
+            <input class="faux-input read-only" type="text" value="No" readonly />
+          </div>
+          <div class="field-group">
+            <label>SMS Opt-In</label>
+            <input class="faux-input read-only" style="color:var(--green)" type="text" value="Active — {{sms_disclosure}}" readonly />
+          </div>
+        </div>
+      </div><!-- end panel-account -->
+
+      <!-- ════════════════════════════════
+           TAB: WRAP-UP & DISPOSITION
+      ═════════════════════════════════════ -->
+      <div class="tab-panel" id="panel-wrapup">
+        <div class="section-title"><span class="title-icon">✔</span> Wrap-Up &amp; Disposition</div>
+
+        <div class="wrapup-grid">
+          <div class="wrapup-card">
+            <div class="wc-label">Contact Reason</div>
+            <div class="voice-only wc-field-val">Storm Outage – Inbound Voice</div>
+            <div class="sms-only wc-field-val">Delinquent Account – SMS</div>
+            <div class="field-group" style="margin-top:8px; margin-bottom:0">
+              <label>Sub-Type</label>
+              <select class="faux-input" id="contact-subtype">
+                <option class="voice-opt" value="">Outage Status Inquiry</option>
+                <option class="voice-opt">Life Support – Priority Escalation</option>
+                <option class="voice-opt">Outage – Safety Concern (Downed Line)</option>
+                <option class="sms-opt" style="display:none">Payment Arrangement – New</option>
+                <option class="sms-opt" style="display:none">Payment Arrangement – Modify</option>
+                <option class="sms-opt" style="display:none">Billing Dispute</option>
+                <option class="sms-opt" style="display:none">Hardship / Assistance Program</option>
+              </select>
+            </div>
+          </div>
+          <div class="wrapup-card">
+            <div class="wc-label">Resolution</div>
+            <div class="disposition-row" id="disp-row">
+              <span class="disp-chip selected voice-disp" onclick="selectDisp(this)">Resolved</span>
+              <span class="disp-chip voice-disp" onclick="selectDisp(this)">Escalated</span>
+              <span class="disp-chip voice-disp" onclick="selectDisp(this)">Callback Scheduled</span>
+              <span class="disp-chip sms-disp" style="display:none" onclick="selectDisp(this)">Plan Created</span>
+              <span class="disp-chip sms-disp" style="display:none" onclick="selectDisp(this)">Declined – Follow-Up</span>
+              <span class="disp-chip sms-disp" style="display:none" onclick="selectDisp(this)">Hardship Referred</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Interaction Summary / Notes</label>
+          <textarea class="faux-input" rows="4" placeholder="Summarize actions taken, commitments made, and any follow-up items..."></textarea>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label>After-Contact Work Code</label>
+            <select class="faux-input">
+              <option>Storm – Outage Confirmed / ERT Provided</option>
+              <option>Storm – Life Support Priority Logged</option>
+              <option>Storm – Safety Referral Made</option>
+              <option>Billing – Payment Arrangement Created</option>
+              <option>Billing – Assistance Program Referral</option>
+              <option>Billing – No Action / Customer Declined</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Follow-Up Task</label>
+            <input class="faux-input" type="text" placeholder="{{FOLLOW_UP_TASK or none}}" />
+          </div>
+        </div>
+
+        <details class="branch" style="margin-bottom:14px">
+          <summary><span class="branch-tag tag-maybe">📌 To Verify</span> &nbsp; Items to confirm before go-live</summary>
+          <div class="branch-body">
+            <ul style="padding-left:16px; line-height:1.8; font-size:12px;">
+              <li>Confirm Outage Notification enrollment opt-in disclosure language: <span class="placeholder">{{call_recording_disclosure}}</span></li>
+              <li>Confirm minimum down payment % and maximum installment plan duration per BGE/ComEd delinquency policy</li>
+              <li>Confirm Life Support Priority queue name and escalation SLA</li>
+              <li>Confirm food spoilage bill credit request URL / process: <span class="placeholder">{{FOOD_SPOILAGE_PROCESS}}</span></li>
+              <li>Confirm storm event naming convention (SE-YYYY-MM-DD or other)</li>
+              <li>SMS disclosure language — ensure opt-in language matches <span class="placeholder">{{sms_disclosure}}</span></li>
+              <li><em>Theme derived from exeloncorp.com: primary #003057, accent #0078C8 — confirm sub-brand utility (ComEd / BGE) colors if needed</em></li>
+            </ul>
+          </div>
+        </details>
+
+        <div class="btn-row">
+          <button class="btn-primary" onclick="showToast('Interaction saved. ACW complete.','success')">💾 Save &amp; Complete ACW</button>
+          <button class="btn-secondary" onclick="showToast('Transferred to ready state.','')">Ready for Next</button>
+        </div>
+
+      </div><!-- end panel-wrapup -->
+
+    </div><!-- end tab-content -->
+  </div><!-- end center -->
+
+  <!-- ── RIGHT PANEL ────────────────────────────────── -->
+  <div id="right-panel">
+
+    <div class="rp-section">
+      <div class="rp-header" onclick="toggleRpSection(this)">
+        <span>Knowledge Base</span><span class="rp-toggle">▾</span>
+      </div>
+      <div class="rp-body" id="kb-body">
+        <div class="rp-item voice-only">
+          <span class="rp-item-icon">⚡</span>
+          <div>
+            <div class="rp-item-title">Storm Response – Agent Handbook</div>
+            <div class="rp-item-sub">Safety scripts, ERT guidance, life support SLA</div>
+            <span class="kb-tag storm">Storm</span>
+          </div>
+        </div>
+        <div class="rp-item voice-only">
+          <span class="rp-item-icon">🔴</span>
+          <div>
+            <div class="rp-item-title">Life Support Protocol</div>
+            <div class="rp-item-sub">Priority Tier 1 — escalation steps &amp; documentation</div>
+            <span class="kb-tag storm">Storm</span>
+          </div>
+        </div>
+        <div class="rp-item voice-only">
+          <span class="rp-item-icon">🗺️</span>
+          <div>
+            <div class="rp-item-title">Outage Map – Customer-Facing</div>
+            <div class="rp-item-sub"><a href="https://www.comed.com/outageview" target="_blank" rel="noopener" class="rp-link">comed.com/outageview ↗</a></div>
+            <span class="kb-tag storm">Storm</span>
+          </div>
+        </div>
+        <div class="rp-item sms-only">
+          <span class="rp-item-icon">💳</span>
+          <div>
+            <div class="rp-item-title">Payment Arrangement Policy</div>
+            <div class="rp-item-sub">Max terms, down pmt %, supervisor override codes</div>
+            <span class="kb-tag billing">Billing</span>
+          </div>
+        </div>
+        <div class="rp-item sms-only">
+          <span class="rp-item-icon">🤝</span>
+          <div>
+            <div class="rp-item-title">Assistance Programs (LIHEAP)</div>
+            <div class="rp-item-sub">Eligibility, referral link, documentation</div>
+            <span class="kb-tag billing">Billing</span>
+          </div>
+        </div>
+        <div class="rp-item sms-only">
+          <span class="rp-item-icon">📲</span>
+          <div>
+            <div class="rp-item-title">SMS Scripting Guidelines</div>
+            <div class="rp-item-sub">Delinquency language, TCPA compliance, opt-out</div>
+            <span class="kb-tag billing">Billing</span>
+          </div>
+        </div>
+        <div class="rp-item">
+          <span class="rp-item-icon">📖</span>
+          <div>
+            <div class="rp-item-title">Residential Tariffs &amp; Rate Classes</div>
+            <div class="rp-item-sub">BES, DS, RH rate guides</div>
+            <span class="kb-tag">General</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rp-section">
+      <div class="rp-header" onclick="toggleRpSection(this)">
+        <span>Suggested Next Actions</span><span class="rp-toggle">▾</span>
+      </div>
+      <div class="rp-body">
+        <div class="rp-item voice-only">
+          <span class="rp-item-icon">📲</span>
+          <div>
+            <div class="rp-item-title">Enroll in Outage Notifications</div>
+            <div class="rp-item-sub">Customer not yet enrolled for this event</div>
+          </div>
+        </div>
+        <div class="rp-item voice-only">
+          <span class="rp-item-icon">🔴</span>
+          <div>
+            <div class="rp-item-title">Document Life Support Equipment</div>
+            <div class="rp-item-sub">Required for Priority Tier 1 logging</div>
+          </div>
+        </div>
+        <div class="rp-item voice-only">
+          <span class="rp-item-icon">🛡️</span>
+          <div>
+            <div class="rp-item-title">Safety Checklist – Storm Protocol</div>
+            <div class="rp-item-sub">Downed lines, generator, food spoilage — deliver before close</div>
+          </div>
+        </div>
+        <div class="rp-item sms-only">
+          <span class="rp-item-icon">💰</span>
+          <div>
+            <div class="rp-item-title">Confirm Down Payment Method</div>
+            <div class="rp-item-sub">Web, autopay, or IVR pay options</div>
+          </div>
+        </div>
+        <div class="rp-item sms-only">
+          <span class="rp-item-icon">📅</span>
+          <div>
+            <div class="rp-item-title">Set Follow-Up Task</div>
+            <div class="rp-item-sub">Verify down payment received on <span class="placeholder">{{DATE_1}}</span></div>
+          </div>
+        </div>
+        <div class="rp-item sms-only">
+          <span class="rp-item-icon">🤝</span>
+          <div>
+            <div class="rp-item-title">Offer Assistance Program Info</div>
+            <div class="rp-item-sub">LIHEAP referral — if hardship indicated</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rp-section">
+      <div class="rp-header" onclick="toggleRpSection(this)">
+        <span>Compliance Reminders</span><span class="rp-toggle">▾</span>
+      </div>
+      <div class="rp-body">
+        <div class="rp-item">
+          <span class="rp-item-icon">🔒</span>
+          <div>
+            <div class="rp-item-title">No PII in Notes Fields</div>
+            <div class="rp-item-sub">SSN, DOB, full card numbers — prohibited</div>
+          </div>
+        </div>
+        <div class="rp-item voice-only">
+          <span class="rp-item-icon">🎙️</span>
+          <div>
+            <div class="rp-item-title">Call Recording Active</div>
+            <div class="rp-item-sub"><span class="placeholder">{{call_recording_disclosure}}</span></div>
+          </div>
+        </div>
+        <div class="rp-item sms-only">
+          <span class="rp-item-icon">📵</span>
+          <div>
+            <div class="rp-item-title">Do Not Threaten Disconnection</div>
+            <div class="rp-item-sub">Follow delinquency script only — no disconnection language</div>
+          </div>
+        </div>
+        <div class="rp-item sms-only">
+          <span class="rp-item-icon">✉️</span>
+          <div>
+            <div class="rp-item-title">SMS Opt-In Verified</div>
+            <div class="rp-item-sub"><span class="placeholder">{{sms_disclosure}}</span> — on file</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end right-panel -->
+
+</div><!-- end workspace -->
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+  /* ── Timer ────────────────────────────────────────────────────── */
+  var timerSec = 0;
+  var timerEl = document.getElementById('handle-timer');
+  setInterval(function() {
+    timerSec++;
+    var m = String(Math.floor(timerSec / 60)).padStart(2,'0');
+    var s = String(timerSec % 60).padStart(2,'0');
+    timerEl.textContent = m + ':' + s;
+  }, 1000);
+
+  /* ── Scenario Switch ─────────────────────────────────────────── */
+  function switchScenario(mode) {
+    document.body.className = 'scenario-' + mode;
+    document.getElementById('btn-voice').classList.toggle('active', mode === 'voice');
+    document.getElementById('btn-sms').classList.toggle('active', mode === 'sms');
+    timerSec = 0;
+
+    // queue badge
+    var qb = document.getElementById('queue-label');
+    qb.textContent = mode === 'voice' ? '⚡ STORM EVENT ACTIVE' : '⛔ DELINQUENCY QUEUE';
+
+    // status dot color
+    var dot = document.getElementById('status-dot');
+    dot.className = 'status-dot busy';
+
+    // tab label
+    document.getElementById('tab-interaction-label').textContent =
+      mode === 'voice' ? '📞 Voice Interaction' : '💬 SMS Thread';
+
+    // account fields
+    if (mode === 'sms') {
+      document.getElementById('acct-num-field').value    = '{{ACCT-3392}}';
+      document.getElementById('acct-holder-field').value = 'Derek Williams';
+      document.getElementById('acct-utility-field').value= 'BGE';
+      document.getElementById('acct-status-field').value = 'DELINQUENT – ${{348.22}} past due';
+      document.getElementById('acct-status-field').style.color = 'var(--red)';
+    } else {
+      document.getElementById('acct-num-field').value    = '{{ACCT-8847}}';
+      document.getElementById('acct-holder-field').value = 'Margaret Sullivan';
+      document.getElementById('acct-utility-field').value= 'ComEd';
+      document.getElementById('acct-status-field').value = 'Current';
+      document.getElementById('acct-status-field').style.color = '';
+    }
+
+    // disposition chips
+    var vd = document.querySelectorAll('.voice-disp');
+    var sd = document.querySelectorAll('.sms-disp');
+    vd.forEach(function(el){ el.style.display = mode==='voice' ? '' : 'none'; });
+    sd.forEach(function(el){ el.style.display = mode==='sms'   ? '' : 'none'; });
+
+    // sub-type options
+    var vo = document.querySelectorAll('.voice-opt');
+    var so = document.querySelectorAll('.sms-opt');
+    vo.forEach(function(el){ el.style.display = mode==='voice' ? '' : 'none'; });
+    so.forEach(function(el){ el.style.display = mode==='sms'   ? '' : 'none'; });
+
+    // sms-only display in section that uses block normally
+    var smsOnlys = document.querySelectorAll('.sms-only');
+    smsOnlys.forEach(function(el){ el.style.display = mode==='sms' ? 'block' : 'none'; });
+    var voiceOnlys = document.querySelectorAll('.voice-only');
+    voiceOnlys.forEach(function(el){ el.style.display = mode==='voice' ? 'block' : 'none'; });
+
+    buildRail(mode);
+    showTab('workflow');
+  }
+
+  /* ── Tabs ─────────────────────────────────────────────────────── */
+  function showTab(name) {
+    var panels = document.querySelectorAll('.tab-panel');
+    panels.forEach(function(p){ p.classList.remove('active'); });
+    var btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(function(b){ b.classList.remove('active'); });
+    document.getElementById('panel-' + name).classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+    if (name === 'wrapup') {
+      document.getElementById('wrapup-badge').style.display = 'none';
+    }
+  }
+
+  /* ── Step Accordion ──────────────────────────────────────────── */
+  function toggleStep(id) {
+    var el = document.getElementById(id);
+    el.classList.toggle('open');
+  }
+  function markComplete(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      var dot = el.querySelector('.step-num');
+      if (dot) { dot.className = 'step-num complete'; dot.textContent = '✓'; }
+    }
+  }
+
+  /* ── Disposition Chips ───────────────────────────────────────── */
+  function selectDisp(el) {
+    var chips = document.querySelectorAll('.disp-chip');
+    chips.forEach(function(c){ c.classList.remove('selected'); });
+    el.classList.add('selected');
+  }
+
+  /* ── Right Panel Toggle ──────────────────────────────────────── */
+  function toggleRpSection(header) {
+    var body = header.nextElementSibling;
+    var toggle = header.querySelector('.rp-toggle');
+    if (body.style.display === 'none') {
+      body.style.display = '';
+      toggle.textContent = '▾';
+    } else {
+      body.style.display = 'none';
+      toggle.textContent = '▸';
+    }
+  }
+
+  /* ── Progress Rail ───────────────────────────────────────────── */
+  var voiceSteps = ['Greeting &amp; Auth','Outage &amp; ERT','Safety Guidance','Enroll &amp; Close'];
+  var smsSteps   = ['ID Verification','Balance &amp; Empathy','Plan Config','Confirm &amp; Send'];
+  function buildRail(mode) {
+    var steps = mode === 'voice' ? voiceSteps : smsSteps;
+    var rail = document.getElementById('progress-rail');
+    rail.innerHTML = '';
+    steps.forEach(function(s, i) {
+      var div = document.createElement('div');
+      div.className = 'rail-step';
+      var dotClass = i === 0 ? 'rail-dot curr' : 'rail-dot';
+      var lblClass = i === 0 ? 'rail-label curr' : 'rail-label';
+      div.innerHTML = '<div class="' + dotClass + '">' + (i+1) + '</div><div class="' + lblClass + '">' + s + '</div>';
+      rail.appendChild(div);
+    });
+  }
+  buildRail('voice');
+
+  /* ── Toast Notifications ─────────────────────────────────────── */
+  function showToast(msg, type) {
+    var c = document.getElementById('toast-container');
+    var t = document.createElement('div');
+    t.className = 'toast' + (type ? ' ' + type : '');
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 3500);
+  }
+
+  /* ── End Interaction ─────────────────────────────────────────── */
+  document.getElementById('end-btn').addEventListener('click', function() {
+    document.getElementById('status-dot').className = 'status-dot';
+    document.getElementById('status-label').textContent = 'ACW';
+    showToast('Interaction ended. Completing After-Contact Work.', 'warn');
+    showTab('wrapup');
+  });
+
+  /* ── Init ────────────────────────────────────────────────────── */
+  // ensure initial display state is consistent with CSS class
+  switchScenario('voice');
+</script>
+</body>
+</html>
