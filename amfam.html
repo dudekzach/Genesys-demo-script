@@ -712,7 +712,7 @@
       <div class="panel active" id="panel-context">
 
         <div class="alert alert-red">
-          🚨 <strong>New Claim — Auto Collision</strong> — Customer is reporting a rear-end collision on I-90 near Madison, WI. No injuries reported. Other party involved. Police report filed. Verify coverage, initiate claim, and offer CoBrowse to assist with online claim submission if needed.
+          🚨 <strong>New Claim — Auto Collision</strong> — Customer is calling to report a vehicle collision and file a claim. Verify identity and coverage, then initiate a CoBrowse session to guide the customer through online claim submission on MyAmFam.
         </div>
 
         <!-- POLICYHOLDER INFO -->
@@ -775,93 +775,34 @@
           </div>
         </div>
 
-        <!-- INCIDENT / CLAIM DETAILS -->
+        <!-- COVERAGE SNAPSHOT -->
         <div class="card">
           <div class="card-header">
-            <span class="card-title">🚗 Incident Details — As Reported</span>
-            <span class="badge badge-yellow">Claim Not Yet Filed</span>
-          </div>
-          <div class="card-body">
-            <div class="field-grid">
-              <div class="field">
-                <label>Claim Type</label>
-                <div class="field-val highlight">Auto — Collision</div>
-              </div>
-              <div class="field">
-                <label>Date of Loss</label>
-                <div class="field-val highlight" id="f-dol">03/17/2025</div>
-              </div>
-              <div class="field">
-                <label>Time of Loss</label>
-                <div class="field-val" id="f-tol">~2:30 PM CT</div>
-              </div>
-              <div class="field">
-                <label>Location</label>
-                <div class="field-val" id="f-loss-loc">I-90 Eastbound, near Exit 147, Madison, WI</div>
-              </div>
-              <div class="field">
-                <label>Vehicle Involved</label>
-                <div class="field-val" id="f-claim-veh">2021 Toyota Camry SE</div>
-              </div>
-              <div class="field">
-                <label>Driveable?</label>
-                <div class="field-val highlight" id="f-driveable">Yes — Minor Damage</div>
-              </div>
-              <div class="field">
-                <label>Injuries Reported</label>
-                <div class="field-val new">None Reported</div>
-              </div>
-              <div class="field">
-                <label>Police Report #</label>
-                <div class="field-val" id="f-police-rpt">MPD-2025-034821</div>
-              </div>
-              <div class="field">
-                <label>Other Party Name</label>
-                <div class="field-val" id="f-other-party">Robert D. Farnsworth</div>
-              </div>
-              <div class="field">
-                <label>Other Party Insurance</label>
-                <div class="field-val" id="f-other-ins">State Farm</div>
-              </div>
-              <div class="field">
-                <label>Other Vehicle</label>
-                <div class="field-val" id="f-other-veh">2019 Chevy Silverado</div>
-              </div>
-              <div class="field">
-                <label>Fault / Liability</label>
-                <div class="field-val highlight" id="f-fault">Other Party — Under Review</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- EXISTING VEHICLES -->
-        <div class="card">
-          <div class="card-header">
-            <span class="card-title">🚙 Vehicles on Policy</span>
+            <span class="card-title">🛡️ Coverage Snapshot</span>
+            <span class="badge badge-green">Active — Verified</span>
           </div>
           <div class="card-body" style="padding:0">
             <table class="sys-table">
               <thead>
-                <tr><th>#</th><th>Year / Make / Model</th><th>VIN</th><th>Current Coverage</th><th>Assigned Driver</th></tr>
+                <tr><th>Coverage</th><th>Limit / Deductible</th><th>Status</th></tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td id="v1-desc">{{vehicle_1_desc}}</td>
-                  <td>{{vin_1}}</td>
-                  <td>Full Coverage</td>
-                  <td id="v1-driver">{{policyholder_name}}</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td id="v2-desc">{{vehicle_2_desc}}</td>
-                  <td>{{vin_2}}</td>
-                  <td>Full Coverage</td>
-                  <td id="v2-driver">{{spouse_name}}</td>
-                </tr>
+                <tr><td>Collision</td><td>$500 deductible</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Comprehensive</td><td>$500 deductible</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Bodily Injury Liability</td><td>$250K / $500K</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Uninsured Motorist</td><td>$250K / $500K</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Rental Reimbursement</td><td>$40/day · 30 days</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td>Roadside Assistance</td><td>Included</td><td><span class="badge badge-green">Active</span></td></tr>
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- PRIOR CLAIMS -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">📁 Prior Claims History</span></div>
+          <div class="card-body">
+            <div class="alert alert-green" style="margin-bottom:0;">✅ No prior claims on this policy. Customer may qualify for a claim-free discount at renewal.</div>
           </div>
         </div>
 
@@ -883,72 +824,60 @@
       <div class="panel" id="panel-workflow">
 
         <div class="card">
-          <div class="card-header"><span class="card-title">📋 File a Claim — Step Checklist</span></div>
+          <div class="card-header"><span class="card-title">📋 File a Claim — Agent Workflow</span></div>
           <div class="card-body">
             <ul class="checklist" id="wf-checklist">
               <li id="wf1">
                 <input type="checkbox" onchange="checkItem(this,'wf1')">
                 <span class="check-text">Greet caller & express empathy — confirm they are safe
-                  <span class="check-sub">Before anything else: "I'm glad you're safe. Let's get this taken care of for you."</span>
+                  <span class="check-sub">"I'm sorry to hear that. I'm glad you're safe — let's get your claim started right away."</span>
                 </span>
               </li>
               <li id="wf2">
                 <input type="checkbox" onchange="checkItem(this,'wf2')">
-                <span class="check-text">Authenticate policyholder identity (full name + policy # OR full name + DOB + address)
-                  <span class="check-sub">Follow two-factor verification protocol before accessing account.</span>
+                <span class="check-text">Authenticate policyholder identity
+                  <span class="check-sub">Full name + policy number, OR full name + DOB + address. Two-factor protocol required.</span>
                 </span>
               </li>
               <li id="wf3">
                 <input type="checkbox" onchange="checkItem(this,'wf3')">
-                <span class="check-text">Confirm vehicle involved and verify active coverage at time of loss
-                  <span class="check-sub">Check policy effective dates — loss must occur within the covered policy period.</span>
+                <span class="check-text">Confirm coverage is active and applicable to the incident
+                  <span class="check-sub">Verify collision/comprehensive coverage is in force. Advise on deductible ($500).</span>
                 </span>
               </li>
               <li id="wf4">
                 <input type="checkbox" onchange="checkItem(this,'wf4')">
-                <span class="check-text">Collect full incident details: date, time, location, description of what happened
-                  <span class="check-sub">Document in claim notes verbatim — use customer's own words where possible.</span>
+                <span class="check-text">Ask about injuries — flag immediately if any party is injured
+                  <span class="check-sub">If bodily injury is reported, transfer to Injury Claims team before proceeding.</span>
                 </span>
               </li>
               <li id="wf5">
                 <input type="checkbox" onchange="checkItem(this,'wf5')">
-                <span class="check-text">Collect other party information (name, phone, vehicle, insurance carrier)
-                  <span class="check-sub">If other party is at fault, subrogation may apply — capture all details.</span>
+                <span class="check-text">Initiate CoBrowse — guide customer to the File a Claim page on MyAmFam
+                  <span class="check-sub">Instruct customer to click "Join CoBrowse" on the app. Confirm session is active before proceeding.</span>
                 </span>
               </li>
               <li id="wf6">
                 <input type="checkbox" onchange="checkItem(this,'wf6')">
-                <span class="check-text">Verify police report was filed and obtain report number
-                  <span class="check-sub">Required for collision claims involving third parties; advise customer to request a copy.</span>
+                <span class="check-text">Walk customer through the online claim form — field by field via CoBrowse
+                  <span class="check-sub">Incident date/time, location, vehicle, description, other party info, police report number.</span>
                 </span>
               </li>
               <li id="wf7">
                 <input type="checkbox" onchange="checkItem(this,'wf7')">
-                <span class="check-text">Review applicable coverages: Collision, Comprehensive, Rental, Roadside
-                  <span class="check-sub">Explain deductibles and what customer can expect for reimbursement.</span>
+                <span class="check-text">Confirm claim submission and provide claim number to customer
+                  <span class="check-sub">Advise: adjuster will make contact within 24 hours.</span>
                 </span>
               </li>
               <li id="wf8">
                 <input type="checkbox" onchange="checkItem(this,'wf8')">
-                <span class="check-text">Initiate CoBrowse — guide customer through online claim submission on MyAmFam
-                  <span class="check-sub">Customer clicks "Join CoBrowse" on their desktop app to begin the session.</span>
+                <span class="check-text">Advise on next steps: rental car, repair shops, adjuster timeline
+                  <span class="check-sub">AmFam Select Service® repair network — lifetime guarantee on covered repairs.</span>
                 </span>
               </li>
               <li id="wf9">
                 <input type="checkbox" onchange="checkItem(this,'wf9')">
-                <span class="check-text">Open claim in system and assign a claims adjuster
-                  <span class="check-sub">Adjuster contact typically within 24 hours. Provide claim number to customer.</span>
-                </span>
-              </li>
-              <li id="wf10">
-                <input type="checkbox" onchange="checkItem(this,'wf10')">
-                <span class="check-text">Advise on next steps: adjuster contact, repair shop options, rental car process
-                  <span class="check-sub">AmFam Select Service® preferred repair network provides quality guarantee.</span>
-                </span>
-              </li>
-              <li id="wf11">
-                <input type="checkbox" onchange="checkItem(this,'wf11')">
-                <span class="check-text">Wrap-up: confirm claim number, adjuster name, expected timeline, and thank customer
+                <span class="check-text">Wrap-up: summarize, confirm email confirmation will be sent, thank customer
                 </span>
               </li>
             </ul>
@@ -1077,58 +1006,7 @@
       <!-- ──────────────────────────────────────────────────── -->
       <div class="panel" id="panel-systems">
 
-        <!-- CLAIM SUMMARY BOX -->
-        <div class="rate-box">
-          <div class="rate-label">Claim Being Filed — Policy PAF-4417-WI-2016</div>
-          <div class="rate-val">Auto Collision</div>
-          <div class="rate-sub">Coverage verified active at date of loss · Collision deductible applies · No prior claims on policy</div>
-        </div>
-        <div class="rate-grid">
-          <div class="rate-item">
-            <div class="ri-label">Collision Deductible</div>
-            <div class="ri-val" style="color:var(--danger)">$500.00</div>
-          </div>
-          <div class="rate-item">
-            <div class="ri-label">Rental Reimbursement</div>
-            <div class="ri-val" style="color:var(--success)">$40/day · 30 days ✓</div>
-          </div>
-          <div class="rate-item">
-            <div class="ri-label">Prior Claims (3yr)</div>
-            <div class="ri-val" style="color:var(--success)">None ✓</div>
-          </div>
-          <div class="rate-item">
-            <div class="ri-label">Claim # (Assigned)</div>
-            <div class="ri-val" id="sys-claim-num">Pending — Open Form</div>
-          </div>
-        </div>
-
-        <hr class="divider"/>
-
-        <!-- POLICY COVERAGES -->
-        <div class="card">
-          <div class="card-header">
-            <span class="card-title">🛡️ Current Policy Coverages</span>
-            <button class="btn btn-ghost btn-sm" onclick="toast('Coverage details refreshed from policy system.','info')">↻ Refresh</button>
-          </div>
-          <div class="card-body" style="padding:0">
-            <table class="sys-table">
-              <thead>
-                <tr><th>Coverage</th><th>Limit / Deductible</th><th>Vehicle</th><th>Status</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>Bodily Injury Liability</td><td>{{bi_limit}}</td><td>All Vehicles</td><td><span class="badge badge-green">Active</span></td></tr>
-                <tr><td>Property Damage Liability</td><td>{{pd_limit}}</td><td>All Vehicles</td><td><span class="badge badge-green">Active</span></td></tr>
-                <tr><td>Uninsured Motorist</td><td>{{um_limit}}</td><td>All Vehicles</td><td><span class="badge badge-green">Active</span></td></tr>
-                <tr><td>Comprehensive</td><td>{{comp_ded}} deductible</td><td>{{vehicle_1_desc}}</td><td><span class="badge badge-green">Active</span></td></tr>
-                <tr><td>Collision</td><td>{{coll_ded}} deductible</td><td>{{vehicle_1_desc}}</td><td><span class="badge badge-green">Active</span></td></tr>
-                <tr><td>Comprehensive</td><td>{{comp_ded}} deductible</td><td>{{vehicle_2_desc}}</td><td><span class="badge badge-green">Active</span></td></tr>
-                <tr><td>Collision</td><td>{{coll_ded}} deductible</td><td>{{vehicle_2_desc}}</td><td><span class="badge badge-green">Active</span></td></tr>
-                <tr><td>Roadside Assistance</td><td>Included</td><td>All Vehicles</td><td><span class="badge badge-green">Active</span></td></tr>
-                <tr><td>Rental Reimbursement</td><td>{{rental_limit}}/day</td><td>All Vehicles</td><td><span class="badge badge-green">Active</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <div class="alert alert-info" style="margin-bottom:14px;">🖥️ <strong>CoBrowse Ready</strong> — Once the customer clicks "Join CoBrowse" on their MyAmFam app, you will gain view access to guide them through the File a Claim form in real time.</div>
 
         <!-- SELECT SERVICE REPAIR SHOPS -->
         <div class="card">
@@ -1145,25 +1023,6 @@
                 <tr><td>Caliber Collision — East Washington</td><td>2.1 mi</td><td>3–5 days</td><td>Lifetime</td><td><span class="badge badge-green">Available</span></td></tr>
                 <tr><td>Gerber Collision & Glass — Monona</td><td>4.3 mi</td><td>4–6 days</td><td>Lifetime</td><td><span class="badge badge-green">Available</span></td></tr>
                 <tr><td>Zimbrick Body Shop — Madison</td><td>5.8 mi</td><td>5–7 days</td><td>Lifetime</td><td><span class="badge badge-yellow">Call Ahead</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- LIABILITY / SUBROGATION FLAGS -->
-        <div class="card">
-          <div class="card-header"><span class="card-title">⚖️ Liability & Subrogation Flags</span></div>
-          <div class="card-body" style="padding:0">
-            <table class="sys-table">
-              <thead>
-                <tr><th>Item</th><th>Status</th><th>Notes</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>Other Party Identified</td><td><span class="badge badge-green">Yes</span></td><td>Robert D. Farnsworth — State Farm insured</td></tr>
-                <tr><td>Police Report Filed</td><td><span class="badge badge-green">Yes</span></td><td>MPD-2025-034821 — Request copy from customer</td></tr>
-                <tr><td>Bodily Injury Claimed</td><td><span class="badge badge-green">None Reported</span></td><td>Monitor — customer may report later</td></tr>
-                <tr><td>Subrogation Potential</td><td><span class="badge badge-yellow">Under Review</span></td><td>Other party may be liable — flag for adjuster</td></tr>
-                <tr><td>UM / UIM Applicable</td><td><span class="badge badge-gray">Not at This Time</span></td><td>Other party has insurance on file</td></tr>
               </tbody>
             </table>
           </div>
