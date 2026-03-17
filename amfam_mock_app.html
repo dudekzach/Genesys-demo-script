@@ -1357,10 +1357,105 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
   padding: 5px 0;
   border-bottom: 1px solid var(--border-light);
 }
-.success-detail-row:last-child { border-bottom: none; }
-.sd-label { color: var(--ink-3); }
-.sd-val   { font-weight: 700; color: var(--ink); }
-</style>
+/* ══════════════════════════════════════════════════════════════
+   CLAIMS PAGE
+══════════════════════════════════════════════════════════════ */
+.claim-type-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+.claim-type-card {
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .15s, background .15s, transform .1s, box-shadow .15s;
+  background: var(--surface);
+}
+.claim-type-card:hover {
+  border-color: var(--blue);
+  background: var(--blue-soft);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.claim-type-card.selected {
+  border-color: var(--blue);
+  background: var(--blue-soft);
+  box-shadow: 0 0 0 3px rgba(0,48,135,.1);
+}
+.claim-type-icon { font-size: 26px; margin-bottom: 8px; }
+.claim-type-label { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.claim-type-desc { font-size: 11px; color: var(--ink-3); line-height: 1.4; }
+
+.claims-cta-card {
+  background: linear-gradient(145deg, var(--blue) 0%, var(--blue-light) 100%);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  color: #fff;
+  box-shadow: 0 8px 30px rgba(0,48,135,.3);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.claims-cta-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.claims-cta-icon {
+  font-size: 32px;
+  width: 56px; height: 56px;
+  background: rgba(255,255,255,.15);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.claims-cta-title { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+.claims-cta-subtitle { font-size: 13px; color: rgba(255,255,255,.7); }
+.claims-cta-body { font-size: 13px; color: rgba(255,255,255,.85); line-height: 1.6; }
+.claims-phone-display {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.claims-phone-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,.6); }
+.claims-phone-number {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -.3px;
+}
+.claims-phone-hours { font-size: 11px; color: rgba(255,255,255,.6); }
+.claims-call-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 14px;
+  font-size: 15px;
+  background: #fff;
+  color: var(--blue);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  transition: transform .1s, box-shadow .15s;
+}
+.claims-call-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.25);
+  background: #fff;
+  color: var(--blue-mid);
+}
+.claims-cta-note { font-size: 12px; color: rgba(255,255,255,.65); text-align: center; }
+.claims-chat-link { text-decoration: underline; cursor: pointer; color: rgba(255,255,255,.85); }
+.claims-chat-link:hover { color: #fff; }
+
 </head>
 <body>
 
@@ -1377,10 +1472,10 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
   </div>
 
   <nav class="topnav-links">
-    <div class="tnav-link active"><span class="tnav-icon">🏠</span> Dashboard</div>
+    <div class="tnav-link active" id="tnav-dashboard" onclick="showDashboard()"><span class="tnav-icon">🏠</span> Dashboard</div>
     <div class="tnav-link" onclick="toast('Navigating to My Policies...')"><span class="tnav-icon">🛡️</span> My Policies</div>
-    <div class="tnav-link" onclick="toast('Navigating to Claims...')"><span class="tnav-icon">📋</span> Claims</div>
-    <div class="tnav-link" onclick="toast('Navigating to Payments...')"><span class="tnav-icon">💳</span> Payments</div>
+    <div class="tnav-link" id="tnav-claims" onclick="showClaimsPage()"><span class="tnav-icon">📋</span> Claims</div>
+    <div class="tnav-link" onclick="showBillingPage()"><span class="tnav-icon">💳</span> Payments</div>
     <div class="tnav-link" onclick="toast('Navigating to Documents...')"><span class="tnav-icon">📄</span> Documents</div>
     <div class="tnav-link" onclick="toast('Finding your local agent...')"><span class="tnav-icon">🏢</span> Find an Agent</div>
   </nav>
@@ -1426,7 +1521,7 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
     <!-- Manage -->
     <div class="sidebar-section">
       <div class="sidebar-label">Manage</div>
-      <div class="sidebar-item active"><span class="si-icon">🏠</span> Dashboard</div>
+      <div class="sidebar-item active" id="snav-dashboard" onclick="showDashboard()"><span class="si-icon">🏠</span> Dashboard</div>
       <div class="sidebar-item" onclick="toast('Loading Policy Details...')"><span class="si-icon">🛡️</span> Policy Details</div>
       <div class="sidebar-item" onclick="openAddDriverModal()">
         <span class="si-icon">👤</span> Drivers
@@ -1451,7 +1546,7 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
     <!-- Support -->
     <div class="sidebar-section">
       <div class="sidebar-label">Support</div>
-      <div class="sidebar-item" onclick="toast('Navigating to Claims...')"><span class="si-icon">📋</span> File a Claim</div>
+      <div class="sidebar-item" id="snav-claims" onclick="showClaimsPage()"><span class="si-icon">📋</span> File a Claim</div>
       <div class="sidebar-item" onclick="startChat()"><span class="si-icon">💬</span> Chat with Us</div>
       <div class="sidebar-item" onclick="toast('Calling 1-800-MYAMFAM...')"><span class="si-icon">📞</span> Call Us</div>
     </div>
@@ -1473,8 +1568,8 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
         <button class="btn btn-secondary" onclick="toast('Generating ID cards for download...')">
           <span class="btn-icon">🪪</span> Get ID Cards
         </button>
-        <button class="btn btn-cobrowse" onclick="initiateCoBrowse()">
-          <span class="btn-icon">🖥️</span> Initiate CoBrowse
+        <button class="btn btn-cobrowse" onclick="joinCoBrowse()">
+          <span class="btn-icon">🖥️</span> Join CoBrowse
         </button>
         <button class="btn btn-primary" onclick="openAddDriverModal()">
           <span class="btn-icon">＋</span> Add Driver
@@ -2222,6 +2317,222 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
 
   </div><!-- /page-billing -->
 
+  <!-- ═══ PAGE: FILE A CLAIM ═══ -->
+  <div class="page-view" id="page-claims">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header" style="animation: fadeUp .4s ease both;">
+      <div class="page-header-left">
+        <div class="page-title">File a Claim</div>
+        <div class="page-subtitle">Policy PAF-4417-WI-2016 · Auto Insurance · Wisconsin</div>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn btn-secondary" onclick="showDashboard()">← Back to Dashboard</button>
+      </div>
+    </div>
+
+    <!-- CLAIMS ALERT BANNER -->
+    <div class="alert-banner" style="background:var(--blue-soft); border-color:rgba(0,48,135,.2); border-left-color:var(--blue); animation: fadeUp .4s .05s ease both;">
+      <div class="alert-icon">📞</div>
+      <div class="alert-text">
+        <div class="alert-title" style="color:#00256e;">Need to speak with someone right now?</div>
+        <div class="alert-body" style="color:#1a3a80;">Our claims team is available 24/7. Call <strong>1-800-MY-AMFAM (1-800-692-6326)</strong> and an agent will guide you through every step of the claims process.</div>
+      </div>
+      <div class="alert-actions">
+        <button class="btn btn-sm btn-blue" onclick="initiateClaimsCall()">📞 Call Now</button>
+      </div>
+    </div>
+
+    <!-- CLAIM TYPE SELECTOR -->
+    <div class="card" style="animation: fadeUp .4s .1s ease both;">
+      <div class="card-header">
+        <span class="card-title"><span class="card-title-icon">📋</span> What happened?</span>
+        <span style="font-size:12px; color:var(--ink-3);">Select the type of claim to get started</span>
+      </div>
+      <div class="card-body">
+        <div class="claim-type-grid">
+          <div class="claim-type-card selected" id="claimtype-collision" onclick="selectClaimType('collision')">
+            <div class="claim-type-icon">🚗💥</div>
+            <div class="claim-type-label">Collision</div>
+            <div class="claim-type-desc">Accident with another vehicle or object</div>
+          </div>
+          <div class="claim-type-card" id="claimtype-weather" onclick="selectClaimType('weather')">
+            <div class="claim-type-icon">🌩️</div>
+            <div class="claim-type-label">Weather / Hail</div>
+            <div class="claim-type-desc">Storm, hail, flood, or wind damage</div>
+          </div>
+          <div class="claim-type-card" id="claimtype-theft" onclick="selectClaimType('theft')">
+            <div class="claim-type-icon">🔓</div>
+            <div class="claim-type-label">Theft / Vandalism</div>
+            <div class="claim-type-desc">Vehicle stolen or deliberately damaged</div>
+          </div>
+          <div class="claim-type-card" id="claimtype-glass" onclick="selectClaimType('glass')">
+            <div class="claim-type-icon">🪟</div>
+            <div class="claim-type-label">Glass / Windshield</div>
+            <div class="claim-type-desc">Cracked or broken glass damage</div>
+          </div>
+          <div class="claim-type-card" id="claimtype-other" onclick="selectClaimType('other')">
+            <div class="claim-type-icon">📝</div>
+            <div class="claim-type-label">Other</div>
+            <div class="claim-type-desc">Animal strike, fire, or other loss</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLAIM FORM + SIDEBAR -->
+    <div class="two-col" style="animation: fadeUp .4s .15s ease both;">
+
+      <!-- LEFT: INCIDENT DETAILS FORM -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+
+        <!-- Incident Info -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title"><span class="card-title-icon">📍</span> Incident Details</span>
+          </div>
+          <div class="card-body">
+            <div class="form-grid form-grid-2" style="margin-bottom:14px;">
+              <div class="form-group">
+                <label class="form-label">Date of Incident</label>
+                <input class="form-input" type="date" value="2025-03-17"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Time of Incident</label>
+                <input class="form-input" type="time" value="14:30"/>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:14px;">
+              <label class="form-label">Location of Incident</label>
+              <input class="form-input" type="text" placeholder="Street address, city, state" value="I-90 Eastbound, near Exit 147, Madison, WI"/>
+            </div>
+            <div class="form-group" style="margin-bottom:14px;">
+              <label class="form-label">Vehicle Involved</label>
+              <select class="form-input">
+                <option selected>2021 Toyota Camry SE — PAF-4417-WI-2016</option>
+                <option>2020 Ford Explorer XLT — PAF-4417-WI-2016</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Describe what happened</label>
+              <textarea class="form-input" rows="4" placeholder="Please describe the incident in as much detail as possible...">Rear-ended at a stoplight. The other driver failed to stop in time. Minor damage to rear bumper and trunk area. No injuries reported. Police were called and a report was filed.</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other Party Info -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title"><span class="card-title-icon">👤</span> Other Party Information</span>
+            <span style="font-size:12px; color:var(--ink-3);">If applicable</span>
+          </div>
+          <div class="card-body">
+            <div class="form-grid form-grid-2" style="margin-bottom:14px;">
+              <div class="form-group">
+                <label class="form-label">Other Driver's Name</label>
+                <input class="form-input" type="text" placeholder="Full name" value="Robert D. Farnsworth"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Other Driver's Phone</label>
+                <input class="form-input" type="tel" placeholder="(xxx) xxx-xxxx" value="(608) 555-0317"/>
+              </div>
+            </div>
+            <div class="form-grid form-grid-2" style="margin-bottom:14px;">
+              <div class="form-group">
+                <label class="form-label">Other Vehicle</label>
+                <input class="form-input" type="text" placeholder="Year, make, model" value="2019 Chevy Silverado"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Other Insurance Co.</label>
+                <input class="form-input" type="text" placeholder="Insurance company" value="State Farm"/>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Police Report Number</label>
+              <input class="form-input" type="text" placeholder="Report # if available" value="MPD-2025-034821"/>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: CALL TO ACTION + DETAILS PANEL -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+
+        <!-- CTA: Call to start -->
+        <div class="claims-cta-card">
+          <div class="claims-cta-header">
+            <div class="claims-cta-icon">📞</div>
+            <div>
+              <div class="claims-cta-title">Ready to File Your Claim?</div>
+              <div class="claims-cta-subtitle">Call us to speak with a claims specialist</div>
+            </div>
+          </div>
+          <div class="claims-cta-body">
+            Call our 24/7 claims line and have your policy number ready. An agent will walk you through this form, confirm your coverage, and assign a claims adjuster — usually within 24 hours.
+          </div>
+          <div class="claims-phone-display">
+            <span class="claims-phone-label">Claims Hotline</span>
+            <span class="claims-phone-number">1-800-MY-AMFAM</span>
+            <span class="claims-phone-hours">Available 24 hours a day, 7 days a week</span>
+          </div>
+          <button class="btn btn-primary claims-call-btn" onclick="initiateClaimsCall()">
+            <span class="btn-icon">📞</span> Call to File This Claim
+          </button>
+          <div class="claims-cta-note">
+            💬 Prefer chat? <span class="claims-chat-link" onclick="startChat()">Connect with an agent online →</span>
+          </div>
+        </div>
+
+        <!-- Policy Coverage Summary -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title"><span class="card-title-icon">🔒</span> Your Coverage</span>
+            <span class="card-action" onclick="toast('Loading full coverage details...')">Details</span>
+          </div>
+          <div class="card-body">
+            <div class="cov-item">
+              <span style="display:flex;align-items:center;"><span class="cov-dot" style="background:var(--green);"></span><span class="cov-name">Collision Coverage</span></span>
+              <span class="cov-val">$500 deduct.</span>
+            </div>
+            <div class="cov-item">
+              <span style="display:flex;align-items:center;"><span class="cov-dot" style="background:var(--green);"></span><span class="cov-name">Comprehensive</span></span>
+              <span class="cov-val">$500 deduct.</span>
+            </div>
+            <div class="cov-item">
+              <span style="display:flex;align-items:center;"><span class="cov-dot" style="background:var(--green);"></span><span class="cov-name">Bodily Injury Liability</span></span>
+              <span class="cov-val">$250K / $500K</span>
+            </div>
+            <div class="cov-item">
+              <span style="display:flex;align-items:center;"><span class="cov-dot" style="background:var(--green);"></span><span class="cov-name">Uninsured Motorist</span></span>
+              <span class="cov-val">$250K / $500K</span>
+            </div>
+            <div class="cov-item" style="margin-bottom:0; border-bottom:none;">
+              <span style="display:flex;align-items:center;"><span class="cov-dot" style="background:var(--green);"></span><span class="cov-name">Rental Reimbursement</span></span>
+              <span class="cov-val">$40/day · 30 days</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Claims History -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title"><span class="card-title-icon">🕒</span> Prior Claims</span>
+          </div>
+          <div class="card-body">
+            <div style="text-align:center; padding:16px 0; color:var(--ink-3);">
+              <div style="font-size:28px; margin-bottom:6px;">✅</div>
+              <div style="font-size:13px; font-weight:600; color:var(--ink-2);">No prior claims on this policy</div>
+              <div style="font-size:12px; margin-top:4px;">You may qualify for a claim-free discount at renewal.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /page-claims -->
+
   </main><!-- /main-content -->
 
 </div><!-- /app-body -->
@@ -2304,24 +2615,33 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
 ══════════════════════════════════════════════════════════════ -->
 <script>
   /* ── PAGE NAVIGATION ───────────────────────────────────────── */
-  function showDashboard() {
-    document.getElementById('page-dashboard').classList.add('active');
-    document.getElementById('page-billing').classList.remove('active');
-    // Sidebar active states
+  function setActivePage(pageId) {
+    document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    document.querySelector('.main-content').scrollTop = 0;
+  }
+
+  function setActiveNav(sidebarId, topnavId) {
     document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
-    document.querySelector('.sidebar-item.active') || document.querySelectorAll('.sidebar-item')[0].classList.add('active');
-    document.querySelectorAll('.sidebar-item')[0].classList.add('active');
-    // Reset stepper
+    document.querySelectorAll('.tnav-link').forEach(el => el.classList.remove('active'));
+    if (sidebarId) document.getElementById(sidebarId)?.classList.add('active');
+    if (topnavId) document.getElementById(topnavId)?.classList.add('active');
+  }
+
+  function showDashboard() {
+    setActivePage('page-dashboard');
+    setActiveNav('snav-dashboard', 'tnav-dashboard');
     goToStep(1, true);
   }
 
   function showBillingPage() {
-    document.getElementById('page-dashboard').classList.remove('active');
-    document.getElementById('page-billing').classList.add('active');
-    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
-    document.getElementById('snav-payments').classList.add('active');
-    // Scroll to top of main
-    document.querySelector('.main-content').scrollTop = 0;
+    setActivePage('page-billing');
+    setActiveNav('snav-payments', null);
+  }
+
+  function showClaimsPage() {
+    setActivePage('page-claims');
+    setActiveNav('snav-claims', 'tnav-claims');
   }
 
   /* ── STEP WIZARD ────────────────────────────────────────────── */
@@ -2426,8 +2746,18 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
   }
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
+  /* ── CLAIMS ────────────────────────────────────────────────── */
+  function initiateClaimsCall() {
+    toast('📞 Dialing 1-800-MY-AMFAM — Claims Line...');
+  }
+
+  function selectClaimType(type) {
+    document.querySelectorAll('.claim-type-card').forEach(el => el.classList.remove('selected'));
+    document.getElementById('claimtype-' + type).classList.add('selected');
+  }
+
   /* ── COBROWSE ──────────────────────────────────────────────── */
-  function initiateCoBrowse() {
+  function joinCoBrowse() {
     try {
       Genesys('command', 'Database.set', {
         messaging: {
