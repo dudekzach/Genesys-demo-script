@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AmFam | Add Teen Driver — Agent Desktop | Cameron Loyal</title>
+<title>AmFam | File a Claim — Agent Desktop | Cameron Loyal</title>
 
 <!-- Theme source: https://www.amfam.com/ | primary: #c8102e | accent: #003087 | confidence: high -->
 
@@ -651,7 +651,7 @@
     AmFam Agent Desktop
   </div>
   <div class="header-sep"></div>
-  <span class="header-badge">📞 Inbound — Policy Change</span>
+  <span class="header-badge">📞 Inbound — New Claim</span>
   <div class="header-meta">
     <span><span class="status-dot"></span>Available</span>
     <span class="agent-name" id="agent-name-display">Agent: {{agent_name}}</span>
@@ -711,8 +711,8 @@
       <!-- ──────────────────────────────────────────────────── -->
       <div class="panel active" id="panel-context">
 
-        <div class="alert alert-warn">
-          ⚠️ <strong>Teen Driver Addition</strong> — Customer is adding a 16-year-old new driver to an existing auto policy. Review all endorsements and verify discount eligibility before quoting premium change.
+        <div class="alert alert-red">
+          🚨 <strong>New Claim — Auto Collision</strong> — Customer is reporting a rear-end collision on I-90 near Madison, WI. No injuries reported. Other party involved. Police report filed. Verify coverage, initiate claim, and offer CoBrowse to assist with online claim submission if needed.
         </div>
 
         <!-- POLICYHOLDER INFO -->
@@ -775,45 +775,61 @@
           </div>
         </div>
 
-        <!-- TEEN DRIVER BEING ADDED -->
+        <!-- INCIDENT / CLAIM DETAILS -->
         <div class="card">
           <div class="card-header">
-            <span class="card-title">🚗 New Driver — To Be Added</span>
-            <span class="badge badge-yellow">Pending Endorsement</span>
+            <span class="card-title">🚗 Incident Details — As Reported</span>
+            <span class="badge badge-yellow">Claim Not Yet Filed</span>
           </div>
           <div class="card-body">
             <div class="field-grid">
               <div class="field">
-                <label>Driver Name</label>
-                <div class="field-val new" id="f-teen-name">{{teen_driver_name}}</div>
+                <label>Claim Type</label>
+                <div class="field-val highlight">Auto — Collision</div>
               </div>
               <div class="field">
-                <label>Relationship</label>
-                <div class="field-val">Child / Dependent</div>
+                <label>Date of Loss</label>
+                <div class="field-val highlight" id="f-dol">03/17/2025</div>
               </div>
               <div class="field">
-                <label>Date of Birth</label>
-                <div class="field-val highlight">{{teen_dob}} — Age 16</div>
+                <label>Time of Loss</label>
+                <div class="field-val" id="f-tol">~2:30 PM CT</div>
               </div>
               <div class="field">
-                <label>License Number</label>
-                <div class="field-val placeholder" id="f-lic">{{teen_license_number}}</div>
+                <label>Location</label>
+                <div class="field-val" id="f-loss-loc">I-90 Eastbound, near Exit 147, Madison, WI</div>
               </div>
               <div class="field">
-                <label>License State</label>
-                <div class="field-val" id="f-lic-state">{{policy_state}}</div>
+                <label>Vehicle Involved</label>
+                <div class="field-val" id="f-claim-veh">2021 Toyota Camry SE</div>
               </div>
               <div class="field">
-                <label>License Date Issued</label>
-                <div class="field-val placeholder">{{license_issue_date}}</div>
+                <label>Driveable?</label>
+                <div class="field-val highlight" id="f-driveable">Yes — Minor Damage</div>
               </div>
               <div class="field">
-                <label>Primary Vehicle</label>
-                <div class="field-val placeholder" id="f-veh">{{primary_vehicle}}</div>
+                <label>Injuries Reported</label>
+                <div class="field-val new">None Reported</div>
               </div>
               <div class="field">
-                <label>Good Student Discount</label>
-                <div class="field-val highlight" id="f-gsd">Verify — GPA ≥ 3.0 required</div>
+                <label>Police Report #</label>
+                <div class="field-val" id="f-police-rpt">MPD-2025-034821</div>
+              </div>
+              <div class="field">
+                <label>Other Party Name</label>
+                <div class="field-val" id="f-other-party">Robert D. Farnsworth</div>
+              </div>
+              <div class="field">
+                <label>Other Party Insurance</label>
+                <div class="field-val" id="f-other-ins">State Farm</div>
+              </div>
+              <div class="field">
+                <label>Other Vehicle</label>
+                <div class="field-val" id="f-other-veh">2019 Chevy Silverado</div>
+              </div>
+              <div class="field">
+                <label>Fault / Liability</label>
+                <div class="field-val highlight" id="f-fault">Other Party — Under Review</div>
               </div>
             </div>
           </div>
@@ -860,72 +876,79 @@
       </div><!-- /panel-context -->
 
 
+
       <!-- ──────────────────────────────────────────────────── -->
       <!-- TAB 2 — WORKFLOW                                    -->
       <!-- ──────────────────────────────────────────────────── -->
       <div class="panel" id="panel-workflow">
 
         <div class="card">
-          <div class="card-header"><span class="card-title">📋 Add Teen Driver — Step Checklist</span></div>
+          <div class="card-header"><span class="card-title">📋 File a Claim — Step Checklist</span></div>
           <div class="card-body">
             <ul class="checklist" id="wf-checklist">
               <li id="wf1">
                 <input type="checkbox" onchange="checkItem(this,'wf1')">
-                <span class="check-text">Greet caller & confirm intent to add new driver
-                  <span class="check-sub">Verify this is a voluntary add, not a state-required notice.</span>
+                <span class="check-text">Greet caller & express empathy — confirm they are safe
+                  <span class="check-sub">Before anything else: "I'm glad you're safe. Let's get this taken care of for you."</span>
                 </span>
               </li>
               <li id="wf2">
                 <input type="checkbox" onchange="checkItem(this,'wf2')">
                 <span class="check-text">Authenticate policyholder identity (full name + policy # OR full name + DOB + address)
-                  <span class="check-sub">Follow two-factor verification protocol.</span>
+                  <span class="check-sub">Follow two-factor verification protocol before accessing account.</span>
                 </span>
               </li>
               <li id="wf3">
                 <input type="checkbox" onchange="checkItem(this,'wf3')">
-                <span class="check-text">Collect teen driver details: full name, DOB, license number, license state, issue date
-                  <span class="check-sub">License must be a valid, non-learner's-permit license in most states.</span>
+                <span class="check-text">Confirm vehicle involved and verify active coverage at time of loss
+                  <span class="check-sub">Check policy effective dates — loss must occur within the covered policy period.</span>
                 </span>
               </li>
               <li id="wf4">
                 <input type="checkbox" onchange="checkItem(this,'wf4')">
-                <span class="check-text">Identify primary vehicle assignment for teen driver
-                  <span class="check-sub">Teen is typically rated on the highest-risk or lowest-premium vehicle — confirm with rating system.</span>
+                <span class="check-text">Collect full incident details: date, time, location, description of what happened
+                  <span class="check-sub">Document in claim notes verbatim — use customer's own words where possible.</span>
                 </span>
               </li>
               <li id="wf5">
                 <input type="checkbox" onchange="checkItem(this,'wf5')">
-                <span class="check-text">Check and offer Good Student Discount
-                  <span class="check-sub">GPA ≥ 3.0 or top 20% of class. Proof required (transcript or report card).</span>
+                <span class="check-text">Collect other party information (name, phone, vehicle, insurance carrier)
+                  <span class="check-sub">If other party is at fault, subrogation may apply — capture all details.</span>
                 </span>
               </li>
               <li id="wf6">
                 <input type="checkbox" onchange="checkItem(this,'wf6')">
-                <span class="check-text">Check and offer Teen Safe Driver (Telematics/KnowYourDrive) enrollment
-                  <span class="check-sub">Offer potential premium discount for monitored driving behavior.</span>
+                <span class="check-text">Verify police report was filed and obtain report number
+                  <span class="check-sub">Required for collision claims involving third parties; advise customer to request a copy.</span>
                 </span>
               </li>
               <li id="wf7">
                 <input type="checkbox" onchange="checkItem(this,'wf7')">
-                <span class="check-text">Provide updated premium estimate and obtain verbal confirmation to proceed
-                  <span class="check-sub">Recite new monthly and/or 6-month premium. Document verbal consent.</span>
+                <span class="check-text">Review applicable coverages: Collision, Comprehensive, Rental, Roadside
+                  <span class="check-sub">Explain deductibles and what customer can expect for reimbursement.</span>
                 </span>
               </li>
               <li id="wf8">
                 <input type="checkbox" onchange="checkItem(this,'wf8')">
-                <span class="check-text">Process endorsement in policy management system
-                  <span class="check-sub">Confirm effective date — typically same-day or next day for new drivers.</span>
+                <span class="check-text">Initiate CoBrowse — guide customer through online claim submission on MyAmFam
+                  <span class="check-sub">Customer clicks "Join CoBrowse" on their desktop app to begin the session.</span>
                 </span>
               </li>
               <li id="wf9">
                 <input type="checkbox" onchange="checkItem(this,'wf9')">
-                <span class="check-text">Confirm updated declarations page and ID cards will be sent
-                  <span class="check-sub">Digital delivery if ePolicy enrolled; paper otherwise.</span>
+                <span class="check-text">Open claim in system and assign a claims adjuster
+                  <span class="check-sub">Adjuster contact typically within 24 hours. Provide claim number to customer.</span>
                 </span>
               </li>
               <li id="wf10">
                 <input type="checkbox" onchange="checkItem(this,'wf10')">
-                <span class="check-text">Wrap-up: summarize changes, thank customer, complete after-call work
+                <span class="check-text">Advise on next steps: adjuster contact, repair shop options, rental car process
+                  <span class="check-sub">AmFam Select Service® preferred repair network provides quality guarantee.</span>
+                </span>
+              </li>
+              <li id="wf11">
+                <input type="checkbox" onchange="checkItem(this,'wf11')">
+                <span class="check-text">Wrap-up: confirm claim number, adjuster name, expected timeline, and thank customer
                 </span>
               </li>
             </ul>
@@ -937,11 +960,11 @@
           <div class="card-header"><span class="card-title">⚡ Quick Actions</span></div>
           <div class="card-body">
             <div class="btn-row">
-              <button class="btn btn-primary" onclick="toast('Rating engine opened — entering teen driver details.','success')">🧮 Open Rating Engine</button>
-              <button class="btn btn-accent" onclick="toast('Policy management system: Add Driver form launched.','info')">➕ Add Driver Form</button>
-              <button class="btn btn-outline" onclick="toast('Good Student Discount verification workflow initiated.','info')">🎓 GSD Verification</button>
-              <button class="btn btn-ghost" onclick="toast('KnowYourDrive enrollment link sent to customer email.','success')">📲 Send KnowYourDrive Invite</button>
-              <button class="btn btn-ghost" onclick="toast('Updated declarations page queued for delivery.','success')">📄 Queue Dec Page</button>
+              <button class="btn btn-primary" onclick="toast('Claims management system opened — new claim form launched.','success')">🗂️ Open New Claim Form</button>
+              <button class="btn btn-accent" onclick="toast('CoBrowse session initiated — waiting for customer to join.','info')">🖥️ Start CoBrowse Session</button>
+              <button class="btn btn-outline" onclick="toast('AmFam Select Service® repair locator opened.','info')">🔧 Find Repair Shop</button>
+              <button class="btn btn-ghost" onclick="toast('Rental reimbursement pre-authorization submitted.','success')">🚗 Pre-Auth Rental Car</button>
+              <button class="btn btn-ghost" onclick="toast('Claim confirmation and next-steps email queued for customer.','success')">📧 Send Claim Summary Email</button>
             </div>
           </div>
         </div>
@@ -951,17 +974,19 @@
           <div class="card-header"><span class="card-title">🚨 Supervisor / Escalation</span></div>
           <div class="card-body">
             <div class="escalation-box">
-              <div class="esc-title">⬆️ Escalate or Conference In</div>
+              <div class="esc-title">⬆️ Escalate or Transfer to Claims Specialist</div>
               <p style="font-size:12px;color:var(--text-main);margin-bottom:8px;">Use escalation paths below if:</p>
               <ul style="font-size:12px;padding-left:16px;color:var(--text-main);margin-bottom:10px;line-height:1.8;">
-                <li>Customer disputes rate increase and requests managerial review</li>
-                <li>License validation fails or youth driver has prior violations</li>
-                <li>Policy near cancellation / payment issue surfaces during call</li>
-                <li>Customer requests exclusion of teen driver (state rules vary)</li>
+                <li>Customer reports bodily injury to any party — transfer immediately to Injury Claims team</li>
+                <li>Total loss is suspected based on vehicle description</li>
+                <li>Customer disputes fault determination or liability assessment</li>
+                <li>Claim involves an uninsured or underinsured motorist (UM/UIM)</li>
+                <li>Customer is requesting legal representation or threatening litigation</li>
               </ul>
               <div class="btn-row">
-                <button class="btn btn-warn btn-sm" onclick="toast('Supervisor warm transfer initiated — hold time: ~2 min.','warn')">📞 Warm Transfer to Supervisor</button>
-                <button class="btn btn-ghost btn-sm" onclick="toast('Underwriting queue note flagged for review.','info')">📋 Flag for Underwriting Review</button>
+                <button class="btn btn-warn btn-sm" onclick="toast('Warm transfer to Claims Specialist initiated — hold time: ~2 min.','warn')">📞 Transfer to Claims Specialist</button>
+                <button class="btn btn-ghost btn-sm" onclick="toast('Injury claims team alerted — supervisor notified.','warn')">🏥 Flag — Bodily Injury</button>
+                <button class="btn btn-ghost btn-sm" onclick="toast('Supervisor conference request submitted.','info')">📋 Conference Supervisor</button>
               </div>
             </div>
           </div>
@@ -989,7 +1014,7 @@
                   <span class="tl-date">TODAY — {{current_date}}</span>
                   <span class="badge badge-red tl-channel">📞 Inbound Call</span>
                 </div>
-                <div class="tl-summary"><strong>Current Interaction</strong> — Customer calling to add 16-year-old teen driver to personal auto policy. KnowYourDrive and Good Student Discount to be discussed.</div>
+                <div class="tl-summary"><strong>Current Interaction</strong> — Customer calling to report a rear-end collision on I-90 near Madison, WI. No injuries. Other party involved (State Farm insured). Police report filed. Agent initiating claim and offering CoBrowse to guide online submission.</div>
               </div>
 
               <div class="tl-event">
@@ -1040,7 +1065,7 @@
         <div class="card">
           <div class="card-header"><span class="card-title">📌 Open Items / Follow-ups</span></div>
           <div class="card-body">
-            <div class="alert alert-info">📎 No open claims or pending tasks prior to this interaction. Post-call: upload Good Student Discount documentation reminder to be set.</div>
+            <div class="alert alert-red">🚨 <strong>Open Claim — Initiated This Interaction.</strong> No prior claims on this policy. Claim adjuster assignment and follow-up contact expected within 24 hours. Post-call: queue claim confirmation email and rental pre-auth if needed.</div>
           </div>
         </div>
 
@@ -1052,28 +1077,28 @@
       <!-- ──────────────────────────────────────────────────── -->
       <div class="panel" id="panel-systems">
 
-        <!-- RATE PREVIEW -->
+        <!-- CLAIM SUMMARY BOX -->
         <div class="rate-box">
-          <div class="rate-label">Updated 6-Month Premium Estimate</div>
-          <div class="rate-val" id="sys-premium">{{new_6mo_premium}}</div>
-          <div class="rate-sub">Includes Good Student Discount. Subject to final rating system confirmation.</div>
+          <div class="rate-label">Claim Being Filed — Policy PAF-4417-WI-2016</div>
+          <div class="rate-val">Auto Collision</div>
+          <div class="rate-sub">Coverage verified active at date of loss · Collision deductible applies · No prior claims on policy</div>
         </div>
         <div class="rate-grid">
           <div class="rate-item">
-            <div class="ri-label">Current Premium (6-mo)</div>
-            <div class="ri-val" id="sys-curr-prem">{{current_6mo_premium}}</div>
+            <div class="ri-label">Collision Deductible</div>
+            <div class="ri-val" style="color:var(--danger)">$500.00</div>
           </div>
           <div class="rate-item">
-            <div class="ri-label">Estimated Increase</div>
-            <div class="ri-val" style="color:var(--danger)" id="sys-increase">{{premium_increase_amt}}</div>
+            <div class="ri-label">Rental Reimbursement</div>
+            <div class="ri-val" style="color:var(--success)">$40/day · 30 days ✓</div>
           </div>
           <div class="rate-item">
-            <div class="ri-label">Good Student Discount</div>
-            <div class="ri-val" style="color:var(--success)">Applied ✓</div>
+            <div class="ri-label">Prior Claims (3yr)</div>
+            <div class="ri-val" style="color:var(--success)">None ✓</div>
           </div>
           <div class="rate-item">
-            <div class="ri-label">KnowYourDrive Potential</div>
-            <div class="ri-val">Up to {{kyd_discount_pct}} savings</div>
+            <div class="ri-label">Claim # (Assigned)</div>
+            <div class="ri-val" id="sys-claim-num">Pending — Open Form</div>
           </div>
         </div>
 
@@ -1105,39 +1130,40 @@
           </div>
         </div>
 
-        <!-- DISCOUNTS ON POLICY -->
+        <!-- SELECT SERVICE REPAIR SHOPS -->
         <div class="card">
-          <div class="card-header"><span class="card-title">🏷️ Discounts Applied</span></div>
+          <div class="card-header">
+            <span class="card-title">🔧 AmFam Select Service® — Preferred Repair Network</span>
+            <button class="btn btn-ghost btn-sm" onclick="toast('Repair shop locator refreshed for Madison, WI area.','info')">↻ Refresh</button>
+          </div>
           <div class="card-body" style="padding:0">
             <table class="sys-table">
               <thead>
-                <tr><th>Discount</th><th>Driver / Vehicle</th><th>Status</th><th>Notes</th></tr>
+                <tr><th>Shop Name</th><th>Distance</th><th>Wait Time</th><th>Guarantee</th><th>Status</th></tr>
               </thead>
               <tbody>
-                <tr><td>Multi-Policy (Auto + Home)</td><td>Account</td><td><span class="badge badge-green">Active</span></td><td>Bundle verified</td></tr>
-                <tr><td>Paperless / ePolicy</td><td>Account</td><td><span class="badge badge-green">Active</span></td><td>Email delivery confirmed</td></tr>
-                <tr><td>Paid-in-Full</td><td>Account</td><td><span class="badge badge-gray">Not Applied</span></td><td>Monthly plan</td></tr>
-                <tr><td>Good Student Discount</td><td>{{teen_driver_name}}</td><td><span class="badge badge-yellow">Pending Docs</span></td><td>Transcript/report card needed</td></tr>
-                <tr><td>KnowYourDrive</td><td>{{teen_driver_name}}</td><td><span class="badge badge-gray">Not Enrolled</span></td><td>Offer enrollment today</td></tr>
+                <tr><td>Caliber Collision — East Washington</td><td>2.1 mi</td><td>3–5 days</td><td>Lifetime</td><td><span class="badge badge-green">Available</span></td></tr>
+                <tr><td>Gerber Collision & Glass — Monona</td><td>4.3 mi</td><td>4–6 days</td><td>Lifetime</td><td><span class="badge badge-green">Available</span></td></tr>
+                <tr><td>Zimbrick Body Shop — Madison</td><td>5.8 mi</td><td>5–7 days</td><td>Lifetime</td><td><span class="badge badge-yellow">Call Ahead</span></td></tr>
               </tbody>
             </table>
           </div>
         </div>
 
-        <!-- DRIVER RECORD LOOKUP -->
+        <!-- LIABILITY / SUBROGATION FLAGS -->
         <div class="card">
-          <div class="card-header">
-            <span class="card-title">🔎 MVR / Driver Record</span>
-            <button class="btn btn-ghost btn-sm" onclick="toast('MVR lookup initiated for {{teen_driver_name}}. Results in ~30 seconds.','info')">Run MVR Check</button>
-          </div>
-          <div class="card-body">
-            <div class="alert alert-warn">⚠️ MVR check for new driver has not been run yet. Run prior to finalizing endorsement to identify any prior violations or license restrictions.</div>
-            <table class="sys-table" style="margin-top:8px">
-              <thead><tr><th>Driver</th><th>License #</th><th>State</th><th>MVR Status</th><th>Violations (3yr)</th></tr></thead>
+          <div class="card-header"><span class="card-title">⚖️ Liability & Subrogation Flags</span></div>
+          <div class="card-body" style="padding:0">
+            <table class="sys-table">
+              <thead>
+                <tr><th>Item</th><th>Status</th><th>Notes</th></tr>
+              </thead>
               <tbody>
-                <tr><td>{{policyholder_name}}</td><td>{{ph_license_num}}</td><td>{{policy_state}}</td><td><span class="badge badge-green">Clear</span></td><td>0</td></tr>
-                <tr><td>{{spouse_name}}</td><td>{{spouse_license_num}}</td><td>{{policy_state}}</td><td><span class="badge badge-green">Clear</span></td><td>0</td></tr>
-                <tr><td>{{teen_driver_name}}</td><td>{{teen_license_number}}</td><td>{{policy_state}}</td><td><span class="badge badge-yellow">Pending</span></td><td>—</td></tr>
+                <tr><td>Other Party Identified</td><td><span class="badge badge-green">Yes</span></td><td>Robert D. Farnsworth — State Farm insured</td></tr>
+                <tr><td>Police Report Filed</td><td><span class="badge badge-green">Yes</span></td><td>MPD-2025-034821 — Request copy from customer</td></tr>
+                <tr><td>Bodily Injury Claimed</td><td><span class="badge badge-green">None Reported</span></td><td>Monitor — customer may report later</td></tr>
+                <tr><td>Subrogation Potential</td><td><span class="badge badge-yellow">Under Review</span></td><td>Other party may be liable — flag for adjuster</td></tr>
+                <tr><td>UM / UIM Applicable</td><td><span class="badge badge-gray">Not at This Time</span></td><td>Other party has insurance on file</td></tr>
               </tbody>
             </table>
           </div>
@@ -1304,23 +1330,27 @@
       'f-phone':          '(608) 555-{{xxxx}}',
       'f-email':          'cameron.loyal@{{domain}}.com',
       'f-state':          'Wisconsin',
-      'f-lic-state':      'Wisconsin',
       'f-agent':          'Marcus T. Leblanc — Madison Central Agency',
       'f-since':          '2016',
       'f-eff':            '03/15/2025',
       'f-renew':          '09/15/2025',
       'f-pay':            'Monthly EFT',
       'f-paper':          'ePolicy — Email Delivery',
-      'f-teen-name':      'Jordan Loyal',
-      'f-lic':            'WI-L{{XXXXXXX}}',
-      'f-veh':            '2021 Toyota Camry',
+      'f-dol':            '03/17/2025',
+      'f-tol':            '~2:30 PM CT',
+      'f-loss-loc':       'I-90 Eastbound, near Exit 147, Madison, WI',
+      'f-claim-veh':      '2021 Toyota Camry SE',
+      'f-driveable':      'Yes — Minor Rear Damage',
+      'f-police-rpt':     'MPD-2025-034821',
+      'f-other-party':    'Robert D. Farnsworth',
+      'f-other-ins':      'State Farm',
+      'f-other-veh':      '2019 Chevy Silverado',
+      'f-fault':          'Other Party — Under Review',
       'v1-desc':          '2021 Toyota Camry SE',
       'v2-desc':          '2020 Ford Explorer XLT',
       'v1-driver':        'Cameron Loyal',
       'v2-driver':        'Alex Loyal',
-      'sys-premium':      '$1,847',
-      'sys-curr-prem':    '$1,234',
-      'sys-increase':     '+$613',
+      'sys-claim-num':    'Pending — Open Claim Form',
       'agent-name-display': 'Agent: Jordan Reyes',
     };
     for (const [id, val] of Object.entries(defaults)) {
