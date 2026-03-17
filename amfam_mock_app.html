@@ -366,6 +366,27 @@ a { text-decoration: none; color: inherit; }
 .btn-blue:hover { background: var(--blue-mid); }
 .btn-sm { padding: 6px 14px; font-size: 12px; }
 .btn-icon { font-size: 15px; }
+.btn-cobrowse {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,48,135,.25);
+  position: relative;
+  overflow: hidden;
+}
+.btn-cobrowse:hover { background: var(--blue-mid); box-shadow: 0 4px 14px rgba(0,48,135,.35); }
+.btn-cobrowse::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.12) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: cobrowse-shimmer 2.4s ease-in-out infinite;
+}
+@keyframes cobrowse-shimmer {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
 
 /* ══════════════════════════════════════════════════════════════
    ALERT BANNER (top of main)
@@ -1452,6 +1473,9 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
         <button class="btn btn-secondary" onclick="toast('Generating ID cards for download...')">
           <span class="btn-icon">🪪</span> Get ID Cards
         </button>
+        <button class="btn btn-cobrowse" onclick="initiateCoBrowse()">
+          <span class="btn-icon">🖥️</span> Initiate CoBrowse
+        </button>
         <button class="btn btn-primary" onclick="openAddDriverModal()">
           <span class="btn-icon">＋</span> Add Driver
         </button>
@@ -2401,6 +2425,30 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
     if (e.target === document.getElementById('add-driver-modal')) closeModal();
   }
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  /* ── COBROWSE ──────────────────────────────────────────────── */
+  function initiateCoBrowse() {
+    try {
+      Genesys('command', 'Database.set', {
+        messaging: {
+          customAttributes: {
+            customerName: 'Cameron Loyal',
+            policyNumber:  'PAF-4417-WI-2016',
+            callReason:    'CoBrowse Session'
+          }
+        }
+      });
+    } catch(e) { /* not yet ready */ }
+
+    try {
+      Genesys('command', 'Messenger.open', {});
+    } catch(e) {
+      const btn = document.querySelector('[class*="genesys-mxg"]') ||
+                  document.querySelector('#genesys-mxg-frame') ||
+                  document.querySelector('[aria-label*="chat"]');
+      if (btn) btn.click();
+    }
+  }
 
   /* ── CHAT ──────────────────────────────────────────────────── */
   function startChat() {
