@@ -1,0 +1,383 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>1st Source Bank Virtual Agent to Live Agent Demo</title>
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f7f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  header {
+    background: #00529b;
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+  }
+  main {
+    flex-grow: 1;
+    display: flex;
+    padding: 1rem;
+  }
+  section {
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+    padding: 1rem 1.5rem;
+    margin: 0 1rem;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+  }
+  section h2 {
+    margin-top: 0;
+    color: #00529b;
+    border-bottom: 2px solid #00529b;
+    padding-bottom: 0.25rem;
+  }
+  .chat-window {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fafafa;
+    padding: 0.5rem;
+  }
+  .message {
+    margin: 0.5rem 0;
+    line-height: 1.4;
+    font-size: 0.95rem;
+    max-width: 80%;
+    padding: 0.5rem 0.7rem;
+    border-radius: 10px;
+  }
+  .from-customer {
+    background: #d0e6ff;
+    align-self: flex-start;
+    border: 1px solid #8ab9ff;
+  }
+  .from-agent {
+    background: #d7f0d2;
+    border: 1px solid #85c66d;
+    align-self: flex-end;
+  }
+  .system-msg {
+    background: #fff3cd;
+    color: #856404;
+    text-align: center;
+    font-style: italic;
+    border: 1px solid #ffeeba;
+    max-width: 100%;
+    margin: 1rem auto 1rem auto;
+  }
+  .input-area {
+    display: flex;
+  }
+  input[type="text"] {
+    flex-grow: 1;
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #ccc;
+    outline: none;
+  }
+  button {
+    background: #00529b;
+    color: white;
+    border: none;
+    padding: 0 1rem;
+    font-size: 1rem;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }
+  button:disabled {
+    background: #999;
+    cursor: default;
+  }
+  footer {
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    color: #555;
+    background: #e5e9f2;
+  }
+  .context-panel {
+    font-size: 0.85rem;
+    background: #eef3fc;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    color: #333;
+    box-shadow: inset 0 0 6px #c6d1f4;
+  }
+  .context-panel h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #003a72;
+  }
+  .context-item {
+    margin-left: 1rem;
+    margin-bottom: 0.3rem;
+  }
+  .highlight {
+    font-weight: 600;
+    color: #00529b;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>1st Source Bank Virtual Agent Demo</h1>
+  <p>Showcasing Genesys Cloud Virtual Agent → Agent Handoff + Salesforce & Teams Context</p>
+</header>
+<main>
+  <section id="customer-area" aria-label="Customer interaction">
+    <h2>Customer (Traveling Retail Banking Customer)</h2>
+    <div class="chat-window" id="customer-chat" aria-live="polite" aria-relevant="additions"></div>
+    <div class="input-area">
+      <input type="text" id="customer-input" placeholder="Type your message..." aria-label="Customer message input" />
+      <button id="customer-send-btn" aria-label="Send message">Send</button>
+    </div>
+  </section>
+  <section id="agent-area" aria-label="Contact center agent interface">
+    <h2>Agent (In Salesforce)</h2>
+    <div class="context-panel" aria-label="Customer contextual information">
+      <h3>Customer Context</h3>
+      <div><strong>Name:</strong> <span id="context-name">Jordan Smith</span></div>
+      <div><strong>Account:</strong> 1234567890</div>
+      <div><strong>Destination:</strong> San Francisco, CA (Business Travel)</div>
+      <div><strong>Issue:</strong> Declined debit card transaction</div>
+      <div><strong>Genesys Session ID:</strong> <span id="genesys-session">GV12345-1stSrc</span></div>
+    </div>
+    <div class="chat-window" id="agent-chat" aria-live="polite" aria-relevant="additions" tabindex="0"></div>
+    <div class="input-area" id="agent-input-area" style="display:none;">
+      <input type="text" id="agent-input" placeholder="Reply to customer..." aria-label="Agent message input" />
+      <button id="agent-send-btn" aria-label="Send reply">Send</button>
+    </div>
+  </section>
+  <section id="teams-area" aria-label="Microsoft Teams agent collaboration">
+    <h2>Teams Collaboration</h2>
+    <div class="chat-window" id="teams-chat" aria-live="polite" aria-relevant="additions" tabindex="0" style="background:#e9f3fa;"></div>
+  </section>
+</main>
+<footer>
+  © 1st Source Bank - Genesys Cloud, Salesforce & Microsoft Teams Integration Demo
+</footer>
+
+<script>
+/*
+  Script simulates a demo story flow encompassing:
+  - Customer initiates conversation with a virtual agent (declined debit card while traveling)
+  - Virtual agent handles initial flow, then hands off to a live agent
+  - Contact center agent sees contextual info in Salesforce interface
+  - Agent and customer messages exchange
+  - Teams collaboration channel shows internal notes and compliance reminders
+
+  The demo highlights:
+  * Genesys Cloud Virtual Agent → Agent Handoff
+  * Salesforce + Teams context synergy
+  * Focus on compliance, day-two excellence, and low-effort customer experience
+  * Authentic tone for a regional bank: 1st Source Bank
+*/
+
+(() => {
+  // Elements
+  const customerChat = document.getElementById("customer-chat");
+  const customerInput = document.getElementById("customer-input");
+  const customerSendBtn = document.getElementById("customer-send-btn");
+
+  const agentChat = document.getElementById("agent-chat");
+  const agentInputArea = document.getElementById("agent-input-area");
+  const agentInput = document.getElementById("agent-input");
+  const agentSendBtn = document.getElementById("agent-send-btn");
+
+  const teamsChat = document.getElementById("teams-chat");
+
+  // Persona Info
+  const customerName = "Jordan Smith";
+  const accountNumber = "1234567890";
+  const destination = "San Francisco, CA";
+  const issue = "declined debit card transaction";
+
+  // State
+  let state = {
+    phase: "virtual-agent", // virtual-agent, handoff, live-agent, ended
+    customerMessages: [],
+    agentMessages: [],
+    teamsMessages: [],
+  };
+
+  // Utility to append message in chat windows
+  function appendMessage(container, text, from, delay = 0) {
+    setTimeout(() => {
+      const div = document.createElement("div");
+      div.classList.add("message");
+      if (from === "customer") {
+        div.classList.add("from-customer");
+        div.textContent = customerName + ": " + text;
+      } else if (from === "agent") {
+        div.classList.add("from-agent");
+        div.textContent = "Agent: " + text;
+      } else if (from === "system") {
+        div.classList.add("system-msg");
+        div.textContent = text;
+      } else if (from === "teams") {
+        div.classList.add("system-msg");
+        div.style.background = "#d9e6f8";
+        div.style.color = "#0b2f58";
+        div.textContent = "[Teams] " + text;
+      }
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }, delay);
+  }
+
+  // Virtual Agent Responses (predefined for demo)
+  const virtualAgentReplies = [
+    {
+      trigger: /hi|hello|hey/i,
+      reply: "Hello Jordan! I see you're traveling. How can I assist you with your debit card today?",
+    },
+    {
+      trigger: /declined|declin(ed|ation)/i,
+      reply: "I'm sorry to hear your debit card was declined. Are you currently traveling outside your usual location?",
+    },
+    {
+      trigger: /yes|traveling|outside/i,
+      reply: "Thanks for confirming. For your security, I need to escalate this issue to one of our agents who can assist with travel-related card blocks. Please hold for a moment.",
+      action: "handoff",
+    },
+    {
+      trigger: /.*/,
+      reply: "I'm here to help you with your debit card issues. Could you please tell me more about the problem?",
+    },
+  ];
+
+  // Teams collaboration messages relevant to compliance & agent support
+  const teamsComplianceNotes = [
+    "Reminder: Verify customer's identity before unlocking card.",
+    "Check travel notices and recent alerts on this account.",
+    "Ensure PCI compliance during call. Do not record card numbers.",
+    "Follow up with after-call survey to capture customer feedback.",
+  ];
+
+  // Simulate internal Teams chat messages spread through the scenario
+  function sendTeamsNote(note, delay) {
+    appendMessage(teamsChat, note, "teams", delay);
+  }
+
+  // Simulate the virtual agent conversation flow
+  function virtualAgentRespond(text) {
+    // Find matching trigger, first match only
+    const match = virtualAgentReplies.find(({ trigger }) => trigger.test(text));
+    if (match) {
+      appendMessage(customerChat, text, "customer", 0);
+      appendMessage(customerChat, match.reply, "agent", 1000);
+
+      if (match.action === "handoff") {
+        // After a short delay, add system note and then activate live agent interface
+        appendMessage(customerChat, "Connecting you to a live agent now...", "system", 1800);
+        setTimeout(() => {
+          state.phase = "live-agent";
+          switchToAgent();
+        }, 4000);
+      }
+    }
+  }
+
+  // Switch UI to live agent interaction
+  function switchToAgent() {
+    customerInput.disabled = true;
+    customerSendBtn.disabled = true;
+
+    // Show agent input area
+    agentInputArea.style.display = "flex";
+
+    appendMessage(agentChat, `Incoming interaction from ${customerName} about ${issue} while traveling to ${destination}.`, "system", 500);
+    appendMessage(agentChat, "Please greet the customer and assist them with their debit card issue.", "system", 1500);
+    sendTeamsNote(teamsComplianceNotes[0], 1000);
+    sendTeamsNote(teamsComplianceNotes[1], 3000);
+  }
+
+  // Handle customer sending message during live agent phase
+  function liveAgentCustomerSend(text) {
+    appendMessage(customerChat, text, "customer");
+    appendMessage(agentChat, text, "customer"); // Mirror customer's messages to agent's chat
+
+    // Agent receives notified and checks in Teams for guidance
+    if (text.toLowerCase().includes('thank') || text.toLowerCase().includes('thanks')) {
+      sendTeamsNote("Customer expressed gratitude. Consider upsell or close politely.", 1500);
+    }
+  }
+
+  // Handle live agent sending message to customer
+  function agentSendMessage(text) {
+    appendMessage(agentChat, text, "agent");
+    appendMessage(customerChat, text, "agent");
+
+    // Log to Teams collaboration
+    sendTeamsNote(`Agent replied: "${text}"`, 700);
+
+    // Simple demo: After agent offers unlock card, add a compliance note
+    if (/unlock|unblock/i.test(text)) {
+      sendTeamsNote(teamsComplianceNotes[2], 1500);
+      sendTeamsNote("Card successfully unlocked. Closing interaction compliance verified.", 4000);
+    }
+  }
+
+  // Event handlers for customer input send button
+  customerSendBtn.addEventListener("click", () => {
+    const text = customerInput.value.trim();
+    if (!text) return;
+    if (state.phase === "virtual-agent") {
+      virtualAgentRespond(text);
+    } else if (state.phase === "live-agent") {
+      liveAgentCustomerSend(text);
+    }
+    customerInput.value = "";
+  });
+
+  customerInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      customerSendBtn.click();
+    }
+  });
+
+  // Event handlers for agent input send button
+  agentSendBtn.addEventListener("click", () => {
+    const text = agentInput.value.trim();
+    if (!text) return;
+    if (state.phase === "live-agent") {
+      agentSendMessage(text);
+    }
+    agentInput.value = "";
+    agentInput.focus();
+  });
+
+  agentInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      agentSendBtn.click();
+    }
+  });
+
+  // Initial greeting from virtual agent on page load to start demo flow
+  function virtualAgentStart() {
+    appendMessage(customerChat, "Hello", "customer", 500);
+    appendMessage(customerChat, virtualAgentReplies[0].reply, "agent", 1500);
+  }
+
+  virtualAgentStart();
+})();
+</script>
+</body>
+</html>
