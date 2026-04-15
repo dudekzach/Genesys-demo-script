@@ -2,86 +2,636 @@ html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1st Source Bank - Agent Demo Script</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Model AI Workflow Architecture</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f4f8;
-            color: #1a2332;
-            min-height: 100vh;
-        }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f4f6f9;
+    min-height: 100vh;
+    padding: 40px 30px;
+    color: #1a2332;
+  }
 
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #003087 0%, #0052cc 100%);
-            color: white;
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+  .page-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+    padding: 48px 52px 52px;
+  }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 44px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #0f1e33;
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+  }
+  .header p {
+    font-size: 13.5px;
+    color: #64748b;
+    font-weight: 400;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
 
-        .bank-logo {
-            background: white;
-            color: #003087;
-            font-weight: 800;
-            font-size: 14px;
-            padding: 6px 12px;
-            border-radius: 4px;
-            letter-spacing: 0.5px;
-        }
+  /* Main flow container */
+  .flow-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: center;
+  }
 
-        .header-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
+  /* Layer wrapper */
+  .layer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
 
-        .header-subtitle {
-            font-size: 12px;
-            opacity: 0.8;
-            margin-top: 2px;
-        }
+  .layer-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #94a3b8;
+    margin-bottom: 10px;
+    align-self: flex-start;
+    padding-left: 4px;
+  }
 
-        .header-badges {
-            display: flex;
-            gap: 8px;
-        }
+  /* Component Boxes */
+  .box {
+    border-radius: 10px;
+    padding: 18px 24px;
+    position: relative;
+  }
 
-        .badge {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-weight: 500;
-        }
+  .box-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0f1e33;
+    margin-bottom: 5px;
+  }
 
-        .badge.live {
-            background: rgba(0,200,100,0.25);
-            border-color: rgba(0,200,100,0.5);
-            animation: pulse 2s infinite;
-        }
+  .box-sublabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 6px;
+    font-family: 'Courier New', monospace;
+    background: rgba(0,0,0,0.04);
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7
+  .box-desc {
+    font-size: 12px;
+    color: #4a5568;
+    line-height: 1.65;
+  }
+
+  /* Layer 1 - User */
+  .box-user {
+    background: #f8fafc;
+    border: 1.5px solid #cbd5e1;
+    width: 360px;
+  }
+
+  /* Layer 2 - Orchestration */
+  .box-orchestration {
+    background: #eff6ff;
+    border: 1.5px solid #93c5fd;
+    width: 480px;
+  }
+
+  /* Callout box */
+  .callout {
+    background: #f0fdf4;
+    border: 1.5px solid #86efac;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 11.5px;
+    color: #166534;
+    line-height: 1.7;
+  }
+  .callout-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-size: 11.5px;
+    color: #15803d;
+  }
+  .callout li {
+    list-style: none;
+    padding-left: 12px;
+    position: relative;
+  }
+  .callout li::before {
+    content: '·';
+    position: absolute;
+    left: 2px;
+    color: #4ade80;
+    font-weight: 900;
+  }
+
+  /* Orchestration row: box + callout side by side */
+  .orchestration-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* Parallel branches */
+  .parallel-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .branches-container {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+  }
+
+  .branch-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Split arrow visual */
+  .split-arrow-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+    height: 50px;
+  }
+
+  /* OpenAI branch */
+  .box-openai {
+    background: #f0f9ff;
+    border: 1.5px solid #38bdf8;
+    width: 280px;
+  }
+
+  /* Anthropic branch */
+  .box-anthropic {
+    background: #fdf4ff;
+    border: 1.5px solid #d8b4fe;
+    width: 280px;
+  }
+
+  .branch-sublabel {
+    font-size: 10.5px;
+    color: #64748b;
+    text-align: center;
+    font-style: italic;
+    margin-top: 8px;
+    line-height: 1.5;
+    max-width: 260px;
+  }
+
+  /* Aggregation / Judge */
+  .box-aggregation {
+    background: #fff7ed;
+    border: 1.5px solid #fed7aa;
+    width: 440px;
+  }
+
+  .box-judge {
+    background: #fff7ed;
+    border: 1.5px solid #fb923c;
+    width: 440px;
+    position: relative;
+  }
+
+  .judge-note {
+    position: absolute;
+    right: -230px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #fefce8;
+    border: 1.5px dashed #fbbf24;
+    border-radius: 8px;
+    padding: 10px 14px;
+    width: 210px;
+    font-size: 11px;
+    color: #78350f;
+    line-height: 1.6;
+  }
+
+  .judge-note-title {
+    font-weight: 700;
+    font-size: 11px;
+    color: #92400e;
+    margin-bottom: 4px;
+  }
+
+  .assess-list {
+    list-style: none;
+    margin-top: 4px;
+  }
+  .assess-list li {
+    font-size: 11.5px;
+    color: #4a5568;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.6;
+  }
+  .assess-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #fb923c;
+    font-size: 10px;
+    top: 1px;
+  }
+
+  /* Output */
+  .box-output {
+    background: #f0fdf4;
+    border: 1.5px solid #4ade80;
+    width: 400px;
+  }
+
+  .box-report {
+    background: #ecfdf5;
+    border: 2px solid #22c55e;
+    width: 400px;
+  }
+
+  .report-items {
+    list-style: none;
+    margin-top: 6px;
+  }
+  .report-items li {
+    font-size: 12px;
+    color: #1a2332;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.7;
+  }
+  .report-items li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #22c55e;
+    font-weight: 700;
+  }
+
+  /* Business Value */
+  .business-value {
+    background: linear-gradient(135deg, #0f1e33 0%, #1e3a5f 100%);
+    border-radius: 12px;
+    padding: 24px 36px;
+    width: 100%;
+    margin-top: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bv-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #60a5fa;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 14px;
+  }
+
+  .bv-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .bv-chip {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 20px;
+    padding: 7px 16px;
+    font-size: 12px;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .bv-chip-icon {
+    width: 7px;
+    height: 7px;
+    background: #60a5fa;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Arrows */
+  .arrow-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 6px 0;
+    gap: 0;
+  }
+  .arrow-line {
+    width: 2px;
+    height: 22px;
+    background: #94a3b8;
+  }
+  .arrow-head {
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 9px solid #94a3b8;
+  }
+
+  /* Split arrow SVG area */
+  .split-svg-area {
+    width: 640px;
+    height: 60px;
+    overflow: visible;
+  }
+
+  /* Converge SVG area */
+  .converge-svg-area {
+    width: 640px;
+    height: 60px;
+    overflow: visible;
+  }
+
+  /* Branch spacing */
+  .branches-inner {
+    display: flex;
+    gap: 80px;
+    justify-content: center;
+  }
+
+  /* OpenAI tag */
+  .tag-openai {
+    display: inline-block;
+    background: #0ea5e9;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  .tag-anthropic {
+    display: inline-block;
+    background: #a855f7;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  /* User icon */
+  .user-icon {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  /* Relative container for judge note */
+  .judge-outer {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  @media (max-width: 900px) {
+    .page-wrapper { padding: 28px 18px; }
+    .split-svg-area { width: 360px; }
+    .converge-svg-area { width: 360px; }
+    .branches-inner { gap: 20px; flex-direction: column; align-items: center; }
+    .judge-note { display: none; }
+    .orchestration-row { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Multi-Model AI Workflow Architecture</h1>
+    <p>Internal Solution Consultant Prototype</p>
+  </div>
+
+  <div class="flow-container">
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- LAYER 1: User Interaction                  -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="layer">
+      <div class="layer-label">Layer 1 — User Interaction</div>
+      <div class="box box-user">
+        <div class="user-icon">👤</div>
+        <div class="box-title">User / Solution Consultant</div>
+        <div class="box-desc">Enters a single prompt in VS Code terminal or command-line interface</div>
+      </div>
+    </div>
+
+    <!-- Arrow down -->
+    <div class="arrow-down"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- LAYER 2: Orchestration                     -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="layer">
+      <div class="layer-label">Layer 2 — Orchestration Layer</div>
+      <div class="orchestration-row">
+        <div class="box box-orchestration">
+          <div class="box-title">Python Orchestration Script</div>
+          <div class="box-sublabel">compare_models.py &nbsp;/&nbsp; autonomous_comparison.py</div>
+          <div class="box-desc">
+            Loads environment variables · accepts prompt input · manages workflow execution · handles API requests · formats and routes outputs
+          </div>
+        </div>
+        <div class="callout">
+          <div class="callout-title">🔐 Secure Configuration</div>
+          <ul>
+            <li>.env file</li>
+            <li>OPENAI_API_KEY</li>
+            <li>ANTHROPIC_API_KEY</li>
+            <li>truststore / SSL handling</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Split arrow SVG -->
+    <svg class="split-svg-area" viewBox="0 0 640 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- vertical stem -->
+      <line x1="320" y1="0" x2="320" y2="22" stroke="#94a3b8" stroke-width="2"/>
+      <!-- horizontal bar -->
+      <line x1="160" y1="22" x2="480" y2="22" stroke="#94a3b8" stroke-width="2"/>
+      <!-- left branch -->
+      <line x1="160" y1="22" x2="160" y2="48" stroke="#38bdf8" stroke-width="2"/>
+      <polygon points="153,48 167,48 160,58" fill="#38bdf8"/>
+      <!-- right branch -->
+      <line x1="480" y1="22" x2="480" y2="48" stroke="#d8b4fe" stroke-width="2"/>
+      <polygon points="473,48 487,48 480,58" fill="#d8b4fe"/>
+    </svg>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- LAYER 3: Model Execution                   -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="layer">
+      <div class="layer-label">Layer 3 — Model Execution Layer</div>
+      <div class="branches-inner">
+
+        <!-- OpenAI Branch -->
+        <div class="branch-wrap">
+          <div class="box box-openai">
+            <div class="tag-openai">OpenAI API</div>
+            <div class="box-title">GPT Model</div>
+            <div class="box-desc">Sends prompt to GPT model and returns response</div>
+          </div>
+          <div class="branch-sublabel">Same prompt sent · Independent response generation</div>
+        </div>
+
+        <!-- Anthropic Branch -->
+        <div class="branch-wrap">
+          <div class="box box-anthropic">
+            <div class="tag-anthropic">Anthropic API</div>
+            <div class="box-title">Claude Model</div>
+            <div class="box-desc">Sends prompt to Claude model and returns response</div>
+          </div>
+          <div class="branch-sublabel">Same prompt sent · Independent response generation</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Converge arrow SVG -->
+    <svg class="converge-svg-area" viewBox="0 0 640 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- left up-branch -->
+      <line x1="160" y1="0" x2="160" y2="22" stroke="#38bdf8" stroke-width="2"/>
+      <!-- right up-branch -->
+      <line x1="480" y1="0" x2="480" y2="22" stroke="#d8b4fe" stroke-width="2"/>
+      <!-- horizontal bar -->
+      <line x1="160" y1="22" x2="480" y2="22" stroke="#94a3b8" stroke-width="2"/>
+      <!-- center stem -->
+      <line x1="320" y1="22" x2="320" y2="48" stroke="#94a3b8" stroke-width="2"/>
+      <polygon points="313,48 327,48 320,58" fill="#94a3b8"/>
+    </svg>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- LAYER 4: Response Processing               -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="layer">
+      <div class="layer-label">Layer 4 — Response Processing Layer</div>
+      <div class="box box-aggregation">
+        <div class="box-title">Response Aggregation</div>
+        <div class="box-desc">Collects OpenAI and Claude outputs into a unified comparison structure, normalizing format for downstream evaluation</div>
+      </div>
+    </div>
+
+    <!-- Arrow down -->
+    <div class="arrow-down"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <!-- Judge Layer -->
+    <div class="judge-outer">
+      <div class="box box-judge">
+        <div class="box-title">Evaluation / Judge Layer</div>
+        <div class="box-desc">Runs a comparison pass across both outputs</div>
+        <ul class="assess-list">
+          <li>Clarity</li>
+          <li>Completeness</li>
+          <li>Tone</li>
+          <li>Practical usefulness</li>
+          <li>Overall recommendation</li>
+        </ul>
+      </div>
+      <div class="judge-note">
+        <div class="judge-note-title">💡 Optional</div>
+        Judge can be powered by a selected model using a rubric-based evaluation prompt for objective scoring
+      </div>
+    </div>
+
+    <!-- Arrow down -->
+    <div class="arrow-down"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- LAYER 5: Output                            -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="layer">
+      <div class="layer-label">Layer 5 — Output Layer</div>
+      <div class="box box-output">
+        <div class="box-title">Formatted Output Generator</div>
+        <div class="box-desc">Builds a structured side-by-side report and renders all results for consultant review</div>
+      </div>
+    </div>
+
+    <!-- Arrow down -->
+    <div class="arrow-down"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <!-- HTML Report -->
+    <div class="layer">
+      <div class="box box-report">
+        <div class="box-title">📄 HTML Comparison Report</div>
+        <ul class="report-items">
+          <li>Original prompt</li>
+          <li>OpenAI response</li>
+          <li>Claude response</li>
+          <li>Recommended winner</li>
+          <li>Summary reasoning</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- LAYER 6: Business Value                    -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="business-value">
+      <div class="bv-title">Business Value</div>
+      <div class="bv-items">
+        <div class="bv-chip"><span class="bv-chip-icon"></span>Rapid side-by-side model comparison</div>
+        <div class="bv-chip"><span class="bv-chip-icon"></span>Better prompt &amp; model selection</div>
+        <div class="bv-chip"><span class="bv-chip-icon"></span>Stronger demo preparation</div>
+        <div class="bv-chip"><span class="bv-chip-icon"></span>Reusable internal evaluation workflow</div>
+        <div class="bv-chip"><span class="bv-chip-icon"></span>Foundation for autonomous agent orchestration</div>
+      </div>
+    </div>
+
+  </div><!-- end flow-container -->
+</div><!-- end page-wrapper -->
+
+</body>
 </html>
