@@ -1,0 +1,494 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Multi-Model AI Workflow Architecture Diagram</title>
+<style>
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background: #F9F9F9;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #222222;
+    margin: 20px;
+    padding: 0;
+    user-select: none;
+  }
+  h1, h2 {
+    margin: 0 0 8px 0;
+    font-weight: 700;
+    color: #222222;
+  }
+  h1 {
+    font-size: 28px;
+  }
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #555555;
+  }
+  /* Container holds entire diagram */
+  .diagram-container {
+    max-width: 1200px;
+    margin: auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    padding: 24px 40px 48px 40px;
+  }
+  /* Layers stacked vertically with spacing */
+  .layer {
+    padding: 20px 36px;
+    border-radius: 10px;
+    margin-bottom: 36px;
+    background: #FAFBFC;
+  }
+  .layer-title {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 6px;
+    color: #3A3A3A;
+  }
+
+  /* Left-to-right flow container for boxes in each layer */
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    flex-wrap: nowrap;
+  }
+
+  /* Boxes */
+  .box {
+    background: white;
+    padding: 16px 20px;
+    border-radius: 14px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    min-width: 260px;
+    max-width: 280px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.38;
+    color: #222;
+  }
+  .box h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #2A2A2A;
+  }
+  .box .label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #666666;
+    margin-bottom: 8px;
+    font-family: monospace;
+  }
+  .box p {
+    margin: 0;
+    white-space: pre-line;
+  }
+
+  /* Subtle shading for orchestration and output layers (accent background) */
+  .layer.orchestration {
+    background: #E9F0FA; /* soft blue */
+  }
+  .layer.output {
+    background: #E8F5E9; /* soft green */
+  }
+
+  /* Orchestration box accent outline */
+  .box.orchestration {
+    border: 2px solid #4A90E2;
+  }
+  /* Output box accent outline */
+  .box.output {
+    border: 2px solid #4CB963;
+  }
+
+  /* Model execution layer - parallel branches */
+  .layer.model-execution .flow-row {
+    justify-content: flex-start;
+    gap: 100px;
+  }
+  .box.openai {
+    border: 2px solid #357ABD; /* blue */
+  }
+  .box.anthropic {
+    border: 2px solid #0E9A95; /* teal */
+  }
+
+  /* Sub-label under model boxes */
+  .model-sub-label {
+    font-size: 12px;
+    margin-top: 8px;
+    color: #555;
+    font-style: italic;
+    user-select: text;
+  }
+
+  /* Arrows with SVG - container for horizontal arrow */
+  .arrow-horizontal {
+    width: 40px;
+    height: 40px;
+    margin: 0 16px;
+    flex-shrink: 0;
+  }
+
+  /* Arrow for split and convergence */
+  .arrow-split {
+    width: 100px;
+    height: 60px;
+    margin: 0 24px;
+  }
+  .arrow-vertical {
+    width: 20px;
+    height: 40px;
+    margin: 0 0;
+  }
+
+  /* Callouts for notes and secure config */
+  .callout {
+    background: #FFF8E1;
+    border-left: 4px solid #FFB300;
+    padding: 12px 18px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #665500;
+    max-width: 280px;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(255 179 0 / 0.25);
+  }
+  .callout.small {
+    max-width: 220px;
+    font-size: 12px;
+  }
+
+  /* Callout connector lines */
+  .callout-connector {
+    position: absolute;
+    border-left: 2px solid #FFB300;
+    top: 16px;
+  }
+
+  /* Special positioning for callouts */
+  .secure-callout-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  .secure-callout-connector {
+    position: absolute;
+    width: 2px;
+    background: #FFB300;
+    top: 60px;
+    left: calc(100% + 4px);
+    height: 75px;
+    border-radius: 2px;
+  }
+  .secure-callout-box {
+    position: absolute;
+    top: 48px;
+    left: calc(100% + 14px);
+  }
+
+  .judge-note-wrapper {
+    position: relative;
+    max-width: 280px;
+  }
+  .judge-note-box {
+    background: #FFF9F4;
+    border-left: 3px solid #B07B00;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #7C6600;
+    border-radius: 6px;
+    line-height: 1.3;
+    max-width: 280px;
+  }
+  .judge-note-connector {
+    position: absolute;
+    width: 2px;
+    background: #B07B00;
+    right: 100%;
+    top: 50%;
+    height: 36px;
+    transform: translateY(-50%);
+    border-radius: 2px;
+  }
+
+  /* Business Callout box styling */
+  .business-outcome {
+    background: #FFF3E0;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(245, 178, 43, 0.3);
+    padding: 24px 28px;
+    max-width: 680px;
+    margin: 36px auto 0 auto;
+    color: #8B5E00;
+  }
+  .business-outcome h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .business-outcome ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .business-outcome ul li {
+    margin-bottom: 8px;
+  }
+
+  /* Arrows SVG styling */
+  /* Use stroke color matching the section color (grey / blue / green) + consistent width */
+
+  /* Hide text selection for arrows */
+  .arrow-svg {
+    user-select: none;
+  }
+
+</style>
+</head>
+<body>
+  <div class="diagram-container" role="img" aria-label="Multi-Model AI Workflow Architecture Diagram">
+
+    <header aria-labelledby="title subtitle">
+      <h1 id="title">Multi-Model AI Workflow Architecture</h1>
+      <h2 id="subtitle">Internal Solution Consultant Prototype</h2>
+    </header>
+
+    <!-- Layer 1: User Interaction -->
+    <section class="layer user-interaction" aria-label="Layer 1: User Interaction">
+      <div class="layer-title">Layer 1: User Interaction</div>
+      <div class="flow-row" style="justify-content: flex-start;">
+        <div class="box" role="region" aria-labelledby="user-label user-desc">
+          <h3 id="user-label">User / Solution Consultant</h3>
+          <p id="user-desc">Enters a single prompt in VS Code terminal or command-line interface</p>
+        </div>
+        <!-- Arrow pointing to orchestration -->
+        <svg class="arrow-horizontal arrow-svg" aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" >
+          <line x1="0" y1="20" x2="30" y2="20" stroke="#666" stroke-width="2" />
+          <polygon points="30,14 40,20 30,26" fill="#666" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- Layer 2: Orchestration Layer -->
+    <section class="layer orchestration" aria-label="Layer 2: Orchestration Layer">
+      <div class="layer-title">Layer 2: Orchestration Layer</div>
+      <div class="flow-row" style="align-items: flex-start;">
+        <div class="box orchestration secure-callout-wrapper" role="region" aria-labelledby="orch-label orch-desc">
+          <h3 id="orch-label">Python Orchestration Script</h3>
+          <div class="label">compare_models.py / autonomous_comparison.py</div>
+          <p id="orch-desc">
+            Loads environment variables, accepts prompt input, manages workflow execution, handles API requests, and formats outputs
+          </p>
+
+          <!-- Secure Configuration Callout - positioned relative -->
+          <div class="secure-callout-connector" aria-hidden="true"></div>
+          <div class="secure-callout-box callout small" role="note" aria-label="Secure Configuration details">
+            <strong>Secure Configuration</strong>
+            <ul>
+              <li>.env file</li>
+              <li>OPENAI_API_KEY</li>
+              <li>ANTHROPIC_API_KEY</li>
+              <li>truststore / SSL handling</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Arrow splitting into two branches -->
+        <svg class="arrow-split arrow-svg" aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60">
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="8" 
+              refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L8,4 L0,8 z" fill="#4A90E2" />
+            </marker>
+            <marker id="arrowhead-blue" markerWidth="8" markerHeight="8" 
+              refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L8,4 L0,8 z" fill="#357ABD" />
+            </marker>
+            <marker id="arrowhead-teal" markerWidth="8" markerHeight="8" 
+              refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L8,4 L0,8 z" fill="#0E9A95" />
+            </marker>
+          </defs>
+          <!-- Horizontal arrow -->
+          <line x1="0" y1="30" x2="40" y2="30" stroke="#4A90E2" stroke-width="3" marker-end="url(#arrowhead)"/>
+          <!-- Split down lines -->
+          <line x1="40" y1="30" x2="40" y2="0" stroke="#4A90E2" stroke-width="3"/>
+          <line x1="40" y1="30" x2="40" y2="60" stroke="#4A90E2" stroke-width="3"/>
+          <!-- Left branch arrow -->
+          <line x1="40" y1="0" x2="90" y2="0" stroke="#357ABD" stroke-width="3" marker-end="url(#arrowhead-blue)"/>
+          <!-- Right branch arrow -->
+          <line x1="40" y1="60" x2="90" y2="60" stroke="#0E9A95" stroke-width="3" marker-end="url(#arrowhead-teal)"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Layer 3: Model Execution Layer -->
+    <section class="layer model-execution" aria-label="Layer 3: Model Execution Layer">
+      <div class="layer-title">Layer 3: Model Execution Layer</div>
+      <div class="flow-row" aria-describedby="model-desc">
+        
+        <div class="box openai" role="region" aria-labelledby="openai-label openai-desc">
+          <h3 id="openai-label">OpenAI API</h3>
+          <p id="openai-desc">Sends prompt to GPT model and returns response</p>
+          <div class="model-sub-label">
+            - Same prompt sent to both models<br />- Independent response generation
+          </div>
+        </div>
+
+        <div class="box anthropic" role="region" aria-labelledby="anthropic-label anthropic-desc">
+          <h3 id="anthropic-label">Anthropic API</h3>
+          <p id="anthropic-desc">Sends prompt to Claude model and returns response</p>
+          <div class="model-sub-label">
+            - Same prompt sent to both models<br />- Independent response generation
+          </div>
+        </div>
+      </div>
+
+      <!-- Converging arrow -->
+      <div style="display:flex; justify-content:center; margin-top: -18px;">
+        <svg class="arrow-split" aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60" style="transform: rotate(180deg);">
+          <defs>
+            <marker id="arrowhead-blue-converge" markerWidth="8" markerHeight="8" 
+              refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L8,4 L0,8 z" fill="#357ABD" />
+            </marker>
+            <marker id="arrowhead-teal-converge" markerWidth="8" markerHeight="8" 
+              refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L8,4 L0,8 z" fill="#0E9A95" />
+            </marker>
+          </defs>
+          <!-- Horizontal arrow at bottom -->
+          <line x1="0" y1="30" x2="40" y2="30" stroke="#4A90E2" stroke-width="3" marker-end="url(#arrowhead-blue-converge)" />
+          <!-- Split down lines reversed -->
+          <line x1="40" y1="30" x2="40" y2="0" stroke="#4A90E2" stroke-width="3"/>
+          <line x1="40" y1="30" x2="40" y2="60" stroke="#4A90E2" stroke-width="3"/>
+          <!-- Left branch arrow -->
+          <line x1="90" y1="0" x2="40" y2="0" stroke="#357ABD" stroke-width="3" marker-end="url(#arrowhead-blue-converge)"/>
+          <!-- Right branch arrow -->
+          <line x1="90" y1="60" x2="40" y2="60" stroke="#0E9A95" stroke-width="3" marker-end="url(#arrowhead-teal-converge)"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Layer 4: Response Processing Layer -->
+    <section class="layer response-processing" aria-label="Layer 4: Response Processing Layer">
+      <div class="layer-title">Layer 4: Response Processing Layer</div>
+      <div class="flow-row" style="align-items: flex-start; gap: 20px;">
+        <div class="box" role="region" aria-labelledby="response-agg-label response-agg-desc">
+          <h3 id="response-agg-label">Response Aggregation</h3>
+          <p id="response-agg-desc">Collects OpenAI and Claude outputs into a unified comparison structure</p>
+        </div>
+
+        <svg class="arrow-horizontal arrow-svg" aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+          <line x1="0" y1="20" x2="30" y2="20" stroke="#666" stroke-width="2" />
+          <polygon points="30,14 40,20 30,26" fill="#666" />
+        </svg>
+
+        <div class="judge-note-wrapper" style="position: relative; display: inline-block;">
+          <div class="box" role="region" aria-labelledby="eval-label eval-desc" style="max-width: 280px;">
+            <h3 id="eval-label">Evaluation / Judge Layer</h3>
+            <p id="eval-desc">
+              Runs a comparison pass across both outputs<br>
+              Assesses:<br>
+              - clarity<br>
+              - completeness<br>
+              - tone<br>
+              - practical usefulness<br>
+              - overall recommendation
+            </p>
+          </div>
+          <!-- Judge note callout to the right side -->
+          <div class="judge-note-connector" aria-hidden="true"></div>
+          <div class="judge-note-box" role="note" aria-label="Judge capability note" style="position:absolute; top: 50%; right: calc(100% + 14px); transform: translateY(-50%);">
+            Judge can be powered by a selected model using a rubric-based evaluation prompt
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow pointing down to next layer -->
+      <div style="display:flex; justify-content:center; margin-top: 28px;">
+        <svg class="arrow-vertical arrow-svg" aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 40" >
+          <line x1="10" y1="0" x2="10" y2="30" stroke="#666" stroke-width="2" />
+          <polygon points="6,30 14,30 10,38" fill="#666" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- Layer 5: Output Layer -->
+    <section class="layer output" aria-label="Layer 5: Output Layer">
+      <div class="layer-title">Layer 5: Output Layer</div>
+      
+      <div class="flow-row" aria-describedby="formatted-desc">
+        <div class="box output" role="region" aria-labelledby="formatted-label formatted-desc" style="min-width: 280px;">
+          <h3 id="formatted-label">Formatted Output Generator</h3>
+          <p id="formatted-desc">Builds a side-by-side report for review</p>
+        </div>
+
+        <!-- Arrow to report -->
+        <svg class="arrow-horizontal arrow-svg" aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+          <line x1="0" y1="20" x2="30" y2="20" stroke="#4CB963" stroke-width="3" />
+          <polygon points="30,14 40,20 30,26" fill="#4CB963" />
+        </svg>
+
+        <div class="box output" role="region" aria-labelledby="html-label html-desc" style="min-width: 280px;">
+          <h3 id="html-label">HTML Comparison Report</h3>
+          <p id="html-desc">
+            Displays:<br>
+            - original prompt<br>
+            - OpenAI response<br>
+            - Claude response<br>
+            - recommended winner<br>
+            - summary reasoning
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Arrow pointing down to business outcome -->
+      <div style="display:flex; justify-content:center; margin-top: 28px;">
+        <svg class="arrow-vertical arrow-svg" aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 40" >
+          <line x1="10" y1="0" x2="10" y2="30" stroke="#4CB963" stroke-width="3" />
+          <polygon points="6,30 14,30 10,38" fill="#4CB963" />
+        </svg>
+      </div>
+
+    </section>
+
+    <!-- Layer 6: Business Outcome Callout -->
+    <section class="business-outcome" aria-label="Layer 6: Business Outcome Callout" role="region">
+      <h3>Business Value</h3>
+      <ul>
+        <li>Rapid side-by-side model comparison</li>
+        <li>Better prompt and model selection</li>
+        <li>Stronger demo preparation</li>
+        <li>Reusable internal evaluation workflow</li>
+        <li>Foundation for future autonomous agent orchestration</li>
+      </ul>
+    </section>
+
+  </div>
+
+</body>
+</html>
