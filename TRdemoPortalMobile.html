@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Thomson Reuters CoCounsel Tax – Mobile Native Shell Prototype</title>
+  <style>
+    :root {
+      --tr-red: #d71920;
+      --tr-red-dark: #a91217;
+      --tr-black: #121212;
+      --tr-charcoal: #202124;
+      --tr-gray-900: #2d2f33;
+      --tr-gray-700: #5f6368;
+      --tr-gray-500: #8b9097;
+      --tr-gray-300: #d8dce2;
+      --tr-gray-200: #eef1f5;
+      --tr-gray-100: #f7f8fa;
+      --tr-white: #ffffff;
+      --tr-blue: #1a73e8;
+      --tr-green: #1e8e3e;
+      --tr-orange: #f29900;
+      --shadow-soft: 0 16px 40px rgba(18, 18, 18, 0.16);
+      --shadow-card: 0 8px 24px rgba(18, 18, 18, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: var(--font);
+      background:
+        radial-gradient(circle at top left, rgba(215, 25, 32, 0.16), transparent 28%),
+        linear-gradient(135deg, #f6f7fb 0%, #e9edf3 100%);
+      color: var(--tr-black);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page-shell {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .phone-frame {
+      width: min(430px, 100%);
+      height: min(860px, calc(100vh - 32px));
+      min-height: 720px;
+      background: var(--tr-black);
+      border-radius: 44px;
+      padding: 12px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+    }
+
+    .phone-screen {
+      height: 100%;
+      background: var(--tr-gray-100);
+      border-radius: 34px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .status-bar {
+      height: 36px;
+      padding: 12px 24px 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--tr-black);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .signal-bars {
+      display: inline-flex;
+      gap: 2px;
+      align-items: flex-end;
+      height: 12px;
+    }
+
+    .signal-bars span {
+      width: 3px;
+      background: var(--tr-black);
+      border-radius: 2px;
+      display: block;
+    }
+
+    .signal-bars span:nth-child(1) { height: 4px; }
+    .signal-bars span:nth-child(2) { height: 6px; }
+    .signal-bars span:nth-child(3) { height: 8px; }
+    .signal-bars span:nth-child(4) { height: 10px; }
+
+    .battery {
+      width: 21px;
+      height: 11px;
+      border: 1.8px solid var(--tr-black);
+      border-radius: 3px;
+      position: relative;
+    }
+
+    .battery::before {
+      content: "";
+      width: 13px;
+      height: 5px;
+      background: var(--tr-black);
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      border-radius: 1px;
+    }
+
+    .battery::after {
+      content: "";
+      width: 2px;
+      height: 5px;
+      background: var(--tr-black);
+      position: absolute;
+      top: 2px;
+      right: -4px;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .app-header {
+      padding: 12px 22px 16px;
+      background: var(--tr-white);
+      border-bottom: 1px solid var(--tr-gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 72px;
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: var(--tr-red);
+      color: var(--tr-white);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      box-shadow: 0 8px 18px rgba(215, 25, 32, 0.24);
+      flex: 0 0 auto;
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-name {
+      font-size: 14px;
+      line-height: 1.1;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-subtitle {
+      margin-top: 2px;
+      font-size: 11px;
+      color: var(--tr-gray-700);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .icon-button {
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      border: 1px solid var(--tr-gray-200);
+      background: var(--tr-white);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: var(--tr-charcoal);
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+
+    .icon-button:hover,
+    .icon-button:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-card);
+      outline: none;
+    }
+
+    .app-content {
+      flex: 1;
+      overflow: auto;
+      padding: 18px 18px 92px;
+      scroll-behavior: smooth;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 180ms ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--tr-red);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: 28px;
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 22px;
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .muted {
+      color: var(--tr-gray-700);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .login-hero {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .hero-card,
+    .card {
+      background: var(--tr-white);
+      border: 1px solid rgba(216, 220, 226, 0.9);
+      border-radius: var(--radius-xl);
+      padding: 22px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .form-group {
+      display: grid;
+      gap: 11px;
+      margin-top: 18px;
+    }
+
+    .input {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid var(--tr-gray-300);
+      border-radius: 16px;
+      padding: 0 15px;
+      background: #fbfcfe;
+      color: var(--tr-black);
+      outline: none;
+      transition: border 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+
+    .input:focus {
+      border-color: var(--tr-red);
+      box-shadow: 0 0 0 4px rgba(215, 25, 32, 0.11);
+      background: var(--tr-white);
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 17px;
+      min-height: 52px;
+      padding: 0 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      text-decoration: none;
+    }
+
+    .btn:focus-visible {
+      outline: 4px solid rgba(215, 25, 32, 0.18);
+      outline-offset: 2px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--tr-red);
+      color: var(--tr-white);
+      box-shadow: 0 12px 22px rgba(215, 25, 32, 0.24);
+    }
+
+    .btn-primary:hover {
+      background: var(--tr-red-dark);
+    }
+
+    .btn-secondary {
+      background: var(--tr-black);
+      color: var(--tr-white);
+    }
+
+    .btn-ghost {
+      background: var(--tr-white);
+      border: 1px solid var(--tr-gray-300);
+      color: var(--tr-charcoal);
+    }
+
+    .btn-full {
+      width: 100%;
+    }
+
+    .hint {
+      margin: 14px 0 0;
+      color: var(--tr-gray-700);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .welcome-card {
+      background:
+        linear-gradient(135deg, rgba(215, 25, 32, 0.94), rgba(139, 18, 23, 0.98)),
+        url("data:image/svg+xml,%3Csvg width='220' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M160 8c32 12 52 36 52 66s-20 58-50 70c-32 13-72 6-100-18C34 101 18 60 33 34 48 8 102-13 160 8Z' fill='rgba(255,255,255,.12)'/%3E%3C/svg%3E");
+      color: var(--tr-white);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: 0 16px 34px rgba(215, 25, 32, 0.24);
+    }
+
+    .welcome-card .muted {
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      color: inherit;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .section-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 22px 2px 10px;
+    }
+
+    .section-title-row h2 {
+      font-size: 17px;
+      margin: 0;
+    }
+
+    .link-button {
+      border: 0;
+      background: transparent;
+      color: var(--tr-red);
+      font-weight: 800;
+      cursor: pointer;
+      padding: 0;
+      font-size: 13px;
+    }
+
+    .matter-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .matter-card {
+      text-align: left;
+      width: 100%;
+      background: var(--tr-white);
+      border: 1px solid var(--tr-gray-200);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: 0 7px 18px rgba(18, 18, 18, 0.045);
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, border 120ms ease;
+    }
+
+    .matter-card:hover,
+    .matter-card:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-card);
+      border-color: rgba(215, 25, 32, 0.28);
+      outline: none;
+    }
+
+    .matter-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .matter-title {
+      font-weight: 850;
+      letter-spacing: -0.025em;
+      margin: 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag-red {
+      color: var(--tr-red-dark);
+      background: rgba(215, 25, 32, 0.1);
+    }
+
+    .tag-green {
+      color: var(--tr-green);
+      background: rgba(30, 142, 62, 0.11);
+    }
+
+    .tag-orange {
+      color: #8a5700;
+      background: rgba(242, 153, 0, 0.14);
+    }
+
+    .metadata-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      color: var(--tr-gray-700);
+      font-size: 12px;
+    }
+
+    .metadata-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--tr-gray-100);
+      border-radius: 999px;
+      padding: 6px 9px;
+    }
+
+    .quick-action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+    }
+
+    .quick-action {
+      background: var(--tr-white);
+      border: 1px solid var(--tr-gray-200);
+      border-radius: var(--radius-lg);
+      padding: 15px;
+      min-height: 116px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 7px 18px rgba(18, 18, 18, 0.045);
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .quick-action strong {
+      display: block;
+      font-size: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .quick-action span {
+      color: var(--tr-gray-700);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .detail-hero {
+      background: var(--tr-white);
+      border-radius: var(--radius-xl);
+      padding: 22px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--tr-gray-200);
+    }
+
+    .back-row {
+      margin-bottom: 14px;
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 0;
+      background: transparent;
+      color: var(--tr-gray-700);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .detail-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .detail-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .detail-meta {
+      background: var(--tr-gray-100);
+      border-radius: 17px;
+      padding: 13px;
+    }
+
+    .detail-meta label {
+      display: block;
+      color: var(--tr-gray-700);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 5px;
+    }
+
+    .detail-meta strong {
+      font-size: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .insight-card {
+      margin-top: 14px;
+      background: #fff8e8;
+      border: 1px solid rgba(242, 153, 0, 0.24);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+
+    .insight-card strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .support-card {
+      margin-top: 14px;
+      background: var(--tr-black);
+      color: var(--tr-white);
+      border-radius: var(--radius-xl);
+      padding: 20px;
+      box-shadow: 0 14px 32px rgba(18, 18, 18, 0.18);
+    }
+
+    .support-card .muted {
+      color: rgba(255, 255, 255, 0.74);
+    }
+
+    .support-card .btn {
+      margin-top: 14px;
+    }
+
+    .context-preview {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 17px;
+      padding: 13px;
+      margin-top: 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.8);
+      overflow: auto;
+    }
+
+    .sdk-placeholder {
+      margin-top: 14px;
+      background: var(--tr-white);
+      color: var(--tr-black);
+      border-radius: var(--radius-xl);
+      padding: 20px;
+      border: 2px dashed rgba(215, 25, 32, 0.36);
+      box-shadow: var(--shadow-card);
+    }
+
+    .sdk-placeholder-code {
+      background: var(--tr-gray-100);
+      border-radius: 16px;
+      padding: 12px;
+      color: var(--tr-gray-900);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      line-height: 1.5;
+      overflow: auto;
+      margin: 12px 0 0;
+    }
+
+    .toast {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 82px;
+      background: rgba(18, 18, 18, 0.92);
+      color: var(--tr-white);
+      border-radius: 18px;
+      padding: 13px 15px;
+      font-size: 13px;
+      line-height: 1.4;
+      box-shadow: 0 12px 26px rgba(18, 18, 18, 0.25);
+      display: none;
+      z-index: 5;
+    }
+
+    .toast.active {
+      display: block;
+      animation: toastIn 180ms ease;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bottom-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      min-height: 76px;
+      padding: 9px 18px calc(9px + var(--safe-bottom));
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--tr-gray-200);
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .bottom-nav.visible {
+      display: grid;
+    }
+
+    .nav-item {
+      border: 0;
+      background: transparent;
+      border-radius: 16px;
+      padding: 8px 6px;
+      color: var(--tr-gray-700);
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      gap: 4px;
+    }
+
+    .nav-item.active {
+      color: var(--tr-red);
+      background: rgba(215, 25, 32, 0.08);
+    }
+
+    .nav-icon {
+      font-size: 17px;
+      line-height: 1;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 520px) {
+      .page-shell {
+        padding: 0;
+        min-height: 100%;
+      }
+
+      .phone-frame {
+        width: 100%;
+        height: 100vh;
+        min-height: 100vh;
+        border-radius: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+
+      .phone-screen {
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="phone-frame" role="application" aria-label="Thomson Reuters CoCounsel Tax mobile shell prototype">
+      <div class="phone-screen">
+        <div class="status-bar" aria-hidden="true">
+          <span id="statusTime">9:41</span>
+          <span class="status-icons">
+            <span class="signal-bars"><span></span><span></span><span></span><span></span></span>
+            <span>5G</span>
+            <span class="battery"></span>
+          </span>
+        </div>
+
+        <header class="app-header">
+          <div class="brand-lockup">
+            <div class="brand-mark">TR</div>
+            <div class="brand-text">
+              <div class="brand-name">Thomson Reuters</div>
+              <div class="brand-subtitle" id="headerSubtitle">CoCounsel Tax Demo</div>
+            </div>
+          </div>
+          <button class="icon-button" type="button" aria-label="Show prototype notes" onclick="showToast('Phase B1 native shell prototype. Phase B2 replaces the placeholder with the Genesys Mobile Messenger SDK launch.')">ⓘ</button>
+        </header>
+
+        <main class="app-content" id="appContent">
+          <section class="screen active" id="loginScreen" aria-labelledby="loginTitle">
+            <div class="login-hero">
+              <div class="hero-card">
+                <p class="eyebrow">B2B Demo Environment</p>
+                <h1 id="loginTitle">Sign in to CoCounsel Tax</h1>
+                <p class="muted">This mobile shell mirrors your browser-based demo and creates a native-style entry point for Mobile Messenger SDK integration.</p>
+
+                <div class="form-group">
+                  <input class="input" type="email" id="emailInput" placeholder="Work email" autocomplete="email" />
+                  <input class="input" type="password" id="passwordInput" placeholder="Password" autocomplete="current-password" />
+                  <button class="btn btn-primary btn-full" type="button" onclick="login()">Sign In</button>
+                </div>
+
+                <p class="hint">For demo purposes, enter any email and password to continue.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="dashboardScreen" aria-labelledby="dashboardTitle">
+            <div class="dashboard-grid">
+              <div class="welcome-card">
+                <p class="eyebrow" style="color: rgba(255,255,255,.8);">Welcome back</p>
+                <h1 id="dashboardTitle">CoCounsel Tax Workspace</h1>
+                <p class="muted">Review active tax matters, monitor AI-assisted workflows, and launch contextual support from inside the customer app.</p>
+                <div class="pill-row">
+                  <span class="pill">3 active matters</span>
+                  <span class="pill">1 high priority</span>
+                  <span class="pill">Mobile shell</span>
+                </div>
+              </div>
+
+              <div class="section-title-row">
+                <h2>Recent Matters</h2>
+                <button class="link-button" type="button" onclick="showToast('This is sample matter data for the Phase B1 mobile shell.')">View all</button>
+              </div>
+
+              <div class="matter-list" id="matterList"></div>
+
+              <div class="section-title-row">
+                <h2>Quick Actions</h2>
+              </div>
+
+              <div class="quick-action-grid">
+                <button class="quick-action" type="button" onclick="showToast('Phase B1 placeholder: document upload flow can be added later.')">
+                  <strong>Upload tax document</strong>
+                  <span>Add a PDF, spreadsheet, or notice to a matter.</span>
+                </button>
+                <button class="quick-action" type="button" onclick="openSupportCenter()">
+                  <strong>Contact support</strong>
+                  <span>Launch the contextual service entry point.</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="matterScreen" aria-labelledby="matterTitle">
+            <div class="back-row">
+              <button class="back-button" type="button" onclick="navigateTo('dashboardScreen')">← Back to dashboard</button>
+            </div>
+
+            <div class="detail-hero">
+              <div class="detail-title-row">
+                <div>
+                  <p class="eyebrow" id="matterClientEyebrow">Client Matter</p>
+                  <h1 id="matterTitle">Matter title</h1>
+                  <p class="muted" id="matterDescription">Matter description</p>
+                </div>
+                <span class="tag tag-red" id="matterStatusTag">Status</span>
+              </div>
+
+              <div class="detail-meta-grid">
+                <div class="detail-meta">
+                  <label>Matter ID</label>
+                  <strong id="matterId">—</strong>
+                </div>
+                <div class="detail-meta">
+                  <label>Priority</label>
+                  <strong id="matterPriority">—</strong>
+                </div>
+                <div class="detail-meta">
+                  <label>Owner</label>
+                  <strong id="matterOwner">—</strong>
+                </div>
+                <div class="detail-meta">
+                  <label>Due Date</label>
+                  <strong id="matterDueDate">—</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="insight-card">
+              <strong>CoCounsel insight</strong>
+              <p class="muted" id="matterInsight">Insight text</p>
+            </div>
+
+            <div class="support-card">
+              <h2>Need help with this matter?</h2>
+              <p class="muted">This is the Phase B1 mobile support launch point. In Phase B2, this button becomes the native Genesys Mobile Messenger SDK entry point.</p>
+              <button class="btn btn-primary btn-full" type="button" onclick="launchMessengerPlaceholder()">Launch Mobile Messenger</button>
+
+              <div class="context-preview" id="contextPreview" aria-label="Context object preview"></div>
+            </div>
+
+            <div class="sdk-placeholder" id="sdkPlaceholder">
+              <h2>SDK launch placeholder</h2>
+              <p class="muted">The native SDK implementation will replace the web bootstrap snippet from the browser version. Keep deployment settings isolated so the mobile app can point to dev, demo, or production deployments.</p>
+              <div class="sdk-placeholder-code">Genesys Mobile SDK Config
+{
+  environment: "prod",
+  deploymentId: "0042b643-9e47-4c81-b7c3-fbe66fb52dd8",
+  launchContext: selectedMatterContext
+}</div>
+            </div>
+          </section>
+
+          <section class="screen" id="supportScreen" aria-labelledby="supportTitle">
+            <div class="back-row">
+              <button class="back-button" type="button" onclick="navigateTo('dashboardScreen')">← Back to dashboard</button>
+            </div>
+
+            <div class="detail-hero">
+              <p class="eyebrow">Support Center</p>
+              <h1 id="supportTitle">How can we help?</h1>
+              <p class="muted">Choose a support path. The recommended path launches Mobile Messenger with context from the current app session.</p>
+            </div>
+
+            <div class="matter-list" style="margin-top: 14px;">
+              <button class="matter-card" type="button" onclick="launchMessengerPlaceholder()">
+                <div class="matter-topline">
+                  <p class="matter-title">Ask CoCounsel Tax Support</p>
+                  <span class="tag tag-red">Recommended</span>
+                </div>
+                <p class="muted">Launch the Mobile Messenger SDK experience from the native app shell.</p>
+              </button>
+
+              <button class="matter-card" type="button" onclick="showToast('Phase B1 placeholder: knowledge article search can be added later.')">
+                <div class="matter-topline">
+                  <p class="matter-title">Search help articles</p>
+                  <span class="tag tag-green">Self-service</span>
+                </div>
+                <p class="muted">Provide an in-app deflection option before escalation.</p>
+              </button>
+
+              <button class="matter-card" type="button" onclick="showToast('Phase B1 placeholder: callback request can be tied into Genesys later.')">
+                <div class="matter-topline">
+                  <p class="matter-title">Request a callback</p>
+                  <span class="tag tag-orange">Future</span>
+                </div>
+                <p class="muted">A later phase could create a callback or voice escalation pattern.</p>
+              </button>
+            </div>
+          </section>
+        </main>
+
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+        <nav class="bottom-nav" id="bottomNav" aria-label="Main navigation">
+          <button class="nav-item active" type="button" data-target="dashboardScreen" onclick="navigateTo('dashboardScreen')">
+            <span class="nav-icon">⌂</span>
+            <span>Home</span>
+          </button>
+          <button class="nav-item" type="button" data-target="matterScreen" onclick="openMatter(currentMatterId || matters[0].id)">
+            <span class="nav-icon">◫</span>
+            <span>Matters</span>
+          </button>
+          <button class="nav-item" type="button" data-target="supportScreen" onclick="openSupportCenter()">
+            <span class="nav-icon">◌</span>
+            <span>Support</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const GENESYS_CONFIG = {
+      environment: "prod",
+      deploymentId: "0042b643-9e47-4c81-b7c3-fbe66fb52dd8"
+    };
+
+    const matters = [
+      {
+        id: "MAT-24081",
+        title: "R&D Credit Analysis",
+        client: "Acme Manufacturing",
+        status: "Review needed",
+        statusClass: "tag-red",
+        priority: "High",
+        owner: "Jamie Rivera",
+        dueDate: "May 15",
+        description: "Evaluate qualified research expenses and prepare documentation for the federal R&D credit position.",
+        insight: "CoCounsel flagged two unresolved expense categories that may need additional substantiation before final review.",
+        issueType: "R&D substantiation question"
+      },
+      {
+        id: "MAT-24092",
+        title: "State Nexus Review",
+        client: "Northstar Logistics",
+        status: "In progress",
+        statusClass: "tag-orange",
+        priority: "Medium",
+        owner: "Taylor Kim",
+        dueDate: "May 22",
+        description: "Analyze state-by-state nexus exposure based on employee location, shipping patterns, and revenue thresholds.",
+        insight: "CoCounsel found potential filing obligations in two additional states based on current sales activity.",
+        issueType: "State nexus workflow question"
+      },
+      {
+        id: "MAT-24103",
+        title: "Transfer Pricing Memo",
+        client: "Apex Global Services",
+        status: "On track",
+        statusClass: "tag-green",
+        priority: "Low",
+        owner: "Morgan Lee",
+        dueDate: "June 4",
+        description: "Draft intercompany services memo and summarize comparable service provider benchmarks.",
+        insight: "CoCounsel completed the first-pass memo outline and identified three benchmark data gaps.",
+        issueType: "Transfer pricing documentation question"
+      }
+    ];
+
+    let currentMatterId = matters[0].id;
+    let toastTimer;
+
+    function login() {
+      const email = document.getElementById("emailInput").value.trim();
+      const pass = document.getElementById("passwordInput").value.trim();
+
+      if (!email || !pass) {
+        showToast("Please enter both email and password.");
+        return;
+      }
+
+      localStorage.setItem("trDemoUserEmail", email);
+      navigateTo("dashboardScreen");
+      showToast("Signed in as " + email + ". Native shell ready.");
+    }
+
+    function renderMatterList() {
+      const list = document.getElementById("matterList");
+      list.innerHTML = matters.map((matter) => `
+        <button class="matter-card" type="button" onclick="openMatter('${matter.id}')">
+          <div class="matter-topline">
+            <p class="matter-title">${matter.title}</p>
+            <span class="tag ${matter.statusClass}">${matter.status}</span>
+          </div>
+          <p class="muted">${matter.client}</p>
+          <div class="metadata-row">
+            <span class="metadata-item">ID ${matter.id}</span>
+            <span class="metadata-item">${matter.priority} priority</span>
+            <span class="metadata-item">Due ${matter.dueDate}</span>
+          </div>
+        </button>
+      `).join("");
+    }
+
+    function openMatter(id) {
+      const matter = matters.find((item) => item.id === id) || matters[0];
+      currentMatterId = matter.id;
+
+      document.getElementById("matterClientEyebrow").textContent = matter.client;
+      document.getElementById("matterTitle").textContent = matter.title;
+      document.getElementById("matterDescription").textContent = matter.description;
+      document.getElementById("matterStatusTag").textContent = matter.status;
+      document.getElementById("matterStatusTag").className = "tag " + matter.statusClass;
+      document.getElementById("matterId").textContent = matter.id;
+      document.getElementById("matterPriority").textContent = matter.priority;
+      document.getElementById("matterOwner").textContent = matter.owner;
+      document.getElementById("matterDueDate").textContent = matter.dueDate;
+      document.getElementById("matterInsight").textContent = matter.insight;
+      document.getElementById("contextPreview").textContent = JSON.stringify(buildLaunchContext(matter), null, 2);
+
+      navigateTo("matterScreen");
+    }
+
+    function openSupportCenter() {
+      navigateTo("supportScreen");
+    }
+
+    function buildLaunchContext(matter) {
+      const email = localStorage.getItem("trDemoUserEmail") || "demo.user@customer.com";
+      return {
+        customerName: "Jamie Rivera",
+        userEmail: email,
+        appName: "CoCounsel Tax Mobile",
+        currentScreen: "Matter Detail",
+        matterId: matter.id,
+        matterTitle: matter.title,
+        client: matter.client,
+        priority: matter.priority,
+        issueType: matter.issueType,
+        genesysEnvironment: GENESYS_CONFIG.environment,
+        genesysDeploymentId: GENESYS_CONFIG.deploymentId
+      };
+    }
+
+    function launchMessengerPlaceholder() {
+      const matter = matters.find((item) => item.id === currentMatterId) || matters[0];
+      const context = buildLaunchContext(matter);
+      console.log("Phase B2 SDK launch context:", context);
+      showToast("Phase B2 placeholder: launch Genesys Mobile Messenger SDK with context for " + matter.id + ". Check the browser console for the context object.");
+    }
+
+    function navigateTo(screenId) {
+      document.querySelectorAll(".screen").forEach((screen) => {
+        screen.classList.toggle("active", screen.id === screenId);
+      });
+
+      const isLoggedIn = screenId !== "loginScreen";
+      document.getElementById("bottomNav").classList.toggle("visible", isLoggedIn);
+      document.getElementById("headerSubtitle").textContent = isLoggedIn ? "CoCounsel Tax Mobile" : "CoCounsel Tax Demo";
+
+      document.querySelectorAll(".nav-item").forEach((item) => {
+        const target = item.getAttribute("data-target");
+        item.classList.toggle("active", target === screenId || (screenId === "matterScreen" && target === "matterScreen"));
+      });
+
+      document.getElementById("appContent").scrollTop = 0;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("active");
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => {
+        toast.classList.remove("active");
+      }, 3600);
+    }
+
+    function updateStatusTime() {
+      const now = new Date();
+      document.getElementById("statusTime").textContent = now.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit"
+      });
+    }
+
+    renderMatterList();
+    openMatter(currentMatterId);
+    navigateTo("loginScreen");
+    updateStatusTime();
+    setInterval(updateStatusTime, 30000);
+  </script>
+</body>
+</html>
