@@ -3,161 +3,223 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Thor Motor Coach | VIN-Driven Warranty Agent Script</title>
+  <title>Thor Motor Coach | VIN Warranty Journey</title>
   <style>
     :root{
-      --tmc-navy:#0c1f34;
-      --tmc-blue:#1c4d7a;
-      --tmc-sky:#eaf3fb;
-      --tmc-red:#c62828;
-      --tmc-gold:#d6a23a;
+      --tmc-navy:#0b1b2f;
+      --tmc-blue:#174f7d;
+      --tmc-red:#c8322d;
       --ink:#17202a;
-      --muted:#5d6b7a;
-      --line:#d8e1ea;
-      --soft:#f6f8fb;
-      --success:#12715b;
-      --warn:#946200;
-      --danger:#9f1d1d;
-      --white:#ffffff;
-      --shadow:0 18px 45px rgba(12,31,52,.14);
-      --radius:20px;
-      --radius-sm:12px;
+      --muted:#657386;
+      --line:#d9e2ec;
+      --soft:#f5f8fb;
+      --soft-blue:#eef7ff;
+      --success:#10745b;
+      --warn:#8a5d00;
+      --danger:#9e2520;
+      --shadow:0 10px 28px rgba(11,27,47,.12);
+      --radius:14px;
     }
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
       color:var(--ink);
       font-family:"Segoe UI",Roboto,Arial,sans-serif;
-      background:linear-gradient(135deg,#f7f9fc 0%,#eef4fa 42%,#f9fbfd 100%);
-      min-height:100vh;
+      background:#eef3f8;
+      overflow:hidden;
     }
     button,input,textarea,select{font:inherit}
-    .app-shell{display:grid;grid-template-columns:86px 1fr;min-height:100vh}
-    .left-rail{background:#102235;color:#c9d8e8;padding:16px 10px;display:flex;flex-direction:column;gap:18px;align-items:center;box-shadow:8px 0 28px rgba(0,0,0,.12);z-index:2}
-    .d365-mark{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#0178d4,#56b6ff);display:grid;place-items:center;color:#fff;font-weight:800;letter-spacing:-1px;box-shadow:0 10px 24px rgba(1,120,212,.32)}
-    .rail-item{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#a9bed1;background:rgba(255,255,255,.06);cursor:default;font-size:20px}
-    .rail-item.active{background:#fff;color:#0f3f66}
-    .main{display:flex;flex-direction:column;min-width:0}
-    .topbar{height:70px;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:1}
-    .brand{display:flex;align-items:center;gap:14px;min-width:0}
-    .tmc-logo{width:54px;height:42px;border-radius:10px;background:var(--tmc-navy);color:#fff;display:grid;place-items:center;font-weight:900;font-size:15px;letter-spacing:.7px;position:relative;overflow:hidden}
-    .tmc-logo:after{content:"";position:absolute;right:-14px;top:-18px;width:48px;height:70px;transform:rotate(31deg);background:var(--tmc-red);opacity:.9}
-    .brand h1{font-size:18px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .brand p{font-size:12px;color:var(--muted);margin:3px 0 0}
-    .voice-strip{display:flex;align-items:center;gap:10px;background:#f0f7ff;border:1px solid #cfe5fb;border-radius:999px;padding:8px 12px;color:#143b5e;font-size:13px}
-    .pulse{width:10px;height:10px;background:#16a085;border-radius:50%;box-shadow:0 0 0 0 rgba(22,160,133,.65);animation:pulse 1.7s infinite}
-    @keyframes pulse{70%{box-shadow:0 0 0 12px rgba(22,160,133,0)}100%{box-shadow:0 0 0 0 rgba(22,160,133,0)}}
-    .content{padding:24px;display:grid;grid-template-columns:360px minmax(520px,1fr);gap:22px;align-items:start}
-    .panel{background:rgba(255,255,255,.96);border:1px solid rgba(216,225,234,.95);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
-    .panel-header{padding:18px 18px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(180deg,#fff,#fbfdff)}
-    .panel-header h2{margin:0;font-size:16px}
-    .panel-body{padding:18px}
-    .chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:#edf3f8;color:#2d4d66;padding:6px 10px;font-size:12px;font-weight:650;white-space:nowrap}
-    .chip.red{background:#fff0f0;color:var(--danger);border:1px solid #f3c7c7}.chip.green{background:#ecfaf6;color:var(--success);border:1px solid #bce9dc}.chip.gold{background:#fff7e6;color:var(--warn);border:1px solid #f1d59b}.chip.blue{background:#ecf5ff;color:#15578a;border:1px solid #c5def6}
-    .profile-card{display:flex;gap:14px;align-items:center;margin-bottom:16px}.avatar{width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,var(--tmc-blue),#69a5d7);display:grid;place-items:center;color:#fff;font-size:22px;font-weight:800}.profile-card h3{margin:0 0 3px;font-size:18px}.profile-card p{margin:0;color:var(--muted);font-size:13px}
-    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.stat{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fbfdff}.stat label{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em}.stat strong{display:block;font-size:15px;margin-top:4px}
-    .field{margin-bottom:12px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:650}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:#fff;color:var(--ink);outline:none}.field input:focus,.field textarea:focus,.field select:focus{border-color:#4e9bd4;box-shadow:0 0 0 3px rgba(78,155,212,.15)}
-    .vehicle{border:1px solid var(--line);border-radius:16px;padding:13px;margin-top:10px;background:#fff;cursor:pointer;transition:.2s}.vehicle:hover{transform:translateY(-1px);box-shadow:0 10px 20px rgba(12,31,52,.08)}.vehicle.selected{border-color:#2c78b6;background:#f0f7ff}.vehicle h4{margin:0 0 5px;font-size:14px}.vehicle p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}.vehicle .vin{font-family:Consolas,monospace;color:#244f75;font-weight:700}
-    .progress{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:16px;background:#fff;border-bottom:1px solid var(--line)}.step{border:1px solid var(--line);border-radius:15px;padding:12px;cursor:pointer;background:#fbfdff;position:relative;transition:.2s;min-height:82px}.step.active{border-color:#1f6ca7;background:#edf7ff;box-shadow:0 10px 20px rgba(31,108,167,.12)}.step.done{border-color:#9ad9c7;background:#f0fbf7}.step small{display:block;color:var(--muted);font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:.06em}.step strong{display:block;margin-top:5px;font-size:13px}.step span{display:block;color:var(--muted);font-size:11px;margin-top:4px;line-height:1.25}
-    .script-stage{padding:20px}.hero-callout{background:linear-gradient(135deg,var(--tmc-navy),#1a4a73);color:#fff;border-radius:22px;padding:20px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;margin-bottom:18px;position:relative;overflow:hidden}.hero-callout:after{content:"";position:absolute;right:-60px;bottom:-80px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.08)}.hero-callout h2{margin:0;font-size:22px}.hero-callout p{margin:7px 0 0;color:#dbe9f5;line-height:1.45}.sentiment{position:relative;z-index:1;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:14px;text-align:center;min-width:140px}.sentiment strong{display:block;font-size:24px}.sentiment span{font-size:12px;color:#dbe9f5}
-    .talk-track{border:1px solid #cfe5fb;background:#f4faff;border-radius:18px;padding:16px;margin-bottom:16px}.talk-track h3,.decision h3,.mini-card h3{font-size:14px;margin:0 0 10px}.quote{background:#fff;border-left:5px solid var(--tmc-red);padding:14px;border-radius:12px;line-height:1.5;font-size:15px}.coach{display:flex;gap:10px;margin-top:12px;color:#37566f;font-size:13px;line-height:1.45}.coach-icon{width:24px;height:24px;display:grid;place-items:center;background:#dceefc;border-radius:50%;flex:0 0 auto}
-    .action-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.mini-card{border:1px solid var(--line);border-radius:17px;padding:15px;background:#fff}.mini-card ul{margin:0;padding-left:18px;color:#405263;line-height:1.55;font-size:13px}.decision{border:1px solid #f0d9a8;background:#fffaf0;border-radius:18px;padding:16px;margin-top:16px}.decision-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.decision button,.nav button,.primary-btn{border:0;border-radius:12px;padding:12px 14px;font-weight:800;cursor:pointer}.decision button{background:#fff;border:1px solid #edd394;color:#543e00}.decision button.selected{background:#805b00;color:#fff;border-color:#805b00}.primary-btn{background:var(--tmc-red);color:#fff;box-shadow:0 10px 18px rgba(198,40,40,.2)}.secondary-btn{background:#eef4f9;color:#24465f;border:1px solid var(--line)!important}.nav{display:flex;justify-content:space-between;align-items:center;padding:0 20px 20px;gap:12px}.nav button{border:1px solid var(--line);background:#fff;color:#25455e}.nav button.primary{background:#0f4f7e;color:#fff;border-color:#0f4f7e}
-    .timeline{position:relative;margin-left:9px}.timeline:before{content:"";position:absolute;left:8px;top:5px;bottom:5px;width:2px;background:#d7e4ee}.timeline-item{position:relative;padding-left:32px;margin-bottom:18px}.timeline-dot{position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:50%;background:#fff;border:4px solid #2b79b5}.timeline-item h4{margin:0 0 3px;font-size:13px}.timeline-item p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
-    .teams-card{border:1px solid #d6cff8;background:#f7f5ff;border-radius:17px;padding:14px;margin-top:14px}.teams-card h3{margin:0 0 8px;font-size:14px;color:#3b2a78}.teams-message{background:#fff;border-radius:12px;padding:12px;font-size:13px;line-height:1.45;border:1px solid #e4defa}.teams-message code{font-family:Consolas,monospace;background:#f0edff;padding:2px 5px;border-radius:6px}
-    .wrap-summary{border:1px solid var(--line);border-radius:16px;overflow:hidden}.wrap-summary div{display:grid;grid-template-columns:130px 1fr;border-bottom:1px solid var(--line)}.wrap-summary div:last-child{border-bottom:0}.wrap-summary label{background:#f5f8fb;color:#53667a;font-size:12px;font-weight:700;padding:11px}.wrap-summary span{padding:11px;font-size:13px;line-height:1.4}
-    .toast{position:fixed;right:24px;bottom:24px;background:#102235;color:#fff;padding:14px 16px;border-radius:14px;box-shadow:var(--shadow);opacity:0;transform:translateY(10px);pointer-events:none;transition:.25s;z-index:10}.toast.show{opacity:1;transform:translateY(0)}
-    @media(max-width:1260px){.content{grid-template-columns:330px 1fr}}
-    @media(max-width:880px){.app-shell{grid-template-columns:1fr}.left-rail{display:none}.content{grid-template-columns:1fr;padding:14px}.topbar{height:auto;align-items:flex-start;gap:12px;flex-direction:column;padding:14px}.progress{grid-template-columns:1fr}.action-grid,.decision-row{grid-template-columns:1fr}.hero-callout{grid-template-columns:1fr}.wrap-summary div{grid-template-columns:1fr}}
+    button{cursor:pointer}
+    .app-shell{height:100vh;display:flex;flex-direction:column;min-width:0}
+
+    /* Compact header for the Interactions - Google Chrome pop-out */
+    .topbar{
+      height:56px;
+      background:#fff;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:8px 14px;
+      flex:0 0 auto;
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .tmc-logo{
+      width:40px;height:34px;border-radius:9px;background:var(--tmc-navy);color:#fff;
+      display:grid;place-items:center;font-weight:900;font-size:11px;letter-spacing:.6px;position:relative;overflow:hidden;flex:0 0 auto;
+    }
+    .tmc-logo:after{content:"";position:absolute;right:-10px;top:-12px;width:34px;height:54px;transform:rotate(31deg);background:var(--tmc-red);opacity:.92}
+    .brand-copy{min-width:0}.brand h1{font-size:15px;line-height:1.1;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brand p{font-size:11px;color:var(--muted);margin:3px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .header-actions{display:flex;gap:7px;align-items:center;flex:0 0 auto}.call-pill,.case-pill{border-radius:999px;padding:6px 9px;font-size:11px;font-weight:750;white-space:nowrap}.call-pill{background:#ecfaf6;color:var(--success);border:1px solid #b8e8db}.case-pill{background:#fff7e6;color:var(--warn);border:1px solid #efd39b}
+
+    .content{
+      height:calc(100vh - 56px);
+      padding:10px;
+      display:grid;
+      grid-template-columns:310px minmax(0,1fr);
+      gap:10px;
+      min-width:0;
+      overflow:hidden;
+    }
+    .panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);min-width:0;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+    .panel-header{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(180deg,#fff,#fbfdff);flex:0 0 auto}
+    .panel-header h2{font-size:14px;margin:0}.panel-body{padding:13px;overflow:auto;min-height:0}.chip{display:inline-flex;align-items:center;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:750;white-space:nowrap}.chip.green{background:#ecfaf6;color:var(--success);border:1px solid #b8e8db}.chip.red{background:#fff0ef;color:var(--danger);border:1px solid #f3c6c2}.chip.gold{background:#fff8e8;color:var(--warn);border:1px solid #efd8a2}.chip.blue{background:#eef7ff;color:#195c8f;border:1px solid #cfe5fb}
+
+    .profile-card{display:flex;gap:10px;align-items:center;margin-bottom:12px}.avatar{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--tmc-blue),#6aa7d8);display:grid;place-items:center;color:#fff;font-size:18px;font-weight:900;flex:0 0 auto}.profile-card h3{margin:0 0 2px;font-size:16px}.profile-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.3}
+    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.stat{border:1px solid var(--line);border-radius:12px;padding:9px;background:#fbfdff}.stat label{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:700}.stat strong{display:block;font-size:13px;margin-top:3px;line-height:1.2}
+    .field{margin:10px 0}.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:750}.field input{width:100%;border:1px solid var(--line);border-radius:11px;padding:9px 10px;background:#fff;color:var(--ink);outline:none;font-size:13px}.field input:focus{border-color:#4e9bd4;box-shadow:0 0 0 3px rgba(78,155,212,.15)}
+    .button-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 10px}.button-row.single{grid-template-columns:1fr}.primary-btn,.action-btn{border-radius:11px;padding:9px 10px;font-weight:850;font-size:12px;transition:.16s}.primary-btn{border:0;background:var(--tmc-red);color:#fff;box-shadow:0 7px 14px rgba(198,50,45,.18)}.action-btn{background:#eef4f9;color:#24465f;border:1px solid var(--line)}.primary-btn:hover,.action-btn:hover{transform:translateY(-1px)}.action-btn.active{background:#0f4f7e;color:#fff;border-color:#0f4f7e}
+    .vehicle{border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px;background:#fff;transition:.16s;text-align:left;width:100%}.vehicle:hover{box-shadow:0 8px 18px rgba(12,31,52,.08)}.vehicle.selected{border-color:#2c78b6;background:#f0f7ff}.vehicle h4{margin:0 0 4px;font-size:13px}.vehicle p{margin:0;color:var(--muted);font-size:11px;line-height:1.35}.vehicle .vin{font-family:Consolas,monospace;color:#244f75;font-weight:800}
+    .record-card{border:1px solid #cfe5fb;background:#f4faff;border-radius:13px;padding:11px;margin-top:10px;min-height:124px}.record-card h3{font-size:13px;margin:0 0 8px}.record-row{display:grid;grid-template-columns:86px 1fr;gap:7px;border-top:1px solid #dcecf8;padding:7px 0}.record-row:first-of-type{border-top:0}.record-row label{font-size:11px;color:var(--muted);font-weight:800}.record-row span{font-size:12px;line-height:1.35}.record-note{margin-top:8px;border-radius:10px;background:#fff;padding:9px;font-size:11.5px;line-height:1.4;color:#35516a;border:1px solid #dcecf8}
+
+    .progress{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:10px;border-bottom:1px solid var(--line);background:#fff;flex:0 0 auto}.step{border:1px solid var(--line);border-radius:12px;padding:9px;background:#fbfdff;transition:.16s;min-height:60px}.step.active{border-color:#1f6ca7;background:#edf7ff;box-shadow:0 8px 18px rgba(31,108,167,.12)}.step.done{border-color:#9ad9c7;background:#f0fbf7}.step small{display:block;color:var(--muted);font-weight:800;text-transform:uppercase;font-size:9px;letter-spacing:.06em}.step strong{display:block;margin-top:4px;font-size:12px;line-height:1.2}.step span{display:none;color:var(--muted);font-size:10.5px;margin-top:3px;line-height:1.2}
+    .script-stage{padding:12px;overflow:auto;min-height:0}.hero-callout{background:linear-gradient(135deg,var(--tmc-navy),#1a4a73);color:#fff;border-radius:16px;padding:14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-bottom:11px;position:relative;overflow:hidden}.hero-callout:after{content:"";position:absolute;right:-60px;bottom:-84px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.08)}.hero-callout h2{margin:0;font-size:18px;line-height:1.15}.hero-callout p{margin:6px 0 0;color:#dbe9f5;line-height:1.35;font-size:12.5px}.sentiment{position:relative;z-index:1;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:10px;text-align:center;min-width:92px}.sentiment strong{display:block;font-size:21px}.sentiment span{font-size:10px;color:#dbe9f5}
+    .talk-track{border:1px solid #cfe5fb;background:#f4faff;border-radius:14px;padding:12px;margin-bottom:11px}.talk-track h3,.decision h3,.mini-card h3{font-size:13px;margin:0 0 8px}.quote{background:#fff;border-left:4px solid var(--tmc-red);padding:11px;border-radius:10px;line-height:1.42;font-size:13px}.coach{display:flex;gap:8px;margin-top:9px;color:#37566f;font-size:12px;line-height:1.35}.coach-icon{width:21px;height:21px;display:grid;place-items:center;background:#dceefc;border-radius:50%;flex:0 0 auto}
+    .action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mini-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.mini-card ul{margin:0;padding-left:17px;color:#405263;line-height:1.45;font-size:12px}.decision{border:1px solid #f0d9a8;background:#fffaf0;border-radius:14px;padding:12px;margin-top:11px}.decision-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.decision button,.nav button{border-radius:11px;padding:9px 10px;font-weight:800;font-size:12px}.decision button{background:#fff;border:1px solid #edd394;color:#543e00}.decision button.selected{background:#805b00;color:#fff;border-color:#805b00}.nav{display:flex;justify-content:space-between;align-items:center;padding:0 12px 12px;gap:10px;flex:0 0 auto}.nav button{border:1px solid var(--line);background:#fff;color:#25455e}.nav button.primary{background:#0f4f7e;color:#fff;border-color:#0f4f7e}
+    .teams-card{border:1px solid #d6cff8;background:#f7f5ff;border-radius:14px;padding:12px;margin-top:11px}.teams-card h3{margin:0 0 8px;font-size:13px;color:#3b2a78}.teams-message{background:#fff;border-radius:10px;padding:10px;font-size:12px;line-height:1.4;border:1px solid #e4defa}.teams-message code{font-family:Consolas,monospace;background:#f0edff;padding:2px 5px;border-radius:6px}.wrap-summary{border:1px solid var(--line);border-radius:13px;overflow:hidden}.wrap-summary div{display:grid;grid-template-columns:112px 1fr;border-bottom:1px solid var(--line)}.wrap-summary div:last-child{border-bottom:0}.wrap-summary label{background:#f5f8fb;color:#53667a;font-size:11px;font-weight:800;padding:9px}.wrap-summary span{padding:9px;font-size:12px;line-height:1.35}
+
+    @media (min-width:940px){.step span{display:block}.content{grid-template-columns:330px minmax(0,1fr)}}
+    @media (max-width:700px){
+      body{overflow:auto}.app-shell{height:auto;min-height:100vh}.content{height:auto;grid-template-columns:1fr;overflow:visible}.panel{min-height:auto}.panel-body,.script-stage{overflow:visible}.topbar{height:auto;align-items:flex-start}.header-actions{display:none}.progress{grid-template-columns:1fr 1fr}.action-grid,.decision-row{grid-template-columns:1fr}.hero-callout{grid-template-columns:1fr}.wrap-summary div,.record-row{grid-template-columns:1fr}.brand h1{white-space:normal}
+    }
   </style>
 </head>
 <body>
   <div class="app-shell">
-    <aside class="left-rail" aria-label="Dynamics 365 navigation">
-      <div class="d365-mark">D</div>
-      <div class="rail-item active" title="Customer Service">☎</div>
-      <div class="rail-item" title="Cases">▦</div>
-      <div class="rail-item" title="Knowledge">◇</div>
-      <div class="rail-item" title="Teams">T</div>
-      <div style="flex:1"></div>
-      <div class="rail-item" title="Settings">⚙</div>
-    </aside>
-    <main class="main">
-      <header class="topbar">
-        <div class="brand">
-          <div class="tmc-logo">TMC</div>
-          <div>
-            <h1>Thor Motor Coach Customer Care | VIN-Driven Warranty Journey</h1>
-            <p>Embedded agent script for Microsoft Dynamics 365 • Powered by Genesys Cloud CX voice context</p>
-          </div>
+    <header class="topbar">
+      <div class="brand">
+        <div class="tmc-logo">TMC</div>
+        <div class="brand-copy">
+          <h1>Thor Motor Coach Customer Care | VIN-Driven Warranty Journey</h1>
+          <p>Embedded agent script for Microsoft Dynamics 365 · Powered by Genesys Cloud CX voice context</p>
         </div>
-      </header>
-      <section class="content">
-        <aside class="panel">
-          <div class="panel-header"><h2>Customer Snapshot</h2><span class="chip green">Verified</span></div>
-          <div class="panel-body">
-            <div class="profile-card">
-              <div class="avatar">CL</div>
-              <div><h3>Cameron Loyal</h3><p>Thor owner • 2 recreational vehicles • Currently traveling</p></div>
-            </div>
-            <div class="stat-grid">
-              <div class="stat"><label>Relationship</label><strong>Owner since 2021</strong></div>
-              <div class="stat"><label>Journey score</label><strong>High value</strong></div>
-              <div class="stat"><label>Preferred channel</label><strong>Voice</strong></div>
-              <div class="stat"><label>Location</label><strong>Boise, ID area</strong></div>
-            </div>
-            <div class="field"><label>Search by VIN, phone, email, or case</label><input id="vinSearch" value="1FDXE4FN8NDC21473" /></div>
-            <button class="primary-btn" style="width:100%" onclick="lookupVin()">Lookup VIN in Dynamics 365</button>
-            <div class="vehicle selected" onclick="selectVehicle(this,'2024 Chateau 31W','1FDXE4FN8NDC21473')"><h4>2024 Chateau 31W</h4><p><span class="vin">1FDXE4FN8NDC21473</span><br>Class C • Warranty active • Issue on current trip</p></div>
-            <div class="vehicle" onclick="selectVehicle(this,'2021 Hurricane 34J','1F66F5DN7M0A77421')"><h4>2021 Hurricane 34J</h4><p><span class="vin">1F66F5DN7M0A77421</span><br>Class A • Warranty expired • Prior roof seal service</p></div>
+      </div>
+      <div class="header-actions">
+        <span class="call-pill">Cameron Loyal</span>
+        <span class="case-pill" id="headerCase">Case pending</span>
+      </div>
+    </header>
+
+    <section class="content">
+      <aside class="panel snapshot-panel">
+        <div class="panel-header"><h2>Customer Snapshot</h2><span class="chip green" id="verifiedChip">Verified</span></div>
+        <div class="panel-body">
+          <div class="profile-card">
+            <div class="avatar">CL</div>
+            <div><h3>Cameron Loyal</h3><p>Thor owner · 2 recreational vehicles · Currently traveling</p></div>
           </div>
-        </aside>
-        <section class="panel">
-          <div class="progress" id="progress"></div>
-          <div class="script-stage" id="stage"></div>
-          <div class="nav">
-            <button onclick="prevStep()">← Previous</button>
-            <button class="primary" onclick="nextStep()">Next Step →</button>
+          <div class="stat-grid">
+            <div class="stat"><label>Relationship</label><strong>Owner since 2021</strong></div>
+            <div class="stat"><label>Journey score</label><strong id="journeyScore">High value</strong></div>
+            <div class="stat"><label>Channel</label><strong>Voice</strong></div>
+            <div class="stat"><label>Location</label><strong id="locationValue">Boise, ID area</strong></div>
           </div>
-        </section>
+          <div class="field">
+            <label for="vinSearch">Search by VIN, phone, email, or case</label>
+            <input id="vinSearch" value="1FDXE4FN8NDC21473" />
+          </div>
+          <div class="button-row single"><button class="primary-btn" onclick="lookupVin()">Lookup VIN in Dynamics 365</button></div>
+          <div class="button-row">
+            <button class="action-btn" id="btnWarranty" onclick="showSnapshotView('warranty')">View Warranty</button>
+            <button class="action-btn" id="btnCase" onclick="showSnapshotView('case')">Create Case</button>
+          </div>
+          <button class="vehicle selected" onclick="selectVehicle('chateau')"><h4>2024 Chateau 31W</h4><p><span class="vin">1FDXE4FN8NDC21473</span><br>Class C · Warranty active · Issue on current trip</p></button>
+          <button class="vehicle" onclick="selectVehicle('hurricane')"><h4>2021 Hurricane 34J</h4><p><span class="vin">1F66F5DN7M0A77421</span><br>Class A · Warranty expired · Prior roof seal service</p></button>
+          <div class="record-card" id="snapshotDetail"></div>
+        </div>
+      </aside>
+
+      <section class="panel workspace-panel">
+        <div class="progress" id="progress"></div>
+        <div class="script-stage" id="stage"></div>
+        <div class="nav">
+          <button onclick="prevStep()">← Previous</button>
+          <button class="primary" onclick="nextStep()">Next Step →</button>
+        </div>
       </section>
-    </main>
+    </section>
   </div>
-  <div class="toast" id="toast">Updated</div>
+
   <script>
+    const vehicles = {
+      chateau: {
+        name:'2024 Chateau 31W', type:'Class C Motorhome', vin:'1FDXE4FN8NDC21473', warranty:'Active limited warranty', score:'High value', location:'Boise, ID area',
+        issue:'Water intrusion near slide-out during current trip', recall:'No open recalls found', history:'Prior owner portal registration and maintenance reminder', eligibility:'Warranty triage eligible', service:'Identify Boise-area authorized service options', caseId:'TMC-042871'
+      },
+      hurricane: {
+        name:'2021 Hurricane 34J', type:'Class A Motorhome', vin:'1F66F5DN7M0A77421', warranty:'Warranty expired', score:'Repeat owner', location:'Indianapolis, IN',
+        issue:'Historical roof seal service inquiry', recall:'No open recalls found', history:'Roof seal inspection completed in 2023', eligibility:'Customer-pay service guidance', service:'Offer nearest dealer scheduling guidance', caseId:'TMC-038144'
+      }
+    };
+    let selectedVehicle = 'chateau';
+    let current = 0;
+    let caseCreated = false;
+
     const stages = [
-      {k:'verify',t:'Identify & Verify',s:'Use VIN to anchor the journey',sent:'Stable',score:'+18',html:`
-        <div class="hero-callout"><div><h2>Open with confidence</h2><p>The call arrives in Dynamics 365 with Genesys voice context, ANI match, and a likely warranty intent. Start by acknowledging the travel disruption and confirming the active VIN.</p></div><div class="sentiment"><strong>+18</strong><span>sentiment</span></div></div>
-        <div class="talk-track"><h3>Agent talk track</h3><div class="quote">“Cameron, I can see you’re calling about your 2024 Chateau. I’ll use the VIN to make sure we’re looking at the right coach, warranty status, and nearby service options. Are you currently somewhere safe and parked?”</div><div class="coach"><span class="coach-icon">✓</span><span>Why it matters: the VIN becomes the single thread connecting warranty, ownership, service history, case routing, and follow-up.</span></div></div>
-        <div class="action-grid"><div class="mini-card"><h3>Confirm</h3><ul><li>Caller identity and callback number</li><li>Current location and travel window</li><li>VIN ending <strong>21473</strong></li><li>Safe operating condition</li></ul></div><div class="mini-card"><h3>Dynamics 365 surfaces</h3><ul><li>Two RVs owned by Cameron Loyal</li><li>Active warranty on 2024 Chateau 31W</li><li>No active safety recall on selected VIN</li><li>Prior owner portal search: “slide seal leak”</li></ul></div></div>`},
-      {k:'diagnose',t:'Diagnose Warranty',s:'Capture symptoms and coverage',sent:'Concerned',score:'-12',html:`
-        <div class="hero-callout"><div><h2>Turn concern into structured case data</h2><p>The customer reports water intrusion around the slide-out after heavy rain. The agent script keeps the conversation human while collecting details warranty and technical teams need.</p></div><div class="sentiment"><strong>-12</strong><span>sentiment</span></div></div>
+      {k:'identify',t:'Identify Caller',s:'Verify Cameron and VIN',html:()=>`
+        <div class="hero-callout"><div><h2>Start with the owner, then the coach</h2><p>Genesys Cloud voice context opens inside Dynamics 365 so the agent can greet Cameron by name and immediately anchor the journey on the VIN.</p></div><div class="sentiment"><strong>66</strong><span>journey score</span></div></div>
+        <div class="talk-track"><h3>Agent talk track</h3><div class="quote">“Cameron, thanks for calling Thor Motor Coach Customer Care. I see you may be traveling today. Let me verify your coach by VIN so I can look at warranty coverage and service options without making you repeat everything.”</div><div class="coach"><span class="coach-icon">✓</span><span>Why it matters: the VIN becomes the single thread connecting warranty, ownership, service history, case routing, and follow-up.</span></div></div>
+        <div class="action-grid"><div class="mini-card"><h3>Confirm</h3><ul><li>Caller identity and callback number</li><li>Current location and travel window</li><li>VIN ending <strong>${vehicles[selectedVehicle].vin.slice(-5)}</strong></li><li>Safe operating condition</li></ul></div><div class="mini-card"><h3>Dynamics 365 surfaces</h3><ul><li>Two RVs owned by Cameron Loyal</li><li>${vehicles[selectedVehicle].warranty}</li><li>${vehicles[selectedVehicle].recall}</li><li>${vehicles[selectedVehicle].history}</li></ul></div></div>`},
+      {k:'diagnose',t:'Diagnose Warranty',s:'Capture symptoms and coverage',html:()=>`
+        <div class="hero-callout"><div><h2>Turn concern into structured case data</h2><p>The customer reports water intrusion around the slide-out after heavy rain. The script keeps the conversation human while collecting details warranty and technical teams need.</p></div><div class="sentiment"><strong>-12</strong><span>sentiment</span></div></div>
         <div class="talk-track"><h3>Agent talk track</h3><div class="quote">“I’m sorry this is happening in the middle of your trip. I’m going to ask a few quick questions so we can document this correctly and find the fastest service path for your coach.”</div></div>
-        <div class="action-grid"><div class="mini-card"><h3>Guided questions</h3><ul><li>When did the leak first appear?</li><li>Is water entering while parked, driving, or both?</li><li>Can the slide fully retract?</li><li>Any visible seal gap, tear, or debris?</li><li>Can photos be uploaded from the owner portal link?</li></ul></div><div class="mini-card"><h3>Warranty indicators</h3><ul><li>VIN warranty entitlement: active</li><li>Likely component: slide-out seal/weatherstrip</li><li>Severity: travel-impacting but not emergency</li><li>Recommended case type: warranty review + service coordination</li></ul></div></div>
-        <div class="decision"><h3>Select symptom path</h3><div class="decision-row"><button onclick="pickDecision(this)">Leak only when slide is extended</button><button onclick="pickDecision(this)">Leak persists with slide retracted</button></div></div>`},
-      {k:'coordinate',t:'Coordinate Service',s:'Use Teams and dealer network',sent:'Improving',score:'+7',html:`
-        <div class="hero-callout"><div><h2>Coordinate without making the customer repeat themselves</h2><p>All collected context carries into the case, Teams escalation draft, and dealer/service handoff so Cameron stays focused on the trip, not the process.</p></div><div class="sentiment"><strong>+7</strong><span>sentiment</span></div></div>
-        <div class="talk-track"><h3>Agent talk track</h3><div class="quote">“I’ve documented the VIN, photos requested, symptoms, and your current location. I’m checking the nearest service options now and will also send this to our warranty support team so they have the same details.”</div></div>
-        <div class="action-grid"><div class="mini-card"><h3>Next best actions</h3><ul><li>Create Dynamics 365 case from voice interaction</li><li>Attach VIN ownership and warranty entitlement</li><li>Launch Teams escalation to warranty support</li><li>Find nearest authorized service option near Boise</li><li>Offer owner portal photo upload link</li></ul></div><div class="mini-card"><h3>Customer experience goal</h3><ul><li>One explanation, one case number</li><li>Warm transfer only when necessary</li><li>Clear expectation for follow-up</li><li>SMS/email confirmation after call</li></ul></div></div>
-        <div class="teams-card"><h3>Microsoft Teams handoff</h3><div class="teams-message">Case <strong>WR-104982</strong> created in Dynamics 365. Warranty Support receives VIN, symptom checklist, trip location, sentiment trend, call transcript summary, and requested service outcome.</div></div>`},
-      {k:'wrap',t:'Wrap & Follow Up',s:'Resolve next step clearly',sent:'Positive',score:'+24',html:`
+        <div class="action-grid"><div class="mini-card"><h3>Guided questions</h3><ul><li>When did the leak first appear?</li><li>Is water entering while parked, driving, or both?</li><li>Can the slide fully retract?</li><li>Any visible seal gap, tear, or debris?</li><li>Can photos be uploaded from the owner portal link?</li></ul></div><div class="mini-card"><h3>Warranty indicators</h3><ul><li>VIN warranty entitlement: ${vehicles[selectedVehicle].warranty}</li><li>Likely component: slide-out seal/weatherstrip</li><li>Severity: travel-impacting but not emergency</li><li>Recommended case type: ${vehicles[selectedVehicle].eligibility}</li></ul></div></div>
+        <div class="decision"><h3>Select symptom path</h3><div class="decision-row"><button onclick="pickDecision(this,'Leak only when slide is extended')">Leak only when slide is extended</button><button onclick="pickDecision(this,'Leak persists with slide retracted')">Leak persists with slide retracted</button></div><div class="record-note" id="symptomDecision">No symptom path selected yet.</div></div>`},
+      {k:'coordinate',t:'Coordinate Service',s:'Dealer, Teams, follow-up',html:()=>`
+        <div class="hero-callout"><div><h2>Coordinate without repetition</h2><p>All collected context carries into the Dynamics 365 case, Teams escalation draft, and service handoff so Cameron stays focused on the trip.</p></div><div class="sentiment"><strong>+7</strong><span>sentiment</span></div></div>
+        <div class="talk-track"><h3>Agent talk track</h3><div class="quote">“I’ve documented the VIN, photos requested, symptoms, and your current location. I’m checking nearby service options and sending the same details to warranty support.”</div></div>
+        <div class="action-grid"><div class="mini-card"><h3>Next steps</h3><ul><li>Create Dynamics 365 case from voice interaction</li><li>Attach VIN ownership and warranty entitlement</li><li>Launch Teams escalation to warranty support</li><li>${vehicles[selectedVehicle].service}</li><li>Offer owner portal photo upload link</li></ul></div><div class="mini-card"><h3>Customer experience goal</h3><ul><li>One explanation, one case number</li><li>Warm transfer only when necessary</li><li>Clear expectation for follow-up</li><li>SMS/email confirmation after call</li></ul></div></div>
+        <div class="teams-card"><h3>Microsoft Teams handoff</h3><div class="teams-message">Case <strong>${caseCreated ? vehicles[selectedVehicle].caseId : 'Draft pending'}</strong> in Dynamics 365. Warranty Support receives VIN, symptom checklist, trip location, sentiment trend, call transcript summary, and requested service outcome.</div></div>`},
+      {k:'wrap',t:'Wrap & Follow Up',s:'Resolve next step clearly',html:()=>`
         <div class="hero-callout"><div><h2>Close with a confident service plan</h2><p>The wrap-up summarizes the agreed path and leaves Cameron with a case number, safety guidance, and a no-surprises follow-up commitment.</p></div><div class="sentiment"><strong>+24</strong><span>sentiment</span></div></div>
-        <div class="talk-track"><h3>Agent close</h3><div class="quote">“Cameron, your case number is WR-104982. I’m sending a confirmation with the photo upload link and the nearest service option we discussed. Our warranty support team will review the details under your VIN, so you won’t have to start over.”</div></div>
-        <div class="wrap-summary"><div><label>Case</label><span>WR-104982 — Warranty service coordination</span></div><div><label>Selected VIN</label><span>1FDXE4FN8NDC21473 — 2024 Chateau 31W</span></div><div><label>Issue</label><span>Slide-out seal water intrusion while traveling</span></div><div><label>Owner promise</label><span>Confirmation sent by SMS/email; warranty support reviewing case; service option near Boise identified.</span></div><div><label>Disposition</label><span>Warranty triage completed • Teams escalation sent • Follow-up task created in Dynamics 365</span></div></div>
+        <div class="talk-track"><h3>Agent close</h3><div class="quote">“Cameron, your case number is ${vehicles[selectedVehicle].caseId}. I’m sending a confirmation with the photo upload link and the nearest service option we discussed. Warranty support will review the details under your VIN, so you won’t have to start over.”</div></div>
+        <div class="wrap-summary"><div><label>Case</label><span>${vehicles[selectedVehicle].caseId} — Warranty service coordination</span></div><div><label>Selected VIN</label><span>${vehicles[selectedVehicle].vin} — ${vehicles[selectedVehicle].name}</span></div><div><label>Issue</label><span>${vehicles[selectedVehicle].issue}</span></div><div><label>Owner promise</label><span>Confirmation sent by SMS/email; warranty support reviewing case; service option near Boise identified.</span></div><div><label>Disposition</label><span>Warranty triage completed · Teams escalation sent · Follow-up task created in Dynamics 365</span></div></div>
         <div class="decision"><h3>One-click wrap codes</h3><div class="decision-row"><button class="selected">Warranty: travel-impacting</button><button>Dealer service referral</button></div></div>`}
     ];
-    let current = 0;
+
     function renderProgress(){
-      document.getElementById('progress').innerHTML = stages.map((x,i)=>`<div class="step ${i===current?'active':i<current?'done':''}" onclick="goStep(${i})"><small>Step ${i+1}</small><strong>${x.t}</strong><span>${x.s}</span></div>`).join('');
+      document.getElementById('progress').innerHTML = stages.map((x,i)=>`<button class="step ${i===current?'active':i<current?'done':''}" onclick="goStep(${i})"><small>Step ${i+1}</small><strong>${x.t}</strong><span>${x.s}</span></button>`).join('');
     }
-    function renderStage(){document.getElementById('stage').innerHTML=stages[current].html;renderProgress();}
-    function goStep(i){current=i;renderStage();toast('Stage changed to '+stages[i].t)}
+    function renderStage(){document.getElementById('stage').innerHTML=stages[current].html();renderProgress();}
+    function setHeaderCase(){document.getElementById('headerCase').textContent = caseCreated ? vehicles[selectedVehicle].caseId : 'Case pending';}
+    function renderSnapshot(mode='overview'){
+      const v = vehicles[selectedVehicle];
+      document.getElementById('vinSearch').value = v.vin;
+      document.getElementById('journeyScore').textContent = v.score;
+      document.getElementById('locationValue').textContent = v.location;
+      document.querySelectorAll('.vehicle').forEach((btn,idx)=>btn.classList.toggle('selected',(idx===0 && selectedVehicle==='chateau') || (idx===1 && selectedVehicle==='hurricane')));
+      document.querySelectorAll('.action-btn').forEach(b=>b.classList.remove('active'));
+      let html = '';
+      if(mode==='warranty'){
+        document.getElementById('btnWarranty').classList.add('active');
+        html = `<h3>Warranty Entitlement</h3><div class="record-row"><label>VIN</label><span>${v.vin}</span></div><div class="record-row"><label>Vehicle</label><span>${v.name} · ${v.type}</span></div><div class="record-row"><label>Status</label><span>${v.warranty}</span></div><div class="record-row"><label>Eligibility</label><span>${v.eligibility}</span></div><div class="record-note">Dynamics 365 is now focused on warranty coverage and service entitlement for the selected VIN.</div>`;
+      } else if(mode==='case'){
+        caseCreated = true;
+        document.getElementById('btnCase').classList.add('active');
+        html = `<h3>Case Created in Dynamics 365</h3><div class="record-row"><label>Case</label><span>${v.caseId}</span></div><div class="record-row"><label>Title</label><span>${v.issue}</span></div><div class="record-row"><label>Queue</label><span>Warranty Support / Travel Impacting</span></div><div class="record-row"><label>Next step</label><span>Send photo upload link and coordinate Boise-area service option.</span></div><div class="record-note">Case context now drives the script, Teams handoff, and wrap-up summary.</div>`;
+        if(current < 2){current = 2;}
+      } else {
+        html = `<h3>Selected Customer Record</h3><div class="record-row"><label>Vehicle</label><span>${v.name}</span></div><div class="record-row"><label>VIN</label><span>${v.vin}</span></div><div class="record-row"><label>Warranty</label><span>${v.warranty}</span></div><div class="record-row"><label>Current issue</label><span>${v.issue}</span></div><div class="record-note">Use VIN lookup, warranty view, or case creation to change the active Dynamics 365 work context.</div>`;
+      }
+      document.getElementById('snapshotDetail').innerHTML = html;
+      setHeaderCase();
+      renderStage();
+    }
+    function lookupVin(){
+      const q = document.getElementById('vinSearch').value.trim().toUpperCase();
+      const match = Object.keys(vehicles).find(k => vehicles[k].vin === q || vehicles[k].name.toUpperCase().includes(q) || vehicles[k].caseId.toUpperCase() === q);
+      if(match){selectedVehicle = match; renderSnapshot('overview');}
+      else {document.getElementById('snapshotDetail').innerHTML = `<h3>No matching VIN found</h3><div class="record-note">Try <strong>1FDXE4FN8NDC21473</strong>, <strong>TMC-042871</strong>, or select one of Cameron Loyal’s vehicles.</div>`;}
+    }
+    function showSnapshotView(mode){renderSnapshot(mode);}
+    function selectVehicle(key){selectedVehicle = key; caseCreated = false; renderSnapshot('overview');}
+    function goStep(i){current=i;renderStage();}
     function nextStep(){current=Math.min(stages.length-1,current+1);renderStage();}
     function prevStep(){current=Math.max(0,current-1);renderStage();}
-    function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1700)}
-    function lookupVin(){toast('VIN matched: active warranty loaded in Dynamics 365')}
-    function selectVehicle(el,name,vin){document.querySelectorAll('.vehicle').forEach(v=>v.classList.remove('selected'));el.classList.add('selected');document.getElementById('vinSearch').value=vin;toast(name+' selected')}
-    function pickDecision(btn){btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');toast('Symptom path captured')}
-    renderStage();
+    function pickDecision(btn,value){btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');const target=document.getElementById('symptomDecision');if(target){target.innerHTML = `<strong>Captured symptom path:</strong> ${value}. This will be added to the Dynamics 365 case notes and Teams handoff.`;}}
+    renderSnapshot('overview');
   </script>
 </body>
 </html>
